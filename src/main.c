@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/06/28 20:20:50 by Philip           ###   ########.fr       */
+/*   Updated: 2024/06/28 21:27:58 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,8 @@ void	put_image_to_window_vars(t_vars *vars)
  */
 void	draw_pixel_in_raster_space(t_img_vars *img_vars, t_pixel pixel)
 {
-	unsigned char	*dst;
-	ptrdiff_t		offset;
+	char		*dst;
+	ptrdiff_t	offset;
 
 	if (pixel.x >= WIDTH || pixel.x < 0 || pixel.y >= HEIGHT || pixel.y < 0)
 		return ;
