@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/02 21:10:16 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/02 22:06:50 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,26 +207,23 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
  */
 void	basic_raytracing(t_img_vars *img_vars, t_scene *scene)
 {
-	int		x;
-	int		y; /* Replace with pixel */
 	t_point	point_on_canvas;
 	t_pixel	pixel;
 
-	y = HEIGHT / 2;
-	while (y >= - HEIGHT / 2)
+	pixel.y = HEIGHT / 2;
+	while (pixel.y >= - HEIGHT / 2)
 	{
-		x = - WIDTH / 2;
-		while (x <= WIDTH / 2)
+		pixel.x = - WIDTH / 2;
+		while (pixel.x <= WIDTH / 2)
 		{
-			point_on_canvas = (t_point){.x = x, .y = y,
+			point_on_canvas = (t_point){.x = pixel.x, .y = pixel.y,
 				.z = (double)(-minirt()->eye_canvas_distance)};
-			pixel = (t_pixel){.x = x, .y = y};
 			pixel.color = trace_ray(scene, (t_point){0}, point_on_canvas, 1, 
 					INFINITY);
 			draw_pixel_in_screen_space(img_vars, pixel);
-			++x;
+			++pixel.x;
 		}
-		--y;
+		--pixel.y;
 	}
 	
 }
@@ -244,7 +241,6 @@ int	main(int argc, char const *argv[])
 
 	set_up_mlx(&vars);
 	set_up_hooks(&vars);
-	// test_draw_on_image(&(vars.img_vars));
 
 	allocate_objects(&scene, 5);
 
@@ -274,8 +270,6 @@ int	main(int argc, char const *argv[])
 	};
 
 	basic_raytracing(&vars.img_vars, &scene);
-
-
 
 	put_image_to_window_vars(&vars);
 	mlx_loop(vars.mlx_ptr);
