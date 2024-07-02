@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 17:44:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/06/28 19:39:43 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/02 18:57:24 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 # define ARGB_H
 # define BLACK 0x000000
 # define WHITE 0xffffff
+# define RED 0xff0000
+# define GREEN 0x00ff00
+# define BLUE 0x0000ff
 
 typedef int	t_argb;
 
