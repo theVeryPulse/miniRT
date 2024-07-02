@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/02 20:17:04 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/02 21:10:16 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,9 +139,9 @@ t_vector	vec_minus(t_vector a, t_vector b)
 void	ray_sphere_intersect(double t[2], t_point ray_origin,
 			t_point ray_direction, t_object *sphere)
 {
-	double 		a;
-	double 		b;
-	double 		c;
+	double		a;
+	double		b;
+	double		c;
 	t_vector	c_to_o;
 	double		discriminant;
 
@@ -208,7 +208,7 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 void	basic_raytracing(t_img_vars *img_vars, t_scene *scene)
 {
 	int		x;
-	int		y;
+	int		y; /* Replace with pixel */
 	t_point	point_on_canvas;
 	t_pixel	pixel;
 
@@ -249,21 +249,25 @@ int	main(int argc, char const *argv[])
 	allocate_objects(&scene, 5);
 
 	scene.objects[0] = (t_object){
+		.type = Sphere,
 		.color = RED,
 		.center = (t_point){0, 0, -3000},
-		.radius = 500
+		.radius = 500,
 	};
 	scene.objects[1] = (t_object){
+		.type = Sphere,
 		.color = BLUE,
-		.center = (t_point){1000000, 1000000, -3500000},
-		.radius = 1000000
+		.center = (t_point){1000, 1000, -5000},
+		.radius = 1800
 	};
 	scene.objects[2] = (t_object){
+		.type = Sphere,
 		.color = GREEN,
 		.center = (t_point){-300, -300, -2500},
 		.radius = 300
 	};
 	scene.objects[3] = (t_object){
+		.type = Sphere,
 		.color = BLACK,
 		.center = (t_point){-1500, 0, -2500},
 		.radius = 400

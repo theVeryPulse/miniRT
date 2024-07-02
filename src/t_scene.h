@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 17:48:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/02 19:53:47 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/02 21:08:16 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 
 typedef enum e_object_type
 {
+	Undefined,
 	Sphere,
 }	t_object_type;
 
@@ -26,6 +27,7 @@ typedef struct s_object
 	t_argb			color;
 	t_point			center;
 	double			radius;
+	t_vector		direction;
 }	t_object;
 
 typedef struct s_scene
