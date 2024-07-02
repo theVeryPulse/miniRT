@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/02 22:10:35 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/02 23:27:35 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,7 @@ void	ray_sphere_intersect(double t[2], t_point ray_origin,
 	else
 	{
 		t[0] = (-b + sqrt(discriminant)) / (2 * a);
-		t[0] = (-b - sqrt(discriminant)) / (2 * a);
+		t[1] = (-b - sqrt(discriminant)) / (2 * a);
 	}
 }
 
