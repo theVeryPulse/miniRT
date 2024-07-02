@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/02 22:06:50 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/02 22:10:35 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ int	destroy_exit(t_vars *vars)
 	mlx_destroy_window(vars->mlx_ptr, vars->win_ptr);
 	mlx_destroy_display(vars->mlx_ptr);
 	free(vars->mlx_ptr);
+	if (vars->scene.objects)
+		free(vars->scene.objects);
 	exit (0);
 }
 
@@ -237,39 +239,38 @@ void	allocate_objects(t_scene *scene, unsigned int object_count)
 int	main(int argc, char const *argv[])
 {
 	t_vars	vars;
-	t_scene	scene;
 
 	set_up_mlx(&vars);
 	set_up_hooks(&vars);
 
-	allocate_objects(&scene, 5);
+	allocate_objects(&vars.scene, 5);
 
-	scene.objects[0] = (t_object){
+	vars.scene.objects[0] = (t_object){
 		.type = Sphere,
 		.color = RED,
 		.center = (t_point){0, 0, -3000},
 		.radius = 500,
 	};
-	scene.objects[1] = (t_object){
+	vars.scene.objects[1] = (t_object){
 		.type = Sphere,
 		.color = BLUE,
 		.center = (t_point){1000, 1000, -5000},
 		.radius = 1800
 	};
-	scene.objects[2] = (t_object){
+	vars.scene.objects[2] = (t_object){
 		.type = Sphere,
 		.color = GREEN,
 		.center = (t_point){-300, -300, -2500},
 		.radius = 300
 	};
-	scene.objects[3] = (t_object){
+	vars.scene.objects[3] = (t_object){
 		.type = Sphere,
 		.color = BLACK,
 		.center = (t_point){-1500, 0, -2500},
 		.radius = 400
 	};
 
-	basic_raytracing(&vars.img_vars, &scene);
+	basic_raytracing(&vars.img_vars, &vars.scene);
 
 	put_image_to_window_vars(&vars);
 	mlx_loop(vars.mlx_ptr);

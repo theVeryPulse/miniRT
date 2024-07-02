@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 17:48:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/02 21:08:16 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/02 22:11:08 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define T_SCENE_H
 
 # include "t_point.h"
+# include "argb.h"
 
 typedef enum e_object_type
 {
