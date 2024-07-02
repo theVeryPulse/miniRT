@@ -4,7 +4,9 @@ CC := gcc
 CFLAGS := -Wall -Wextra -Werror
 
 # ls src/**/*.c >> Makefile
-FILES := main.c
+FILES := main.c \
+	argb.c \
+	minirt.c
 
 FILES := $(addprefix src/, $(FILES))
 OFILES := $(patsubst src/%.c, build/%.o, $(FILES))
@@ -42,3 +44,4 @@ debug: CFLAGS := -g
 debug: re
 
 .PHONY: all, clean, fclean, re, debug
+

@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/06/28 21:27:58 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/02 20:17:04 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 
 #include <stdio.h> /* printf */
 #include <stdlib.h> /* free */
+
+#include "minirt.h"
+
 
 int	destroy_exit(t_vars *vars)
 {
@@ -108,13 +111,168 @@ void	test_draw_on_image(t_img_vars *img_vars)
 		draw_pixel_in_screen_space(img_vars, pixel);	
 }
 
+#include "t_point.h"
+#include "t_scene.h"
+
+double	dot_product(t_vector a, t_vector b)
+{
+	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
+}
+
+t_vector	vec_minus(t_vector a, t_vector b)
+{
+	return ((t_vector){.x = a.x - b.x, .y = a.y - b.y, .z = a.z - b.z});
+}
+
+#include <math.h>
+
+/**
+ * @brief 
+ * 
+ * @param t 
+ * @param ray_origin 
+ * @param point_on_canvas 
+ * @param sphere 
+ * @note |O+tD-C|^2 - R^2 = 0;
+ *        => a = D^2; b = 2D(O-C); c=|O-C|^2-R^2
+ */
+void	ray_sphere_intersect(double t[2], t_point ray_origin,
+			t_point ray_direction, t_object *sphere)
+{
+	double 		a;
+	double 		b;
+	double 		c;
+	t_vector	c_to_o;
+	double		discriminant;
+
+	c_to_o = vec_minus(ray_origin, sphere->center);
+	a = dot_product(ray_direction, ray_direction);
+	b = 2 * dot_product(c_to_o, ray_direction);
+	c = dot_product(c_to_o, c_to_o) - sphere->radius * sphere->radius;
+	discriminant = b * b - 4 * a * c;
+	if (discriminant < 0)
+	{
+		t[0] = INFINITY;
+		t[1] = INFINITY;
+	}
+	else
+	{
+		t[0] = (-b + sqrt(discriminant)) / (2 * a);
+		t[0] = (-b - sqrt(discriminant)) / (2 * a);
+	}
+}
+
+
+t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
+		double t_min, double t_max)
+{
+	double		closest_t;
+	double		t[2];
+	t_object	*closest_object;
+	size_t	i;
+
+	closest_object = NULL;
+	closest_t = INFINITY;
+	i = 0;
+	while (i < scene->object_count)
+	{
+		if (scene->objects[i].type == Sphere)
+		{
+			ray_sphere_intersect(t, ray_origin, ray_direction,
+				&(scene->objects)[i]);
+			if (t[0] >= t_min && t[0] <= t_max && t[0] < closest_t)
+			{
+				closest_t = t[0];
+				closest_object = &(scene->objects[i]);
+			}
+			if (t[1] >= t_min && t[1] <= t_max && t[1] < closest_t)
+			{
+				closest_t = t[1];
+				closest_object = &(scene->objects[i]);
+			}
+		}
+		++i;
+	}
+	if (closest_object == NULL)
+		return minirt()->background_color;
+	else
+		return closest_object->color;
+}
+
+#include <stdint.h>
+
+/**
+ * @brief 
+ * @ref computer-graphics-from-scratch / 02-basic-raytracing
+ */
+void	basic_raytracing(t_img_vars *img_vars, t_scene *scene)
+{
+	int		x;
+	int		y;
+	t_point	point_on_canvas;
+	t_pixel	pixel;
+
+	y = HEIGHT / 2;
+	while (y >= - HEIGHT / 2)
+	{
+		x = - WIDTH / 2;
+		while (x <= WIDTH / 2)
+		{
+			point_on_canvas = (t_point){.x = x, .y = y,
+				.z = (double)(-minirt()->eye_canvas_distance)};
+			pixel = (t_pixel){.x = x, .y = y};
+			pixel.color = trace_ray(scene, (t_point){0}, point_on_canvas, 1, 
+					INFINITY);
+			draw_pixel_in_screen_space(img_vars, pixel);
+			++x;
+		}
+		--y;
+	}
+	
+}
+
+void	allocate_objects(t_scene *scene, unsigned int object_count)
+{
+	scene->objects = (t_object *)malloc(object_count * sizeof(t_object));
+	scene->object_count = object_count;
+}
+
 int	main(int argc, char const *argv[])
 {
 	t_vars	vars;
+	t_scene	scene;
 
 	set_up_mlx(&vars);
 	set_up_hooks(&vars);
-	test_draw_on_image(&(vars.img_vars));
+	// test_draw_on_image(&(vars.img_vars));
+
+	allocate_objects(&scene, 5);
+
+	scene.objects[0] = (t_object){
+		.color = RED,
+		.center = (t_point){0, 0, -3000},
+		.radius = 500
+	};
+	scene.objects[1] = (t_object){
+		.color = BLUE,
+		.center = (t_point){1000000, 1000000, -3500000},
+		.radius = 1000000
+	};
+	scene.objects[2] = (t_object){
+		.color = GREEN,
+		.center = (t_point){-300, -300, -2500},
+		.radius = 300
+	};
+	scene.objects[3] = (t_object){
+		.color = BLACK,
+		.center = (t_point){-1500, 0, -2500},
+		.radius = 400
+	};
+
+	basic_raytracing(&vars.img_vars, &scene);
+
+
+
 	put_image_to_window_vars(&vars);
 	mlx_loop(vars.mlx_ptr);
 	return (0);
