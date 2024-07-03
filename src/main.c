@@ -135,6 +135,11 @@ t_vector	vector_tail_head(t_vector tail, t_vector head)
 	return (vector_minus(head, tail));
 }
 
+double	vector_length(t_vector a)
+{
+	return (sqrt(a.x * a.x + a.y * a.y + a.z * a.z));
+}
+
 /**
  * @brief 
  * 
