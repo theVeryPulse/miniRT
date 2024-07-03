@@ -29,6 +29,11 @@
 
 #include <math.h>
 
+#include "../lib/libft/inc/libft.h"
+
+void	basic_raytracing(t_img_vars *img_vars, t_scene *scene);
+void	put_image_to_window_vars(t_vars *vars);
+
 int	destroy_exit(t_vars *vars)
 {
 	printf("exiting...\n");
@@ -46,6 +51,33 @@ int	handle_key(int key, t_vars *vars)
 	printf("%d pressed\n", key);
 	if (key == XK_Escape)
 		destroy_exit(vars);
+	else if (key == XK_Tab)
+	{
+		++(vars->scene.focus);
+		if (vars->scene.focus == vars->scene.objects + vars->scene.object_count)
+			vars->scene.focus = vars->scene.lights;
+		else if (vars->scene.focus == vars->scene.lights + vars->scene.light_count)
+			vars->scene.focus = vars->scene.objects;
+	}
+	else if (key == XK_Up || key == XK_Down || key == XK_Left || key == XK_Right
+		|| key == XK_i || key == XK_o)
+	{
+		if (key == XK_Up)
+			vars->scene.focus->position.y += 100;
+		else if (key == XK_Down)
+			vars->scene.focus->position.y -= 100;
+		else if (key == XK_Left)
+			vars->scene.focus->position.x -= 100;
+		else if (key == XK_Right)
+			vars->scene.focus->position.x += 100;
+		else if (key == XK_i)
+			vars->scene.focus->position.z -= 100;
+		else if (key == XK_o)
+			vars->scene.focus->position.z += 100;
+
+		basic_raytracing(&vars->img_vars, &vars->scene);
+		put_image_to_window_vars(vars);
+	}
 }
 
 void	set_up_hooks(t_vars *vars)
