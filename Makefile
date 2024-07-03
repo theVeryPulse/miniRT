@@ -23,9 +23,16 @@ FT_STT := lib/libft/lib/libft.a
 
 all: $(NAME)
 
-$(NAME): $(OFILES)
-	@$(CC) $(CFLAGS) -o $@ $(OFILES) $(MLX_STT) -lXext -lX11 -lm -lz
+
+$(NAME): $(OFILES) $(FT_STT) $(MLX_STT)
+	@$(CC) $(CFLAGS) -o $@ $(OFILES) $(FT_STT) $(MLX_STT) -lXext -lX11 -lm -lz
 	@echo "\033[0;32m\n>>> ./$@\n\033[0m"
+
+$(FT_STT):
+	$(MAKE) -C lib/libft all
+
+$(MLX_STT):
+	$(MAKE) -C lib/minilibx-linux
 
 build/%.o: src/%.c
 	@mkdir -p $(@D)
