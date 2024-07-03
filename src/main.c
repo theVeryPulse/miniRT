@@ -224,7 +224,7 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal)
 		else
 		{
 			if (scene->lights[i].type == PointLight)
-				light = vector_tail_head(scene->lights[i].position, point);
+				light = vector_minus(scene->lights[i].position, point);
 			else if (scene->lights[i].type == DirectionalLight)
 				light = scene->lights[i].direction;
 			normal_dot_light = vector_dot_product(normal, light);
