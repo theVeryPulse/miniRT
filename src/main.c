@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/03 15:11:19 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/03 16:28:20 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,34 +54,29 @@ int	handle_key(int key, t_vars *vars)
 	else if (key == XK_Tab)
 	{
 		char	*message;
-		static int	i = 0;
-		++(vars->scene.focus);
-		++i;
-		if (vars->scene.focus->type == Object && i >= vars->scene.object_count) // Check category
-		{
+
+		if (vars->scene.focus->type == Object && vars->scene.focus
+			- vars->scene.objects >= vars->scene.object_count - 1)
 			vars->scene.focus = vars->scene.lights;
-			i = 0;
-		}
-		else if (vars->scene.focus->type == Light && i >= vars->scene.light_count)
-		{
+		else if (vars->scene.focus->type == Light && vars->scene.focus
+			- vars->scene.lights >= vars->scene.light_count - 1)
 			vars->scene.focus = vars->scene.objects;
-			i = 0;
-		}
-		printf("Focusing on %p\n", vars->scene.focus);
+		else
+			++(vars->scene.focus);
 		if (vars->scene.focus->type == PointLight)
-			message = "Point Light";
+			message = "Focus: Point Light";
 		else if (vars->scene.focus->type == DirectionalLight)
-			message = "Directional Light";
+			message = "Focus: Directional Light";
 		else if (vars->scene.focus->type == AmbientLight)
-			message = "Ambience Light ";
+			message = "Focus: Ambience Light ";
 		else if (vars->scene.focus->type == Sphere)
-			message = "Sphere";
-		
+			message = "Focus: Sphere";
+
 		put_image_to_window_vars(vars);
 		mlx_string_put(vars->mlx_ptr, vars->win_ptr, 10, 10, GREEN, message);
 	}
 	else if (key == XK_Up || key == XK_Down || key == XK_Left || key == XK_Right
-		|| key == XK_i || key == XK_o)
+		|| key == XK_i || key == XK_o || key == XK_Page_Up || key == XK_Page_Down)
 	{
 		if (key == XK_Up)
 			vars->scene.focus->position.y += 100;
@@ -95,7 +90,14 @@ int	handle_key(int key, t_vars *vars)
 			vars->scene.focus->position.z -= 100;
 		else if (key == XK_o)
 			vars->scene.focus->position.z += 100;
-
+		if (vars->scene.focus->category == Light && key == XK_Page_Up)
+		{
+			vars->scene.focus->intensity *= 1.05;
+			if (vars->scene.focus->intensity >= 1)
+				vars->scene.focus->intensity = 1;
+		}
+		else if (vars->scene.focus->category == Light && key == XK_Page_Down)
+				vars->scene.focus->intensity *= 0.95;
 		basic_raytracing(&vars->img_vars, &vars->scene);
 		put_image_to_window_vars(vars);
 	}
@@ -234,6 +236,8 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal)
 		}
 		++i;
 	}
+	if (intensity >= 1)
+		intensity = 1;
 	return (intensity);
 }
 
