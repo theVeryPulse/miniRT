@@ -53,11 +53,32 @@ int	handle_key(int key, t_vars *vars)
 		destroy_exit(vars);
 	else if (key == XK_Tab)
 	{
+		char	*message;
+		static int	i = 0;
 		++(vars->scene.focus);
-		if (vars->scene.focus == vars->scene.objects + vars->scene.object_count)
+		++i;
+		if (vars->scene.focus->type == Object && i >= vars->scene.object_count) // Check category
+		{
 			vars->scene.focus = vars->scene.lights;
-		else if (vars->scene.focus == vars->scene.lights + vars->scene.light_count)
+			i = 0;
+		}
+		else if (vars->scene.focus->type == Light && i >= vars->scene.light_count)
+		{
 			vars->scene.focus = vars->scene.objects;
+			i = 0;
+		}
+		printf("Focusing on %p\n", vars->scene.focus);
+		if (vars->scene.focus->type == PointLight)
+			message = "Point Light";
+		else if (vars->scene.focus->type == DirectionalLight)
+			message = "Directional Light";
+		else if (vars->scene.focus->type == AmbientLight)
+			message = "Ambience Light ";
+		else if (vars->scene.focus->type == Sphere)
+			message = "Sphere";
+		
+		put_image_to_window_vars(vars);
+		mlx_string_put(vars->mlx_ptr, vars->win_ptr, 10, 10, GREEN, message);
 	}
 	else if (key == XK_Up || key == XK_Down || key == XK_Left || key == XK_Right
 		|| key == XK_i || key == XK_o)
