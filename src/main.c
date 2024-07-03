@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/02 23:27:35 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/03 11:16:37 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 
 #include "minirt.h"
 
+#include "t_pixel.h"
+#include <stddef.h> /* ptrdiff_t */
 
 int	destroy_exit(t_vars *vars)
 {
@@ -69,8 +71,6 @@ void	put_image_to_window_vars(t_vars *vars)
 		vars->img_vars.img_ptr, 0, 0);
 }
 
-#include "pixel.h"
-#include <stddef.h>
 /**
  * @brief Draws a pixel with the specified color at the given raster space
  *        coordinates on the mlx image.
