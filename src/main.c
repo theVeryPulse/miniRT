@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/03 11:30:41 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/03 11:36:49 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,11 @@
 
 #include "t_pixel.h"
 #include <stddef.h> /* ptrdiff_t */
+
+#include "t_point.h"
+#include "t_scene.h"
+
+#include <math.h>
 
 int	destroy_exit(t_vars *vars)
 {
@@ -113,8 +118,7 @@ void	test_draw_on_image(t_img_vars *img_vars)
 		draw_pixel_in_screen_space(img_vars, pixel);	
 }
 
-#include "t_point.h"
-#include "t_scene.h"
+
 
 double	vector_dot_product(t_vector a, t_vector b)
 {
@@ -130,7 +134,6 @@ t_vector	vector_tail_head(t_vector tail, t_vector head)
 {
 	return (vector_minus(head, tail));
 }
-#include <math.h>
 
 /**
  * @brief 
@@ -205,7 +208,6 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 		return closest_object->color;
 }
 
-#include <stdint.h>
 
 /**
  * @brief 
