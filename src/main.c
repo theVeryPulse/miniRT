@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/03 13:55:16 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/03 15:11:19 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -320,9 +320,7 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 		normal = vector_divide(normal, vector_length(normal));
 		factor = compute_lighting(scene, intersection, normal);
 		color = closest_object->color;
-		// return (closest_object->color
-		// 		* compute_lighting(scene, intersection, normal));
-		return (argb(0xff, get_r(color) * factor, get_g(color) * factor,
+		return (argb(0x00, get_r(color) * factor, get_g(color) * factor,
 				get_b(color) * factor));
 	}
 }
@@ -373,21 +371,24 @@ int	main(int argc, char const *argv[])
 	set_up_mlx(&vars);
 	set_up_hooks(&vars);
 
-	allocate_objects(&vars.scene, 4);
+	allocate_objects(&vars.scene, 3);
 	vars.scene.objects[0] = (t_object){
 		.type = Sphere,
+		.category = Object,
 		.color = RED,
 		.position = (t_point){0, 0, -3000},
 		.radius = 500,
 	};
 	vars.scene.objects[1] = (t_object){
 		.type = Sphere,
+		.category = Object,
 		.color = BLUE,
 		.position = (t_point){1000, 1000, -5000},
 		.radius = 1800
 	};
 	vars.scene.objects[2] = (t_object){
 		.type = Sphere,
+		.category = Object,
 		.color = GREEN,
 		.position = (t_point){-1000, -300, -2500},
 		.radius = 300
@@ -396,17 +397,20 @@ int	main(int argc, char const *argv[])
 	allocate_lights(&vars.scene, 3);
 	vars.scene.lights[0] = (t_object){
 		.type = PointLight,
-		.intensity = 0.0,
-		.position = (t_point){0, 0, -10000}
+		.category = Light,
+		.intensity = 0.6,
+		.position = (t_point){1000, 2000, -1000}
 	};
 	vars.scene.lights[1] = (t_object){
 		.type = DirectionalLight,
-		.intensity = 1.0,
-		.direction = (t_vector){8, 4, 4}
+		.category = Light,
+		.intensity = 0.2,
+		.direction = (t_vector){4, 8, -2}
 		};
 	vars.scene.lights[2] = (t_object){
 		.type = AmbientLight,
-		.intensity = 0.0
+		.category = Light,
+		.intensity = 0.2
 	};
 	vars.scene.focus = &(vars.scene.objects)[0];
 	basic_raytracing(&vars.img_vars, &vars.scene);

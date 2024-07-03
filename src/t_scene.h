@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 17:48:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/03 13:36:17 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/03 14:22:17 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,16 @@ typedef enum e_object_type
 	DirectionalLight
 }	t_object_type;
 
+typedef enum e_category
+{
+	Object,
+	Light
+}	t_category;
+
 typedef struct s_object
 {
 	t_object_type	type;
+	t_category		category;
 	t_argb			color;
 	t_point			position;
 	double			radius;
