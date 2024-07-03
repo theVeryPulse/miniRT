@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 17:48:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/02 22:11:08 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/03 13:36:17 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,18 @@ typedef enum e_object_type
 {
 	Undefined,
 	Sphere,
+	AmbientLight,
+	PointLight,
+	DirectionalLight
 }	t_object_type;
 
 typedef struct s_object
 {
 	t_object_type	type;
 	t_argb			color;
-	t_point			center;
+	t_point			position;
 	double			radius;
+	double			intensity;
 	t_vector		direction;
 }	t_object;
 
@@ -36,6 +40,9 @@ typedef struct s_scene
 	/* Array of objects */
 	t_object		*objects;
 	unsigned int	object_count;
+	t_object		*lights;
+	unsigned int	light_count;
+	t_object		*focus;
 }	t_scene;
 
 #endif /* T_SCENE_H */

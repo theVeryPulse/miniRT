@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/03 11:36:49 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/03 13:55:16 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,50 @@ double	vector_length(t_vector a)
 	return (sqrt(a.x * a.x + a.y * a.y + a.z * a.z));
 }
 
+t_vector	vector_add(t_vector a, t_vector b)
+{
+	return ((t_vector){.x = a.x + b.x, .y = a.y + b.y, .z = a.z + b.z});
+}
+
+t_vector	vector_multiply(double t, t_vector a)
+{
+	return ((t_vector){.x = t * a.x, .y = t * a.y, .z = t * a.z});
+}
+
+t_vector	vector_divide(t_vector a, double t)
+{
+	return ((t_vector){.x = a.x / t, .y = a.y / t, .z = a.z / t});
+}
+
+double	compute_lighting(t_scene *scene, t_point point, t_vector normal)
+{
+	size_t		i;
+	double		intensity;
+	t_vector	light;
+	double		normal_dot_light;
+
+	intensity = 0.0;
+	i = 0;
+	while (i < scene->light_count)
+	{
+		if (scene->lights[i].type == AmbientLight)
+			intensity += scene->lights[i].intensity;
+		else
+		{
+			if (scene->lights[i].type == PointLight)
+				light = vector_tail_head(scene->lights[i].position, point);
+			else if (scene->lights[i].type == DirectionalLight)
+				light = scene->lights[i].direction;
+			normal_dot_light = vector_dot_product(normal, light);
+			if (normal_dot_light > 0)
+				intensity += scene->lights[i].intensity * normal_dot_light
+					/ (vector_length(normal) * vector_length(light));
+		}
+		++i;
+	}
+	return (intensity);
+}
+
 /**
  * @brief 
  * 
@@ -191,7 +235,7 @@ void	ray_sphere_intersect(double t[2], t_point ray_origin,
 	t_vector	c_to_o;
 	double		discriminant;
 
-	c_to_o = vector_minus(ray_origin, sphere->center);
+	c_to_o = vector_minus(ray_origin, sphere->position);
 	a = vector_dot_product(ray_direction, ray_direction);
 	b = 2 * vector_dot_product(c_to_o, ray_direction);
 	c = vector_dot_product(c_to_o, c_to_o) - sphere->radius * sphere->radius;
@@ -207,6 +251,7 @@ void	ray_sphere_intersect(double t[2], t_point ray_origin,
 		t[1] = (-b - sqrt(discriminant)) / (2 * a);
 	}
 }
+
 
 
 t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
@@ -240,11 +285,26 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 		++i;
 	}
 	if (closest_object == NULL)
-		return minirt()->background_color;
+		return (minirt()->background_color);
 	else
-		return closest_object->color;
-}
+	{
+		t_point		intersection;
+		t_vector	normal;
+		double		factor;
+		t_argb		color;
 
+		intersection = vector_add(ray_origin,
+			vector_multiply(closest_t, ray_direction));
+		normal = vector_minus(intersection, closest_object->position);
+		normal = vector_divide(normal, vector_length(normal));
+		factor = compute_lighting(scene, intersection, normal);
+		color = closest_object->color;
+		// return (closest_object->color
+		// 		* compute_lighting(scene, intersection, normal));
+		return (argb(0xff, get_r(color) * factor, get_g(color) * factor,
+				get_b(color) * factor));
+	}
+}
 
 /**
  * @brief 
@@ -275,8 +335,14 @@ void	basic_raytracing(t_img_vars *img_vars, t_scene *scene)
 
 void	allocate_objects(t_scene *scene, unsigned int object_count)
 {
-	scene->objects = (t_object *)malloc(object_count * sizeof(t_object));
+	scene->objects = (t_object *)ft_calloc(object_count, sizeof(t_object));
 	scene->object_count = object_count;
+}
+
+void	allocate_lights(t_scene *scene, unsigned int light_count)
+{
+	scene->lights = (t_object *)ft_calloc(light_count, sizeof(t_object));
+	scene->light_count = light_count;
 }
 
 int	main(int argc, char const *argv[])
@@ -286,33 +352,42 @@ int	main(int argc, char const *argv[])
 	set_up_mlx(&vars);
 	set_up_hooks(&vars);
 
-	allocate_objects(&vars.scene, 5);
-
+	allocate_objects(&vars.scene, 4);
 	vars.scene.objects[0] = (t_object){
 		.type = Sphere,
 		.color = RED,
-		.center = (t_point){0, 0, -3000},
+		.position = (t_point){0, 0, -3000},
 		.radius = 500,
 	};
 	vars.scene.objects[1] = (t_object){
 		.type = Sphere,
 		.color = BLUE,
-		.center = (t_point){1000, 1000, -5000},
+		.position = (t_point){1000, 1000, -5000},
 		.radius = 1800
 	};
 	vars.scene.objects[2] = (t_object){
 		.type = Sphere,
 		.color = GREEN,
-		.center = (t_point){-300, -300, -2500},
+		.position = (t_point){-1000, -300, -2500},
 		.radius = 300
 	};
-	vars.scene.objects[3] = (t_object){
-		.type = Sphere,
-		.color = BLACK,
-		.center = (t_point){-1500, 0, -2500},
-		.radius = 400
-	};
 
+	allocate_lights(&vars.scene, 3);
+	vars.scene.lights[0] = (t_object){
+		.type = PointLight,
+		.intensity = 0.0,
+		.position = (t_point){0, 0, -10000}
+	};
+	vars.scene.lights[1] = (t_object){
+		.type = DirectionalLight,
+		.intensity = 1.0,
+		.direction = (t_vector){8, 4, 4}
+		};
+	vars.scene.lights[2] = (t_object){
+		.type = AmbientLight,
+		.intensity = 0.0
+	};
+	vars.scene.focus = &(vars.scene.objects)[0];
 	basic_raytracing(&vars.img_vars, &vars.scene);
 
 	put_image_to_window_vars(&vars);

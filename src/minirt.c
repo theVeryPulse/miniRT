@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 16:10:49 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/02 20:21:18 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/03 13:40:09 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ extern t_minirt	*minirt(void)
 {
 	static t_minirt	data = (t_minirt){
 		.fov = 90,
-		.background_color = WHITE
+		.background_color = BLACK
 	};
 	static bool		first = true;
 
