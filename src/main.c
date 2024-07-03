@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/03 11:16:37 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/03 11:30:41 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,16 +116,20 @@ void	test_draw_on_image(t_img_vars *img_vars)
 #include "t_point.h"
 #include "t_scene.h"
 
-double	dot_product(t_vector a, t_vector b)
+double	vector_dot_product(t_vector a, t_vector b)
 {
 	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 }
 
-t_vector	vec_minus(t_vector a, t_vector b)
+t_vector	vector_minus(t_vector a, t_vector b)
 {
 	return ((t_vector){.x = a.x - b.x, .y = a.y - b.y, .z = a.z - b.z});
 }
 
+t_vector	vector_tail_head(t_vector tail, t_vector head)
+{
+	return (vector_minus(head, tail));
+}
 #include <math.h>
 
 /**
@@ -147,10 +151,10 @@ void	ray_sphere_intersect(double t[2], t_point ray_origin,
 	t_vector	c_to_o;
 	double		discriminant;
 
-	c_to_o = vec_minus(ray_origin, sphere->center);
-	a = dot_product(ray_direction, ray_direction);
-	b = 2 * dot_product(c_to_o, ray_direction);
-	c = dot_product(c_to_o, c_to_o) - sphere->radius * sphere->radius;
+	c_to_o = vector_minus(ray_origin, sphere->center);
+	a = vector_dot_product(ray_direction, ray_direction);
+	b = 2 * vector_dot_product(c_to_o, ray_direction);
+	c = vector_dot_product(c_to_o, c_to_o) - sphere->radius * sphere->radius;
 	discriminant = b * b - 4 * a * c;
 	if (discriminant < 0)
 	{
