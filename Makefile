@@ -1,11 +1,12 @@
 NAME := miniRT
 
 CC := gcc
-CFLAGS := -Wall -Wextra -Werror
+CFLAGS := -Wall -Wextra -Werror -O3
 
 # ls src/**/*.c >> Makefile
 FILES := main.c \
 	argb.c \
+	handle_keypress_event.c \
 	minirt.c
 
 FILES := $(addprefix src/, $(FILES))
@@ -47,7 +48,7 @@ fclean: clean
 
 re: fclean all
 
-debug: CFLAGS := -g
+debug: CFLAGS := -g -Wall -Wextra
 debug: re
 
 .PHONY: all, clean, fclean, re, debug
