@@ -6,13 +6,14 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/04 10:38:18 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/04 14:48:45 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/minilibx-linux/mlx.h"
-#include "vars.h"
+#include "t_vars.h"
 #include "window.h"
+#include "handle_keypress_event.h"
 #include <X11/X.h> /* DestroyNotify, ButtonReleaseMask */
 #include <X11/keysym.h> /* XK_escape */
 
@@ -46,81 +47,9 @@ int	destroy_exit(t_vars *vars)
 	exit (0);
 }
 
-int	handle_key(int key, t_vars *vars)
-{
-	printf("%d pressed\n", key);
-	if (key == XK_Escape)
-		destroy_exit(vars);
-	else if (key == XK_Tab)
-	{
-		char	*message;
-
-		if (vars->scene.focus->type == Object && vars->scene.focus
-			- vars->scene.objects >= vars->scene.object_count - 1)
-			vars->scene.focus = vars->scene.lights;
-		else if (vars->scene.focus->type == Light && vars->scene.focus
-			- vars->scene.lights >= vars->scene.light_count - 1)
-			vars->scene.focus = vars->scene.objects;
-		else
-			++(vars->scene.focus);
-		if (vars->scene.focus->type == PointLight)
-			message = "Focus: Point Light";
-		else if (vars->scene.focus->type == DirectionalLight)
-			message = "Focus: Directional Light";
-		else if (vars->scene.focus->type == AmbientLight)
-			message = "Focus: Ambience Light ";
-		else if (vars->scene.focus->type == Sphere)
-			message = "Focus: Sphere";
-
-		put_image_to_window_vars(vars);
-		mlx_string_put(vars->mlx_ptr, vars->win_ptr, 10, 10, GREEN, message);
-	}
-	else if (key == XK_Up || key == XK_Down || key == XK_Left || key == XK_Right
-		|| key == XK_i || key == XK_o || key == XK_Page_Up || key == XK_Page_Down)
-	{
-		if (vars->scene.focus->type == DirectionalLight)
-		{
-			if (key == XK_Up)
-				vars->scene.focus->direction.y += 1;
-			else if (key == XK_Down)
-				vars->scene.focus->direction.y -= 1;
-			else if (key == XK_Left)
-				vars->scene.focus->direction.x -= 1;
-			else if (key == XK_Right)
-				vars->scene.focus->direction.x += 1;
-			else if (key == XK_i)
-				vars->scene.focus->direction.z -= 1;
-			else if (key == XK_o)
-				vars->scene.focus->direction.z += 1;
-		}
-		if (key == XK_Up)
-			vars->scene.focus->position.y += 100;
-		else if (key == XK_Down)
-			vars->scene.focus->position.y -= 100;
-		else if (key == XK_Left)
-			vars->scene.focus->position.x -= 100;
-		else if (key == XK_Right)
-			vars->scene.focus->position.x += 100;
-		else if (key == XK_i)
-			vars->scene.focus->position.z -= 100;
-		else if (key == XK_o)
-			vars->scene.focus->position.z += 100;
-		if (vars->scene.focus->category == Light && key == XK_Page_Up)
-		{
-			vars->scene.focus->intensity *= 1.05;
-			if (vars->scene.focus->intensity >= 1)
-				vars->scene.focus->intensity = 1;
-		}
-		else if (vars->scene.focus->category == Light && key == XK_Page_Down)
-				vars->scene.focus->intensity *= 0.95;
-		basic_raytracing(&vars->img_vars, &vars->scene);
-		put_image_to_window_vars(vars);
-	}
-}
-
 void	set_up_hooks(t_vars *vars)
 {
-	mlx_key_hook(vars->win_ptr, handle_key, vars);
+	mlx_key_hook(vars->win_ptr, handle_keypress_event, vars);
 	mlx_hook(vars->win_ptr, DestroyNotify, ButtonReleaseMask, destroy_exit,
 		vars);
 }
@@ -391,7 +320,8 @@ void	allocate_lights(t_scene *scene, unsigned int light_count)
 	scene->light_count = light_count;
 }
 
-int	main(int argc, char const *argv[])
+// int	main(int argc, char const *argv[])
+int	main(void)
 {
 	t_vars	vars;
 
@@ -426,7 +356,8 @@ int	main(int argc, char const *argv[])
 		.type = PointLight,
 		.category = Light,
 		.intensity = 0.6,
-		.position = (t_point){1000, 2000, -1000}
+		.position = (t_point){1000, 2000, -1000},
+		.direction = (t_vector){0}
 	};
 	vars.scene.lights[1] = (t_object){
 		.type = DirectionalLight,
