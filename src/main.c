@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/04 10:32:31 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/04 10:38:18 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,6 +225,14 @@ t_vector	vector_divide(t_vector a, double t)
 	return ((t_vector){.x = a.x / t, .y = a.y / t, .z = a.z / t});
 }
 
+/**
+ * @brief Computes the intensity of diffuse reflection at given point
+ * 
+ * @param scene Scene struct, which contains all light sources.
+ * @param point Point on object to calculate.
+ * @param normal Normal vector at the point on surface.
+ * @return double Intensity of the diffuse light at given point, range [0, 1]
+ */
 double	compute_lighting(t_scene *scene, t_point point, t_vector normal)
 {
 	size_t		i;
