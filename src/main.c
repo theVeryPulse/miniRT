@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/03 16:28:20 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/04 10:32:31 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,21 @@ int	handle_key(int key, t_vars *vars)
 	else if (key == XK_Up || key == XK_Down || key == XK_Left || key == XK_Right
 		|| key == XK_i || key == XK_o || key == XK_Page_Up || key == XK_Page_Down)
 	{
+		if (vars->scene.focus->type == DirectionalLight)
+		{
+			if (key == XK_Up)
+				vars->scene.focus->direction.y += 1;
+			else if (key == XK_Down)
+				vars->scene.focus->direction.y -= 1;
+			else if (key == XK_Left)
+				vars->scene.focus->direction.x -= 1;
+			else if (key == XK_Right)
+				vars->scene.focus->direction.x += 1;
+			else if (key == XK_i)
+				vars->scene.focus->direction.z -= 1;
+			else if (key == XK_o)
+				vars->scene.focus->direction.z += 1;
+		}
 		if (key == XK_Up)
 			vars->scene.focus->position.y += 100;
 		else if (key == XK_Down)
