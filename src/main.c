@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/07 00:47:47 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/07 00:58:08 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ int	destroy_exit(t_vars *vars)
 	free(vars->mlx_ptr);
 	if (vars->scene.objects)
 		free(vars->scene.objects);
+	if (vars->scene.lights)
+		free(vars->scene.lights);
 	exit (0);
 }
 
