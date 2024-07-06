@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/04 14:48:45 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/07 00:47:47 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,8 @@ t_vector	vector_divide(t_vector a, double t)
  * @param normal Normal vector at the point on surface.
  * @return double Intensity of the diffuse light at given point, range [0, 1]
  */
-double	compute_lighting(t_scene *scene, t_point point, t_vector normal)
+double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
+		t_vector view, double specular_exponent)
 {
 	size_t		i;
 	double		intensity;
@@ -181,10 +182,31 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal)
 				light = vector_minus(scene->lights[i].position, point);
 			else if (scene->lights[i].type == DirectionalLight)
 				light = scene->lights[i].direction;
+			
+			/* Diffuse reflection */
 			normal_dot_light = vector_dot_product(normal, light);
 			if (normal_dot_light > 0)
 				intensity += scene->lights[i].intensity * normal_dot_light
 					/ (vector_length(normal) * vector_length(light));
+			
+			/* Specular reflection */
+			if (specular_exponent != -1)
+			{
+				t_vector	reflection;
+				double		reflection_dot_view;
+
+				/*  R = 2 * dot(N, L) * N - L */
+				reflection = vector_multiply(2 * vector_dot_product(reflection, light), normal);
+				reflection = vector_minus(reflection, light);
+				reflection_dot_view = vector_dot_product(reflection, view);
+				if (reflection_dot_view > 0)
+				{
+					intensity += scene->lights[i].intensity
+						* pow(reflection_dot_view
+						/ (vector_length(reflection) * vector_length(view)),
+						specular_exponent);
+				}
+			}
 		}
 		++i;
 	}
@@ -274,7 +296,9 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 			vector_multiply(closest_t, ray_direction));
 		normal = vector_minus(intersection, closest_object->position);
 		normal = vector_divide(normal, vector_length(normal));
-		factor = compute_lighting(scene, intersection, normal);
+		factor = compute_lighting(scene, intersection, normal,
+			vector_multiply(-1, ray_direction),
+			closest_object->specular_exponent);
 		color = closest_object->color;
 		return (argb(0x00, get_r(color) * factor, get_g(color) * factor,
 				get_b(color) * factor));
@@ -335,40 +359,43 @@ int	main(void)
 		.color = RED,
 		.position = (t_point){0, 0, -3000},
 		.radius = 500,
+		.specular_exponent = 500 /* Shiny */
 	};
 	vars.scene.objects[1] = (t_object){
 		.type = Sphere,
 		.category = Object,
 		.color = BLUE,
 		.position = (t_point){1000, 1000, -5000},
-		.radius = 1800
+		.radius = 1800,
+		.specular_exponent = 10 /* Somewhat shiny */
 	};
 	vars.scene.objects[2] = (t_object){
 		.type = Sphere,
 		.category = Object,
 		.color = GREEN,
 		.position = (t_point){-1000, -300, -2500},
-		.radius = 300
+		.radius = 300,
+		.specular_exponent = 1000 /* Very shiny */
 	};
 
 	allocate_lights(&vars.scene, 3);
 	vars.scene.lights[0] = (t_object){
 		.type = PointLight,
 		.category = Light,
-		.intensity = 0.6,
+		.intensity = 1.0,
 		.position = (t_point){1000, 2000, -1000},
 		.direction = (t_vector){0}
 	};
 	vars.scene.lights[1] = (t_object){
 		.type = DirectionalLight,
 		.category = Light,
-		.intensity = 0.2,
+		.intensity = 0.0,
 		.direction = (t_vector){4, 8, -2}
 		};
 	vars.scene.lights[2] = (t_object){
 		.type = AmbientLight,
 		.category = Light,
-		.intensity = 0.2
+		.intensity = 0.0
 	};
 	vars.scene.focus = &(vars.scene.objects)[0];
 	basic_raytracing(&vars.img_vars, &vars.scene);
