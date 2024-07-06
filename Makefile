@@ -22,8 +22,11 @@ FT_STT := lib/libft/lib/libft.a
 
 # .SILENT:
 
-all: $(NAME)
+all: git_submodules $(NAME)
 
+git_submodules:
+	@git submodule init
+	@git submodule update
 
 $(NAME): $(OFILES) $(FT_STT) $(MLX_STT)
 	@$(CC) $(CFLAGS) -o $@ $(OFILES) $(FT_STT) $(MLX_STT) -lXext -lX11 -lm -lz
