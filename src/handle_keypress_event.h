@@ -1,35 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vars.h                                             :+:      :+:    :+:   */
+/*   handle_keypress_event.h                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/02 02:11:29 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/02 22:09:12 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/04 14:25:15 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/04 14:26:00 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef VARS_H
-# define VARS_H
+#ifndef HANDLE_KEYPRESS_EVENT_H
+# define HANDLE_KEYPRESS_EVENT_H
 
-# include "t_scene.h"
+# include "t_vars.h"
 
-typedef struct s_img_vars
-{
-	void	*img_ptr;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_size;
-	int		endian;
-}	t_img_vars;
+extern int	handle_keypress_event(int key, t_vars *vars);
 
-typedef struct s_vars
-{
-	void		*mlx_ptr;
-	void		*win_ptr;
-	t_img_vars	img_vars;
-	t_scene		scene;
-}	t_vars;
-
-#endif /* VARS_H */
+#endif /* HANDLE_KEYPRESS_EVENT_H */

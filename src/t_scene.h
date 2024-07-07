@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 17:48:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/03 15:45:39 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/07 00:36:43 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,22 @@ typedef enum e_category
 
 typedef struct s_object
 {
+	/* Common properties */
+
 	t_object_type	type;
 	t_category		category;
 	t_argb			color;
 	t_point			position;
-	double			radius;
+
+	/* Light properties */
+
 	double			intensity;
 	t_vector		direction;
+
+	/* Object properties */
+
+	double			radius;
+	double			specular_exponent;
 }	t_object;
 
 typedef struct s_scene

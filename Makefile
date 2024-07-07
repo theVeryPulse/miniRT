@@ -1,11 +1,12 @@
 NAME := miniRT
 
 CC := gcc
-CFLAGS := -Wall -Wextra -Werror
+CFLAGS := -Wall -Wextra -Werror -O3
 
 # ls src/**/*.c >> Makefile
 FILES := main.c \
 	argb.c \
+	handle_keypress_event.c \
 	minirt.c
 
 FILES := $(addprefix src/, $(FILES))
@@ -21,8 +22,11 @@ FT_STT := lib/libft/lib/libft.a
 
 # .SILENT:
 
-all: $(NAME)
+all: git_submodules $(NAME)
 
+git_submodules:
+	@git submodule init
+	@git submodule update
 
 $(NAME): $(OFILES) $(FT_STT) $(MLX_STT)
 	@$(CC) $(CFLAGS) -o $@ $(OFILES) $(FT_STT) $(MLX_STT) -lXext -lX11 -lm -lz
@@ -47,7 +51,7 @@ fclean: clean
 
 re: fclean all
 
-debug: CFLAGS := -g
+debug: CFLAGS := -g -Wall -Wextra
 debug: re
 
 .PHONY: all, clean, fclean, re, debug
