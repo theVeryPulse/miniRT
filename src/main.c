@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/07 00:58:08 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/07 01:00:31 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,7 +198,7 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 				double		reflection_dot_view;
 
 				/*  R = 2 * dot(N, L) * N - L */
-				reflection = vector_multiply(2 * vector_dot_product(reflection, light), normal);
+				reflection = vector_multiply(2 * vector_dot_product(normal, light), normal);
 				reflection = vector_minus(reflection, light);
 				reflection_dot_view = vector_dot_product(reflection, view);
 				if (reflection_dot_view > 0)
