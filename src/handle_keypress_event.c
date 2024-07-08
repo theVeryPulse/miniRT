@@ -6,15 +6,17 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:21:20 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/08 00:15:50 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/08 19:49:34 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "t_vars.h"
 #include "../lib/minilibx-linux/mlx.h"
 #include "minirt.h"
+#include "../lib/libft/inc/libft.h"
 #include <X11/keysym.h> /* XK_escape */
 #include <stdio.h>
+#include <stdlib.h> /* free */
 
 void	put_image_to_window_vars(t_vars *vars);
 int		destroy_exit(t_vars *vars);
@@ -123,6 +125,11 @@ extern int	handle_keypress_event(int key, t_vars *vars)
 			update_fov(minirt()->fov + 1);
 		basic_raytracing(&vars->img_vars, &vars->scene);
 		put_image_to_window_vars(vars);
+		char *fov = ft_itoa((int)minirt()->fov);
+		char *message = ft_format_string("FOV: %s");
+		mlx_string_put(vars->mlx_ptr, vars->win_ptr, 10, 10, GREEN, message);
+		free(fov);
+		free(message);
 	}
 	return (0);
 }
