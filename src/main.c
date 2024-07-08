@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/07 01:00:31 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/08 23:57:09 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,7 +253,13 @@ void	ray_sphere_intersect(double t[2], t_point ray_origin,
 	}
 }
 
-
+t_argb	color_with_intensity(t_argb color, double intensity_factor)
+{
+	return (argb(0x00,
+		get_r(color) * intensity_factor,
+		get_g(color) * intensity_factor,
+		get_b(color) * intensity_factor));
+}
 
 t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 		double t_min, double t_max)
@@ -292,7 +298,6 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 		t_point		intersection;
 		t_vector	normal;
 		double		factor;
-		t_argb		color;
 
 		intersection = vector_add(ray_origin,
 			vector_multiply(closest_t, ray_direction));
@@ -301,9 +306,7 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 		factor = compute_lighting(scene, intersection, normal,
 			vector_multiply(-1, ray_direction),
 			closest_object->specular_exponent);
-		color = closest_object->color;
-		return (argb(0x00, get_r(color) * factor, get_g(color) * factor,
-				get_b(color) * factor));
+		return(color_with_intensity(closest_object->color, factor));
 	}
 }
 
