@@ -348,6 +348,7 @@ void	basic_raytracing(t_vars *vars)
 			++pixel.x;
 		}
 		--pixel.y;
+		mlx_string_put(vars->mlx_ptr, vars->win_ptr, HEIGHT - 2 * pixel.y, 5, 0x009900, "-");
 	}
 	
 }
