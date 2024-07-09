@@ -6,18 +6,21 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:21:20 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/04 14:50:16 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/09 01:06:14 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "t_vars.h"
 #include "../lib/minilibx-linux/mlx.h"
+#include "minirt.h"
+#include "../lib/libft/inc/libft.h"
 #include <X11/keysym.h> /* XK_escape */
 #include <stdio.h>
+#include <stdlib.h> /* free */
 
 void	put_image_to_window_vars(t_vars *vars);
 int		destroy_exit(t_vars *vars);
-void	basic_raytracing(t_img_vars *img_vars, t_scene *scene);
+void	basic_raytracing(t_vars *vars);
 
 static void	switch_focus(t_vars *vars)
 {
@@ -111,8 +114,22 @@ extern int	handle_keypress_event(int key, t_vars *vars)
 		if (focus->category == Light
 			&& (key == XK_Page_Up || key == XK_Page_Down))
 			adjust_light_intensity(focus, key);
-		basic_raytracing(&vars->img_vars, &vars->scene);
+		basic_raytracing(vars);
 		put_image_to_window_vars(vars);
+	}
+	else if (key == XK_bracketleft || key == XK_bracketright)
+	{
+		if (key == XK_bracketleft)
+			update_fov(minirt()->fov - 1);
+		else if (key == XK_bracketright)
+			update_fov(minirt()->fov + 1);
+		basic_raytracing(vars);
+		put_image_to_window_vars(vars);
+		char *fov = ft_itoa((int)minirt()->fov);
+		char *message = ft_format_string("FOV: %s");
+		mlx_string_put(vars->mlx_ptr, vars->win_ptr, 10, 10, GREEN, message);
+		free(fov);
+		free(message);
 	}
 	return (0);
 }

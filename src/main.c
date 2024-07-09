@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/07 01:00:31 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/09 01:22:27 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 
 #include "../lib/libft/inc/libft.h"
 
-void	basic_raytracing(t_img_vars *img_vars, t_scene *scene);
+void	basic_raytracing(t_vars *vars);
 void	put_image_to_window_vars(t_vars *vars);
 
 int	destroy_exit(t_vars *vars)
@@ -156,13 +156,51 @@ t_vector	vector_divide(t_vector a, double t)
 	return ((t_vector){.x = a.x / t, .y = a.y / t, .z = a.z / t});
 }
 
+t_object	*find_closest_object(t_scene *scene, t_point ray_origin,
+	t_vector ray_direction, double t_min, double t_max, double *closest_t)
+{
+	double		t[2];
+	t_object	*closest_object;
+	size_t		i;
+
+	closest_object = NULL;
+	i = 0;
+	while (i < scene->object_count)
+	{
+		if (scene->objects[i].type == Sphere)
+		{
+			ray_sphere_intersect(t, ray_origin, ray_direction,
+				&(scene->objects)[i]);
+		}
+		else if (scene->objects[i].type != Sphere)
+			;
+
+		if (t[0] >= t_min && t[0] <= t_max && t[0] < *closest_t)
+		{
+			*closest_t = t[0];
+			closest_object = &(scene->objects[i]);
+		}
+		if (t[1] >= t_min && t[1] <= t_max && t[1] < *closest_t)
+		{
+			*closest_t = t[1];
+			closest_object = &(scene->objects[i]);
+		}
+		++i;
+	}
+	return (closest_object);
+}
+
 /**
- * @brief Computes the intensity of diffuse reflection at given point
+ * @brief Computes the intensity of reflection at given point, including diffuse
+ *        reflection, specular reflection, shade,
  * 
  * @param scene Scene struct, which contains all light sources.
  * @param point Point on object to calculate.
  * @param normal Normal vector at the point on surface.
  * @return double Intensity of the diffuse light at given point, range [0, 1]
+ * @note
+ * For point light, t_max is 1, this means object on the other side of the light
+ * will not cast shadow on current object.
  */
 double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 		t_vector view, double specular_exponent)
@@ -171,6 +209,7 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 	double		intensity;
 	t_vector	light;
 	double		normal_dot_light;
+	double		t_max;
 
 	intensity = 0.0;
 	i = 0;
@@ -181,10 +220,28 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 		else
 		{
 			if (scene->lights[i].type == PointLight)
+			{
 				light = vector_minus(scene->lights[i].position, point);
+				t_max = 1;
+			}
 			else if (scene->lights[i].type == DirectionalLight)
+			{
 				light = scene->lights[i].direction;
-			
+				t_max = INFINITY;
+			}
+
+			/* Shadow check */
+			t_object	*shadow_object = NULL;
+			double		shadow_t = INFINITY;
+
+			shadow_object = find_closest_object(scene, point, light, 0.0001,
+				t_max, &shadow_t);
+			if (shadow_object != NULL)
+			{
+				++i;
+				continue;
+			}
+
 			/* Diffuse reflection */
 			normal_dot_light = vector_dot_product(normal, light);
 			if (normal_dot_light > 0)
@@ -253,7 +310,13 @@ void	ray_sphere_intersect(double t[2], t_point ray_origin,
 	}
 }
 
-
+t_argb	color_with_intensity(t_argb color, double intensity)
+{
+	return (argb(0x00,
+		get_r(color) * intensity,
+		get_g(color) * intensity,
+		get_b(color) * intensity));
+}
 
 t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 		double t_min, double t_max)
@@ -261,49 +324,27 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 	double		closest_t;
 	double		t[2];
 	t_object	*closest_object;
-	size_t	i;
 
 	closest_object = NULL;
 	closest_t = INFINITY;
-	i = 0;
-	while (i < scene->object_count)
-	{
-		if (scene->objects[i].type == Sphere)
-		{
-			ray_sphere_intersect(t, ray_origin, ray_direction,
-				&(scene->objects)[i]);
-			if (t[0] >= t_min && t[0] <= t_max && t[0] < closest_t)
-			{
-				closest_t = t[0];
-				closest_object = &(scene->objects[i]);
-			}
-			if (t[1] >= t_min && t[1] <= t_max && t[1] < closest_t)
-			{
-				closest_t = t[1];
-				closest_object = &(scene->objects[i]);
-			}
-		}
-		++i;
-	}
+	closest_object = find_closest_object(scene, ray_origin, ray_direction,
+		t_min, t_max, &closest_t);
 	if (closest_object == NULL)
 		return (minirt()->background_color);
 	else
 	{
 		t_point		intersection;
 		t_vector	normal;
-		double		factor;
-		t_argb		color;
+		double		intensity;
 
 		intersection = vector_add(ray_origin,
 			vector_multiply(closest_t, ray_direction));
 		normal = vector_minus(intersection, closest_object->position);
 		normal = vector_divide(normal, vector_length(normal));
-		factor = compute_lighting(scene, intersection, normal,
+		intensity = compute_lighting(scene, intersection, normal,
 			vector_multiply(-1, ray_direction),
 			closest_object->specular_exponent);
-		color = closest_object->color;
-		return (argb(0x00, get_r(color) * factor, get_g(color) * factor,
-				get_b(color) * factor));
+		return(color_with_intensity(closest_object->color, intensity));
 	}
 }
 
@@ -311,7 +352,7 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
  * @brief 
  * @ref computer-graphics-from-scratch / 02-basic-raytracing
  */
-void	basic_raytracing(t_img_vars *img_vars, t_scene *scene)
+void	basic_raytracing(t_vars *vars)
 {
 	t_point	point_on_canvas;
 	t_pixel	pixel;
@@ -324,12 +365,13 @@ void	basic_raytracing(t_img_vars *img_vars, t_scene *scene)
 		{
 			point_on_canvas = (t_point){.x = pixel.x, .y = pixel.y,
 				.z = (double)(-minirt()->eye_canvas_distance)};
-			pixel.color = trace_ray(scene, (t_point){0}, point_on_canvas, 1, 
+			pixel.color = trace_ray(&vars->scene, (t_point){0}, point_on_canvas, 1, 
 					INFINITY);
-			draw_pixel_in_screen_space(img_vars, pixel);
+			draw_pixel_in_screen_space(&vars->img_vars, pixel);
 			++pixel.x;
 		}
 		--pixel.y;
+		mlx_string_put(vars->mlx_ptr, vars->win_ptr, HEIGHT - 2 * pixel.y, 5, 0x009900, "-");
 	}
 	
 }
@@ -384,23 +426,33 @@ int	main(void)
 	vars.scene.lights[0] = (t_object){
 		.type = PointLight,
 		.category = Light,
-		.intensity = 1.0,
+		.intensity = 0.4,
 		.position = (t_point){1000, 2000, -1000},
 		.direction = (t_vector){0}
 	};
+#if 0
 	vars.scene.lights[1] = (t_object){
 		.type = DirectionalLight,
 		.category = Light,
 		.intensity = 0.0,
-		.direction = (t_vector){4, 8, -2}
+		.direction = (t_vector){0, 0, 0.1}
 		};
+#else // Two point lights for better shadow effect
+	vars.scene.lights[1] = (t_object){
+		.type = PointLight,
+		.category = Light,
+		.intensity = 0.4,
+		.position = (t_point){-1000, -2000, -1000},
+		.direction = (t_vector){0}
+	};
+#endif
 	vars.scene.lights[2] = (t_object){
 		.type = AmbientLight,
 		.category = Light,
-		.intensity = 0.0
+		.intensity = 0.2
 	};
 	vars.scene.focus = &(vars.scene.objects)[0];
-	basic_raytracing(&vars.img_vars, &vars.scene);
+	basic_raytracing(&vars);
 
 	put_image_to_window_vars(&vars);
 	mlx_loop(vars.mlx_ptr);
