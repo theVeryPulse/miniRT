@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/09 01:07:51 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/09 01:14:45 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,12 +191,16 @@ t_object	*find_closest_object(t_scene *scene, t_point ray_origin,
 }
 
 /**
- * @brief Computes the intensity of diffuse reflection at given point
+ * @brief Computes the intensity of reflection at given point, including diffuse
+ *        reflection, specular reflection, shade,
  * 
  * @param scene Scene struct, which contains all light sources.
  * @param point Point on object to calculate.
  * @param normal Normal vector at the point on surface.
  * @return double Intensity of the diffuse light at given point, range [0, 1]
+ * @note
+ * For point light, t_max is 1, this means object on the other side of the light
+ * will not cast shadow on current object.
  */
 double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 		t_vector view, double specular_exponent)
@@ -205,6 +209,7 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 	double		intensity;
 	t_vector	light;
 	double		normal_dot_light;
+	double		t_max;
 
 	intensity = 0.0;
 	i = 0;
@@ -215,10 +220,28 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 		else
 		{
 			if (scene->lights[i].type == PointLight)
+			{
 				light = vector_minus(scene->lights[i].position, point);
+				t_max = 1;
+			}
 			else if (scene->lights[i].type == DirectionalLight)
+			{
 				light = scene->lights[i].direction;
-			
+				t_max = INFINITY;
+			}
+
+			/* Shadow check */
+			t_object	*shadow_object = NULL;
+			double		shadow_t = INFINITY;
+
+			shadow_object = find_closest_object(scene, point, light, 0.0001,
+				t_max, &shadow_t);
+			if (shadow_object != NULL)
+			{
+				++i;
+				continue;
+			}
+
 			/* Diffuse reflection */
 			normal_dot_light = vector_dot_product(normal, light);
 			if (normal_dot_light > 0)
@@ -403,7 +426,7 @@ int	main(void)
 	vars.scene.lights[0] = (t_object){
 		.type = PointLight,
 		.category = Light,
-		.intensity = 1.0,
+		.intensity = 0.9,
 		.position = (t_point){1000, 2000, -1000},
 		.direction = (t_vector){0}
 	};
@@ -411,12 +434,12 @@ int	main(void)
 		.type = DirectionalLight,
 		.category = Light,
 		.intensity = 0.0,
-		.direction = (t_vector){4, 8, -2}
+		.direction = (t_vector){0, 0, 0.1}
 		};
 	vars.scene.lights[2] = (t_object){
 		.type = AmbientLight,
 		.category = Light,
-		.intensity = 0.0
+		.intensity = 0.1
 	};
 	vars.scene.focus = &(vars.scene.objects)[0];
 	basic_raytracing(&vars);
