@@ -156,6 +156,40 @@ t_vector	vector_divide(t_vector a, double t)
 	return ((t_vector){.x = a.x / t, .y = a.y / t, .z = a.z / t});
 }
 
+t_object	*find_closest_object(t_scene *scene, t_point ray_origin,
+	t_vector ray_direction, double t_min, double t_max, double *closest_t)
+{
+	double		t[2];
+	t_object	*closest_object;
+	size_t		i;
+
+	closest_object = NULL;
+	i = 0;
+	while (i < scene->object_count)
+	{
+		if (scene->objects[i].type == Sphere)
+		{
+			ray_sphere_intersect(t, ray_origin, ray_direction,
+				&(scene->objects)[i]);
+		}
+		else if (scene->objects[i].type != Sphere)
+			;
+
+		if (t[0] >= t_min && t[0] <= t_max && t[0] < *closest_t)
+		{
+			*closest_t = t[0];
+			closest_object = &(scene->objects[i]);
+		}
+		if (t[1] >= t_min && t[1] <= t_max && t[1] < *closest_t)
+		{
+			*closest_t = t[1];
+			closest_object = &(scene->objects[i]);
+		}
+		++i;
+	}
+	return (closest_object);
+}
+
 /**
  * @brief Computes the intensity of diffuse reflection at given point
  * 
@@ -267,30 +301,11 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 	double		closest_t;
 	double		t[2];
 	t_object	*closest_object;
-	size_t	i;
 
 	closest_object = NULL;
 	closest_t = INFINITY;
-	i = 0;
-	while (i < scene->object_count)
-	{
-		if (scene->objects[i].type == Sphere)
-		{
-			ray_sphere_intersect(t, ray_origin, ray_direction,
-				&(scene->objects)[i]);
-			if (t[0] >= t_min && t[0] <= t_max && t[0] < closest_t)
-			{
-				closest_t = t[0];
-				closest_object = &(scene->objects[i]);
-			}
-			if (t[1] >= t_min && t[1] <= t_max && t[1] < closest_t)
-			{
-				closest_t = t[1];
-				closest_object = &(scene->objects[i]);
-			}
-		}
-		++i;
-	}
+	closest_object = find_closest_object(scene, ray_origin, ray_direction,
+		t_min, t_max, &closest_t);
 	if (closest_object == NULL)
 		return (minirt()->background_color);
 	else
