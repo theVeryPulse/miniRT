@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/09 01:22:27 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/09 11:37:45 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #include "t_scene.h"
 
 #include <math.h>
+#include <unistd.h> /* STDERR */
 
 #include "../lib/libft/inc/libft.h"
 
@@ -90,7 +91,10 @@ void	draw_pixel_in_raster_space(t_img_vars *img_vars, t_pixel pixel)
 	ptrdiff_t	offset;
 
 	if (pixel.x >= WIDTH || pixel.x < 0 || pixel.y >= HEIGHT || pixel.y < 0)
+	{
+		printf("(%d, %d) outside window\n", pixel.x, pixel.y);
 		return ;
+	}
 	offset = pixel.y * img_vars->line_size
 		+ pixel.x * (img_vars->bits_per_pixel / 8);
 	dst = img_vars->addr + offset;
@@ -358,10 +362,10 @@ void	basic_raytracing(t_vars *vars)
 	t_pixel	pixel;
 
 	pixel.y = HEIGHT / 2;
-	while (pixel.y >= - HEIGHT / 2)
+	while (pixel.y > - HEIGHT / 2)
 	{
 		pixel.x = - WIDTH / 2;
-		while (pixel.x <= WIDTH / 2)
+		while (pixel.x < WIDTH / 2)
 		{
 			point_on_canvas = (t_point){.x = pixel.x, .y = pixel.y,
 				.z = (double)(-minirt()->eye_canvas_distance)};
