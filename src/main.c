@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/09 00:00:02 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/09 01:07:51 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 
 #include "../lib/libft/inc/libft.h"
 
-void	basic_raytracing(t_img_vars *img_vars, t_scene *scene);
+void	basic_raytracing(t_vars *vars);
 void	put_image_to_window_vars(t_vars *vars);
 
 int	destroy_exit(t_vars *vars)
@@ -314,7 +314,7 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
  * @brief 
  * @ref computer-graphics-from-scratch / 02-basic-raytracing
  */
-void	basic_raytracing(t_img_vars *img_vars, t_scene *scene)
+void	basic_raytracing(t_vars *vars)
 {
 	t_point	point_on_canvas;
 	t_pixel	pixel;
@@ -327,9 +327,9 @@ void	basic_raytracing(t_img_vars *img_vars, t_scene *scene)
 		{
 			point_on_canvas = (t_point){.x = pixel.x, .y = pixel.y,
 				.z = (double)(-minirt()->eye_canvas_distance)};
-			pixel.color = trace_ray(scene, (t_point){0}, point_on_canvas, 1, 
+			pixel.color = trace_ray(&vars->scene, (t_point){0}, point_on_canvas, 1, 
 					INFINITY);
-			draw_pixel_in_screen_space(img_vars, pixel);
+			draw_pixel_in_screen_space(&vars->img_vars, pixel);
 			++pixel.x;
 		}
 		--pixel.y;
@@ -403,7 +403,7 @@ int	main(void)
 		.intensity = 0.0
 	};
 	vars.scene.focus = &(vars.scene.objects)[0];
-	basic_raytracing(&vars.img_vars, &vars.scene);
+	basic_raytracing(&vars);
 
 	put_image_to_window_vars(&vars);
 	mlx_loop(vars.mlx_ptr);

@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:21:20 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/08 19:49:34 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/09 01:06:14 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 void	put_image_to_window_vars(t_vars *vars);
 int		destroy_exit(t_vars *vars);
-void	basic_raytracing(t_img_vars *img_vars, t_scene *scene);
+void	basic_raytracing(t_vars *vars);
 
 static void	switch_focus(t_vars *vars)
 {
@@ -114,7 +114,7 @@ extern int	handle_keypress_event(int key, t_vars *vars)
 		if (focus->category == Light
 			&& (key == XK_Page_Up || key == XK_Page_Down))
 			adjust_light_intensity(focus, key);
-		basic_raytracing(&vars->img_vars, &vars->scene);
+		basic_raytracing(vars);
 		put_image_to_window_vars(vars);
 	}
 	else if (key == XK_bracketleft || key == XK_bracketright)
@@ -123,7 +123,7 @@ extern int	handle_keypress_event(int key, t_vars *vars)
 			update_fov(minirt()->fov - 1);
 		else if (key == XK_bracketright)
 			update_fov(minirt()->fov + 1);
-		basic_raytracing(&vars->img_vars, &vars->scene);
+		basic_raytracing(vars);
 		put_image_to_window_vars(vars);
 		char *fov = ft_itoa((int)minirt()->fov);
 		char *message = ft_format_string("FOV: %s");
