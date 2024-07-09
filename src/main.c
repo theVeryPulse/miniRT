@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/09 01:14:45 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/09 01:22:27 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -426,20 +426,30 @@ int	main(void)
 	vars.scene.lights[0] = (t_object){
 		.type = PointLight,
 		.category = Light,
-		.intensity = 0.9,
+		.intensity = 0.4,
 		.position = (t_point){1000, 2000, -1000},
 		.direction = (t_vector){0}
 	};
+#if 0
 	vars.scene.lights[1] = (t_object){
 		.type = DirectionalLight,
 		.category = Light,
 		.intensity = 0.0,
 		.direction = (t_vector){0, 0, 0.1}
 		};
+#else // Two point lights for better shadow effect
+	vars.scene.lights[1] = (t_object){
+		.type = PointLight,
+		.category = Light,
+		.intensity = 0.4,
+		.position = (t_point){-1000, -2000, -1000},
+		.direction = (t_vector){0}
+	};
+#endif
 	vars.scene.lights[2] = (t_object){
 		.type = AmbientLight,
 		.category = Light,
-		.intensity = 0.1
+		.intensity = 0.2
 	};
 	vars.scene.focus = &(vars.scene.objects)[0];
 	basic_raytracing(&vars);
