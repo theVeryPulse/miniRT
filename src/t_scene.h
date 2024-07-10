@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 17:48:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 17:33:30 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/10 23:30:31 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,16 @@
 # define T_SCENE_H
 
 # include "t_object.h"
+# include <stdint.h>
 
 typedef struct s_scene
 {
 	/* Array of objects */
-	t_object		*objects;
-	unsigned int	object_count;
-	t_object		*lights;
-	unsigned int	light_count;
-	t_object		*focus;
+	t_object	*objects;
+	uint8_t		object_count;
+	t_object	*lights;
+	uint8_t		light_count;
+	t_object	*focus;
 }	t_scene;
 
 #endif /* T_SCENE_H */
