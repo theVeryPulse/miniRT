@@ -33,7 +33,7 @@
 
 #include "../lib/libft/inc/libft.h"
 
-void	basic_raytracing(t_vars *vars);
+void	render_image(t_vars *vars);
 void	put_image_to_window_vars(t_vars *vars);
 
 int	destroy_exit(t_vars *vars)
@@ -379,7 +379,7 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
  * @brief 
  * @ref computer-graphics-from-scratch / 02-basic-raytracing
  */
-void	basic_raytracing(t_vars *vars)
+void	render_image(t_vars *vars)
 {
 	t_point	point_on_canvas;
 	t_pixel	pixel;
@@ -483,7 +483,7 @@ int	main(void)
 		.intensity = 0.2
 	};
 	vars.scene.focus = &(vars.scene.objects)[0];
-	basic_raytracing(&vars);
+	render_image(&vars);
 
 	put_image_to_window_vars(&vars);
 	mlx_loop(vars.mlx_ptr);
