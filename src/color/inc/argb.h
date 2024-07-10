@@ -6,13 +6,14 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 17:44:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 22:56:16 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/10 23:19:42 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ARGB_H
 # define ARGB_H
 
+# include "../t_argb.h"
 # include <stdint.h>
 
 # define BLACK 0x000000
@@ -26,10 +27,8 @@
 # define YELLOW  0xffff00
 # define CYAN    0x00ffff
 
-typedef int	t_argb;
-
 extern t_argb	argb(uint8_t alpha, uint8_t r, uint8_t g, uint8_t b);
-extern uint8_t	get_a(t_argb argb);
+extern uint8_t	alpha_component(t_argb argb);
 extern uint8_t	blue_component(t_argb argb);
 extern uint8_t	green_component(t_argb argb);
 extern uint8_t	red_component(t_argb argb);

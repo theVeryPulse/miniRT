@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 17:30:36 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 23:10:34 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/10 23:23:36 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define T_OBJECT_H
 
 # include "geometry/vector/t_point.h"
-# include "argb.h"
+# include "color/inc/argb.h"
 
 typedef enum e_object_type
 {

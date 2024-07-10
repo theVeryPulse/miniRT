@@ -1,25 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_pixel.h                                          :+:      :+:    :+:   */
+/*   color_mult.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/08 17:43:10 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 23:23:46 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/10 20:05:02 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/10 23:24:07 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_PIXEL_H
-# define T_PIXEL_H
+#include "inc/argb.h"
 
-# include "color/inc/argb.h"
-
-typedef struct s_pixel
+extern inline t_argb	color_mult(t_argb color, double factor)
 {
-	int		x;
-	int		y;
-	t_argb	color;
-}	t_pixel;
-
-#endif
+	return (argb(0x00,
+			red_component(color) * factor,
+			green_component(color) * factor,
+			blue_component(color) * factor));
+}

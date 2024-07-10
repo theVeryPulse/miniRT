@@ -1,25 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_pixel.h                                          :+:      :+:    :+:   */
+/*   argb.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/08 17:43:10 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 23:23:46 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/10 23:20:54 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/10 23:25:40 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_PIXEL_H
-# define T_PIXEL_H
+#include "t_argb.h"
+#include <stdint-gcc.h>
 
-# include "color/inc/argb.h"
-
-typedef struct s_pixel
+/**
+ * @brief Create a int value representing arpg
+ * 
+ * @param alpha Transparency
+ * @param r Red
+ * @param g Green
+ * @param b Blue
+ * @return int (0xAARRGGBB)
+ */
+extern t_argb	argb(uint8_t alpha, uint8_t r, uint8_t g, uint8_t b)
 {
-	int		x;
-	int		y;
-	t_argb	color;
-}	t_pixel;
-
-#endif
+	return (*(int *)(uint8_t[4]){b, g, r, alpha});
+}

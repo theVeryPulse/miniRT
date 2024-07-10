@@ -1,21 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   color_add.c                                        :+:      :+:    :+:   */
+/*   blue_component.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/10 20:04:59 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 20:07:10 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/10 23:22:17 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/10 23:26:11 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "argb.h"
+#include "t_argb.h"
+#include <stdint.h>
 
-extern inline t_argb	color_add(t_argb a, t_argb b)
+/**
+ * @brief Retrieves the blue component from a 32-bit ARGB color value.
+ *
+ * @param argb The 32-bit ARGB color value.
+ * @return The blue component of the color.
+ */
+extern uint8_t	blue_component(t_argb argb)
 {
-	return (argb(0x00,
-			red_component(a) + red_component(b),
-			green_component(a) + green_component(b),
-			blue_component(a) + blue_component(b)));
+	return (((uint8_t *)&argb)[0]);
 }

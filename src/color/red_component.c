@@ -1,25 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_pixel.h                                          :+:      :+:    :+:   */
+/*   red_component.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/08 17:43:10 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 23:23:46 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/10 23:21:36 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/10 23:25:48 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_PIXEL_H
-# define T_PIXEL_H
+#include "t_argb.h"
+#include <stdint.h>
 
-# include "color/inc/argb.h"
-
-typedef struct s_pixel
+/**
+ * @brief Retrieves the red component from a 32-bit ARGB color value.
+ *
+ * @param argb The 32-bit ARGB color value.
+ * @return The red component of the color.
+ */
+extern uint8_t	red_component(t_argb argb)
 {
-	int		x;
-	int		y;
-	t_argb	color;
-}	t_pixel;
-
-#endif
+	return (((uint8_t *)&argb)[2]);
+}

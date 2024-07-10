@@ -4,9 +4,13 @@ CC := gcc
 CFLAGS := -Wall -Wextra -Werror -O3
 
 # ls src/**/*.c >> Makefile
-FILES := src/argb.c \
-	src/color_add.c \
-	src/color_mult.c \
+FILES := src/color/alpha_component.c \
+	src/color/argb.c \
+	src/color/blue_component.c \
+	src/color/color_add.c \
+	src/color/color_mult.c \
+	src/color/green_component.c \
+	src/color/red_component.c \
 	src/geometry/matrix/mx_mult.c \
 	src/geometry/matrix/mx_mult_mx.c \
 	src/geometry/matrix/mx_transpose.c \
@@ -66,3 +70,4 @@ debug: CFLAGS := -g -Wall -Wextra
 debug: re
 
 .PHONY: all, clean, fclean, re, debug
+
