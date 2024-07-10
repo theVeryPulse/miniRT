@@ -6,12 +6,12 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:11:29 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/04 14:22:54 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/10 17:33:43 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef VARS_H
-# define VARS_H
+#ifndef T_VARS_H
+# define T_VARS_H
 
 # include "t_scene.h"
 
