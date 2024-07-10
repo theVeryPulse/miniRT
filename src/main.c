@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/11 00:25:19 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/11 00:30:15 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 void	render_image(t_vars *vars);
 void	put_image_to_window_vars(t_vars *vars);
 void	ray_sphere_intersect(double t[2], t_point ray_origin,
-			t_point ray_direction, t_object *sphere);
+			t_point ray_direction, t_object *sphere, double a);
 
 int	destroy_exit(t_vars *vars)
 {
@@ -139,7 +139,7 @@ t_object	*find_closest_object(t_scene *scene, t_point ray_origin,
 		if (scene->objects[i].type == Sphere)
 		{
 			ray_sphere_intersect(t, ray_origin, ray_direction,
-				&(scene->objects)[i]);
+				&(scene->objects)[i], vec_dot(ray_direction, ray_direction));
 		}
 		else if (scene->objects[i].type != Sphere)
 			;
@@ -262,20 +262,22 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
  * @param ray_origin 
  * @param point_on_canvas 
  * @param sphere 
- * @note |O+tD-C|^2 - R^2 = 0;
- *        => a = D^2; b = 2D(O-C); c=|O-C|^2-R^2
+ * @note
+ * |O+tD-C|^2 - R^2 = 0;
+ * => a = D^2; b = 2D(O-C); c=|O-C|^2-R^2
+ * 
+ * a = vec_dot(ray_direction, ray_direction)
+ * `a` remains unchanged for the same ray.
  */
 void	ray_sphere_intersect(double t[2], t_point ray_origin,
-			t_point ray_direction, t_object *sphere)
+			t_point ray_direction, t_object *sphere, double a)
 {
-	double		a;
 	double		b;
 	double		c;
 	t_vector	c_to_o;
 	double		discriminant;
 
 	c_to_o = vec_minus(ray_origin, sphere->position);
-	a = vec_dot(ray_direction, ray_direction);
 	b = 2 * vec_dot(c_to_o, ray_direction);
 	c = vec_dot(c_to_o, c_to_o) - sphere->radius_squared;
 	discriminant = b * b - 4 * a * c;
