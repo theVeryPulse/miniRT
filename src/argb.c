@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 12:42:46 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 20:03:56 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/10 22:56:24 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
  * @param b Blue
  * @return int (0xAARRGGBB)
  */
-extern inline t_argb	argb(uint8_t alpha, uint8_t r, uint8_t g, uint8_t b)
+extern t_argb	argb(uint8_t alpha, uint8_t r, uint8_t g, uint8_t b)
 {
 	return (*(int *)(uint8_t[4]){b, g, r, alpha});
 }
@@ -33,7 +33,7 @@ extern inline t_argb	argb(uint8_t alpha, uint8_t r, uint8_t g, uint8_t b)
  * @param argb The 32-bit ARGB color value.
  * @return The alpha component of the color.
  */
-extern inline uint8_t	get_a(t_argb argb)
+extern uint8_t	get_a(t_argb argb)
 {
 	return (((uint8_t *)&argb)[3]);
 }
@@ -44,7 +44,7 @@ extern inline uint8_t	get_a(t_argb argb)
  * @param argb The 32-bit ARGB color value.
  * @return The red component of the color.
  */
-extern inline uint8_t	red_component(t_argb argb)
+extern uint8_t	red_component(t_argb argb)
 {
 	return (((uint8_t *)&argb)[2]);
 }
@@ -55,7 +55,7 @@ extern inline uint8_t	red_component(t_argb argb)
  * @param argb The 32-bit ARGB color value.
  * @return The green component of the color.
  */
-extern inline uint8_t	green_component(t_argb argb)
+extern uint8_t	green_component(t_argb argb)
 {
 	return (((uint8_t *)&argb)[1]);
 }
@@ -66,7 +66,7 @@ extern inline uint8_t	green_component(t_argb argb)
  * @param argb The 32-bit ARGB color value.
  * @return The blue component of the color.
  */
-extern inline uint8_t	blue_component(t_argb argb)
+extern uint8_t	blue_component(t_argb argb)
 {
 	return (((uint8_t *)&argb)[0]);
 }

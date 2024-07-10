@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 17:44:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 20:29:17 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/10 22:56:16 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@
 
 typedef int	t_argb;
 
-extern inline t_argb	argb(uint8_t alpha, uint8_t r, uint8_t g, uint8_t b);
-extern inline uint8_t	get_a(t_argb argb);
-extern inline uint8_t	blue_component(t_argb argb);
-extern inline uint8_t	green_component(t_argb argb);
-extern inline uint8_t	red_component(t_argb argb);
+extern t_argb	argb(uint8_t alpha, uint8_t r, uint8_t g, uint8_t b);
+extern uint8_t	get_a(t_argb argb);
+extern uint8_t	blue_component(t_argb argb);
+extern uint8_t	green_component(t_argb argb);
+extern uint8_t	red_component(t_argb argb);
 
-extern inline t_argb	color_mult(t_argb color, double intensity);
-extern inline t_argb	color_add(t_argb a, t_argb b);
+extern t_argb	color_mult(t_argb color, double intensity);
+extern t_argb	color_add(t_argb a, t_argb b);
 
 #endif
