@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 20:18:19 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/10 20:32:34 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -428,7 +428,7 @@ int	main(void)
 	vars.scene.objects[0] = (t_object){
 		.type = Sphere,
 		.category = Object,
-		.color = RED,
+		.color = MAGENTA,
 		.position = (t_point){0, 0, -3000},
 		.radius = 500,
 		.specular_exponent = 10, /* Shiny */
@@ -437,7 +437,7 @@ int	main(void)
 	vars.scene.objects[1] = (t_object){
 		.type = Sphere,
 		.category = Object,
-		.color = BLUE,
+		.color = CYAN,
 		.position = (t_point){1000, 1000, -5000},
 		.radius = 1800,
 		.specular_exponent = 100, /* Somewhat shiny */
@@ -446,7 +446,7 @@ int	main(void)
 	vars.scene.objects[2] = (t_object){
 		.type = Sphere,
 		.category = Object,
-		.color = GREEN,
+		.color = YELLOW,
 		.position = (t_point){-1000, -300, -2500},
 		.radius = 300,
 		.specular_exponent = 1000, /* Very shiny */
