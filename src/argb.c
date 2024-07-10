@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 12:42:46 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 19:49:51 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/10 20:03:56 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ extern inline uint8_t	get_a(t_argb argb)
  * @param argb The 32-bit ARGB color value.
  * @return The red component of the color.
  */
-extern inline uint8_t	get_r(t_argb argb)
+extern inline uint8_t	red_component(t_argb argb)
 {
 	return (((uint8_t *)&argb)[2]);
 }
@@ -55,7 +55,7 @@ extern inline uint8_t	get_r(t_argb argb)
  * @param argb The 32-bit ARGB color value.
  * @return The green component of the color.
  */
-extern inline uint8_t	get_g(t_argb argb)
+extern inline uint8_t	green_component(t_argb argb)
 {
 	return (((uint8_t *)&argb)[1]);
 }
@@ -66,7 +66,7 @@ extern inline uint8_t	get_g(t_argb argb)
  * @param argb The 32-bit ARGB color value.
  * @return The blue component of the color.
  */
-extern inline uint8_t	get_b(t_argb argb)
+extern inline uint8_t	blue_component(t_argb argb)
 {
 	return (((uint8_t *)&argb)[0]);
 }

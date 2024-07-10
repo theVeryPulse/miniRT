@@ -26,8 +26,8 @@ typedef int	t_argb;
 
 extern inline t_argb	argb(uint8_t alpha, uint8_t r, uint8_t g, uint8_t b);
 extern inline uint8_t	get_a(t_argb argb);
-extern inline uint8_t	get_b(t_argb argb);
-extern inline uint8_t	get_g(t_argb argb);
-extern inline uint8_t	get_r(t_argb argb);
+extern inline uint8_t	blue_component(t_argb argb);
+extern inline uint8_t	green_component(t_argb argb);
+extern inline uint8_t	red_component(t_argb argb);
 
 #endif
