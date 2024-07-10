@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 23:50:11 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/11 00:25:19 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -274,9 +274,9 @@ void	ray_sphere_intersect(double t[2], t_point ray_origin,
 	t_vector	c_to_o;
 	double		discriminant;
 
+	c_to_o = vec_minus(ray_origin, sphere->position);
 	a = vec_dot(ray_direction, ray_direction);
 	b = 2 * vec_dot(c_to_o, ray_direction);
-	c_to_o = vec_minus(ray_origin, sphere->position);
 	c = vec_dot(c_to_o, c_to_o) - sphere->radius_squared;
 	discriminant = b * b - 4 * a * c;
 	if (discriminant < 0)
