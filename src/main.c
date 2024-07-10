@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/09 11:37:45 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/10 18:11:19 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,20 @@ t_object	*find_closest_object(t_scene *scene, t_point ray_origin,
 }
 
 /**
+ * @brief 
+ * 
+ * @param normal 
+ * @param ray 
+ * @return t_vector 
+ * @note Equation: R = 2 * dot(N, L) * N - L
+ */
+static inline t_vector	reflect_ray(t_vector normal, t_vector ray)
+{
+	return (vector_minus(
+			vector_multiply(2 * vector_dot_product(normal, ray), normal), ray));
+}
+
+/**
  * @brief Computes the intensity of reflection at given point, including diffuse
  *        reflection, specular reflection, shade,
  * 
@@ -258,9 +272,7 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 				t_vector	reflection;
 				double		reflection_dot_view;
 
-				/*  R = 2 * dot(N, L) * N - L */
-				reflection = vector_multiply(2 * vector_dot_product(normal, light), normal);
-				reflection = vector_minus(reflection, light);
+				reflection = reflect_ray(normal, light);
 				reflection_dot_view = vector_dot_product(reflection, view);
 				if (reflection_dot_view > 0)
 				{
