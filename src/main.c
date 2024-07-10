@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 20:32:34 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/10 23:50:11 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@
 
 void	render_image(t_vars *vars);
 void	put_image_to_window_vars(t_vars *vars);
+void	ray_sphere_intersect(double t[2], t_point ray_origin,
+			t_point ray_direction, t_object *sphere);
 
 int	destroy_exit(t_vars *vars)
 {
@@ -272,10 +274,10 @@ void	ray_sphere_intersect(double t[2], t_point ray_origin,
 	t_vector	c_to_o;
 	double		discriminant;
 
-	c_to_o = vec_minus(ray_origin, sphere->position);
 	a = vec_dot(ray_direction, ray_direction);
 	b = 2 * vec_dot(c_to_o, ray_direction);
-	c = vec_dot(c_to_o, c_to_o) - sphere->radius * sphere->radius;
+	c_to_o = vec_minus(ray_origin, sphere->position);
+	c = vec_dot(c_to_o, c_to_o) - sphere->radius_squared;
 	discriminant = b * b - 4 * a * c;
 	if (discriminant < 0)
 	{
@@ -293,7 +295,6 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 		double t_min, double t_max, uint8_t recursion_depth)
 {
 	double		closest_t;
-	double		t[2];
 	t_object	*closest_object;
 
 	closest_object = NULL;
@@ -378,6 +379,19 @@ void	allocate_lights(t_scene *scene, unsigned int light_count)
 	scene->light_count = light_count;
 }
 
+void	calculate_radius_squared(t_scene *scene)
+{
+	t_object	*object;
+
+	object = scene->objects;
+	while (object < scene->objects + scene->object_count)
+	{
+		if (object->type == Sphere)
+			object->radius_squared = object->radius * object->radius;
+		++object;
+	}
+}
+
 // int	main(int argc, char const *argv[])
 int	main(void)
 {
@@ -414,6 +428,7 @@ int	main(void)
 		.specular_exponent = 1000, /* Very shiny */
 		.reflectivity = 0.5 /* Half reflective */
 	};
+	calculate_radius_squared(&vars.scene);
 
 	allocate_lights(&vars.scene, 3);
 	vars.scene.lights[0] = (t_object){
