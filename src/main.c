@@ -407,7 +407,8 @@ int	main(void)
 		.color = RED,
 		.position = (t_point){0, 0, -3000},
 		.radius = 500,
-		.specular_exponent = 500 /* Shiny */
+		.specular_exponent = 500, /* Shiny */
+		.reflectivity = 0.2, /* A bit reflective */
 	};
 	vars.scene.objects[1] = (t_object){
 		.type = Sphere,
@@ -415,7 +416,8 @@ int	main(void)
 		.color = BLUE,
 		.position = (t_point){1000, 1000, -5000},
 		.radius = 1800,
-		.specular_exponent = 10 /* Somewhat shiny */
+		.specular_exponent = 10, /* Somewhat shiny */
+		.reflectivity = 0.3 /* A bit more reflective */
 	};
 	vars.scene.objects[2] = (t_object){
 		.type = Sphere,
@@ -423,7 +425,8 @@ int	main(void)
 		.color = GREEN,
 		.position = (t_point){-1000, -300, -2500},
 		.radius = 300,
-		.specular_exponent = 1000 /* Very shiny */
+		.specular_exponent = 1000, /* Very shiny */
+		.reflectivity = 0.5 /* Half reflective */
 	};
 
 	allocate_lights(&vars.scene, 3);

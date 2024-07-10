@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 17:30:36 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 17:33:23 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/10 17:40:04 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct s_object
 
 	double			radius;
 	double			specular_exponent;
+	double			reflectivity;
 }	t_object;
 
 #endif /* T_OBJECT_H */
