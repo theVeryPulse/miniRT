@@ -4,14 +4,23 @@ CC := gcc
 CFLAGS := -Wall -Wextra -Werror -O3
 
 # ls src/**/*.c >> Makefile
-FILES := main.c \
-	argb.c \
-	handle_keypress_event.c \
-	color_add.c \
-	color_mult.c \
-	minirt.c
+FILES := src/argb.c \
+	src/color_add.c \
+	src/color_mult.c \
+	src/geometry/matrix/mx_mult.c \
+	src/geometry/matrix/mx_mult_mx.c \
+	src/geometry/matrix/mx_transpose.c \
+	src/geometry/vector/vec_add.c \
+	src/geometry/vector/vec_div.c \
+	src/geometry/vector/vec_dot.c \
+	src/geometry/vector/vec_len.c \
+	src/geometry/vector/vec_minus.c \
+	src/geometry/vector/vec_mult.c \
+	src/handle_keypress_event.c \
+	src/main.c \
+	src/minirt.c
 
-FILES := $(addprefix src/, $(FILES))
+# FILES := $(addprefix src/, $(FILES))
 OFILES := $(patsubst src/%.c, build/%.o, $(FILES))
 
 # debugmake:
@@ -57,4 +66,3 @@ debug: CFLAGS := -g -Wall -Wextra
 debug: re
 
 .PHONY: all, clean, fclean, re, debug
-
