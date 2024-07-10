@@ -25,7 +25,7 @@
 #include "t_pixel.h"
 #include <stddef.h> /* ptrdiff_t */
 
-#include "t_point.h"
+#include "geometry/inc/geometry.h"
 #include "t_scene.h"
 
 #include <math.h>
@@ -123,43 +123,6 @@ void	test_draw_on_image(t_img_vars *img_vars)
 		draw_pixel_in_screen_space(img_vars, pixel);	
 }
 
-
-
-static inline double	vector_dot_product(t_vector a, t_vector b)
-{
-	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
-}
-
-static inline t_vector	vector_minus(t_vector a, t_vector b)
-{
-	return ((t_vector){.x = a.x - b.x, .y = a.y - b.y, .z = a.z - b.z});
-}
-
-static inline t_vector	vector_tail_head(t_vector tail, t_vector head)
-{
-	return (vector_minus(head, tail));
-}
-
-static inline double	vector_length(t_vector a)
-{
-	return (sqrt(a.x * a.x + a.y * a.y + a.z * a.z));
-}
-
-static inline t_vector	vector_add(t_vector a, t_vector b)
-{
-	return ((t_vector){.x = a.x + b.x, .y = a.y + b.y, .z = a.z + b.z});
-}
-
-static inline t_vector	vector_multiply(double t, t_vector a)
-{
-	return ((t_vector){.x = t * a.x, .y = t * a.y, .z = t * a.z});
-}
-
-static inline t_vector	vector_divide(t_vector a, double t)
-{
-	return ((t_vector){.x = a.x / t, .y = a.y / t, .z = a.z / t});
-}
-
 t_object	*find_closest_object(t_scene *scene, t_point ray_origin,
 	t_vector ray_direction, double t_min, double t_max, double *closest_t)
 {
@@ -204,8 +167,8 @@ t_object	*find_closest_object(t_scene *scene, t_point ray_origin,
  */
 static inline t_vector	reflect_ray(t_vector ray, t_vector normal)
 {
-	return (vector_minus(
-			vector_multiply(2 * vector_dot_product(normal, ray), normal), ray));
+	return (vec_minus(
+			vec_mult(2 * vec_dot(normal, ray), normal), ray));
 }
 
 /**
@@ -239,7 +202,7 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 		{
 			if (scene->lights[i].type == PointLight)
 			{
-				light = vector_minus(scene->lights[i].position, point);
+				light = vec_minus(scene->lights[i].position, point);
 				t_max = 1;
 			}
 			else if (scene->lights[i].type == DirectionalLight)
@@ -261,10 +224,10 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 			}
 
 			/* Diffuse reflection */
-			normal_dot_light = vector_dot_product(normal, light);
+			normal_dot_light = vec_dot(normal, light);
 			if (normal_dot_light > 0)
 				intensity += scene->lights[i].intensity * normal_dot_light
-					/ (vector_length(normal) * vector_length(light));
+					/ (vec_len(normal) * vec_len(light));
 			
 			/* Specular reflection */
 			if (specular_exponent != -1)
@@ -273,12 +236,12 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 				double		reflection_dot_view;
 
 				reflection = reflect_ray(light, normal);
-				reflection_dot_view = vector_dot_product(reflection, view);
+				reflection_dot_view = vec_dot(reflection, view);
 				if (reflection_dot_view > 0)
 				{
 					intensity += scene->lights[i].intensity
 						* pow(reflection_dot_view
-						/ (vector_length(reflection) * vector_length(view)),
+						/ (vec_len(reflection) * vec_len(view)),
 						specular_exponent);
 				}
 			}
@@ -309,10 +272,10 @@ void	ray_sphere_intersect(double t[2], t_point ray_origin,
 	t_vector	c_to_o;
 	double		discriminant;
 
-	c_to_o = vector_minus(ray_origin, sphere->position);
-	a = vector_dot_product(ray_direction, ray_direction);
-	b = 2 * vector_dot_product(c_to_o, ray_direction);
-	c = vector_dot_product(c_to_o, c_to_o) - sphere->radius * sphere->radius;
+	c_to_o = vec_minus(ray_origin, sphere->position);
+	a = vec_dot(ray_direction, ray_direction);
+	b = 2 * vec_dot(c_to_o, ray_direction);
+	c = vec_dot(c_to_o, c_to_o) - sphere->radius * sphere->radius;
 	discriminant = b * b - 4 * a * c;
 	if (discriminant < 0)
 	{
@@ -347,12 +310,11 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 	double		intensity;
 	t_argb		local_color;
 
-	intersection = vector_add(ray_origin,
-		vector_multiply(closest_t, ray_direction));
-	unit_normal = vector_minus(intersection, closest_object->position);
-	unit_normal = vector_divide(unit_normal, vector_length(unit_normal));
+	intersection = vec_add(ray_origin, vec_mult(closest_t, ray_direction));
+	unit_normal = vec_minus(intersection, closest_object->position);
+	unit_normal = vec_div(unit_normal, vec_len(unit_normal));
 	intensity = compute_lighting(scene, intersection, unit_normal,
-		vector_multiply(-1, ray_direction),
+		vec_mult(-1, ray_direction),
 		closest_object->specular_exponent);
 	local_color = color_mult(closest_object->color, intensity);
 
@@ -366,7 +328,7 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 	t_vector	reflection;
 	t_argb		reflected_color;
 
-	reflection = reflect_ray(vector_multiply(-1, ray_direction), unit_normal);
+	reflection = reflect_ray(vec_mult(-1, ray_direction), unit_normal);
 	reflected_color = trace_ray(scene, intersection, reflection, 0.001, INFINITY,
 		recursion_depth - 1);
 	/* The more smooth the object is, the more light it reflects */
