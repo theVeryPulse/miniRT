@@ -326,7 +326,7 @@ void	ray_sphere_intersect(double t[2], t_point ray_origin,
 	}
 }
 
-t_argb	color_with_intensity(t_argb color, double intensity)
+static inline t_argb	color_with_intensity(t_argb color, double intensity)
 {
 	return (argb(0x00,
 		get_r(color) * intensity,
