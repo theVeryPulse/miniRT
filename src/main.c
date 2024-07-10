@@ -125,37 +125,37 @@ void	test_draw_on_image(t_img_vars *img_vars)
 
 
 
-double	vector_dot_product(t_vector a, t_vector b)
+static inline double	vector_dot_product(t_vector a, t_vector b)
 {
 	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 }
 
-t_vector	vector_minus(t_vector a, t_vector b)
+static inline t_vector	vector_minus(t_vector a, t_vector b)
 {
 	return ((t_vector){.x = a.x - b.x, .y = a.y - b.y, .z = a.z - b.z});
 }
 
-t_vector	vector_tail_head(t_vector tail, t_vector head)
+static inline t_vector	vector_tail_head(t_vector tail, t_vector head)
 {
 	return (vector_minus(head, tail));
 }
 
-double	vector_length(t_vector a)
+static inline double	vector_length(t_vector a)
 {
 	return (sqrt(a.x * a.x + a.y * a.y + a.z * a.z));
 }
 
-t_vector	vector_add(t_vector a, t_vector b)
+static inline t_vector	vector_add(t_vector a, t_vector b)
 {
 	return ((t_vector){.x = a.x + b.x, .y = a.y + b.y, .z = a.z + b.z});
 }
 
-t_vector	vector_multiply(double t, t_vector a)
+static inline t_vector	vector_multiply(double t, t_vector a)
 {
 	return ((t_vector){.x = t * a.x, .y = t * a.y, .z = t * a.z});
 }
 
-t_vector	vector_divide(t_vector a, double t)
+static inline t_vector	vector_divide(t_vector a, double t)
 {
 	return ((t_vector){.x = a.x / t, .y = a.y / t, .z = a.z / t});
 }
