@@ -334,6 +334,14 @@ static inline t_argb	color_with_intensity(t_argb color, double intensity)
 		get_b(color) * intensity));
 }
 
+static inline t_argb	color_add(t_argb a, t_argb b)
+{
+	return (argb(0x00,
+		get_r(a) + get_r(b),
+		get_g(a) + get_g(b),
+		get_b(a) + get_b(b)));
+}
+
 t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 		double t_min, double t_max)
 {
