@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 17:44:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 19:49:37 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/10 20:18:31 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,8 @@ extern inline uint8_t	get_a(t_argb argb);
 extern inline uint8_t	blue_component(t_argb argb);
 extern inline uint8_t	green_component(t_argb argb);
 extern inline uint8_t	red_component(t_argb argb);
+
+extern inline t_argb	color_mult(t_argb color, double intensity);
+extern inline t_argb	color_add(t_argb a, t_argb b);
 
 #endif

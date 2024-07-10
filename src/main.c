@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 19:57:07 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/10 20:18:19 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -326,22 +326,6 @@ void	ray_sphere_intersect(double t[2], t_point ray_origin,
 	}
 }
 
-static inline t_argb	color_with_intensity(t_argb color, double intensity)
-{
-	return (argb(0x00,
-		get_r(color) * intensity,
-		get_g(color) * intensity,
-		get_b(color) * intensity));
-}
-
-static inline t_argb	color_add(t_argb a, t_argb b)
-{
-	return (argb(0x00,
-		get_r(a) + get_r(b),
-		get_g(a) + get_g(b),
-		get_b(a) + get_b(b)));
-}
-
 t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 		double t_min, double t_max, uint8_t recursion_depth)
 {
@@ -370,7 +354,7 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 	intensity = compute_lighting(scene, intersection, unit_normal,
 		vector_multiply(-1, ray_direction),
 		closest_object->specular_exponent);
-	local_color = color_with_intensity(closest_object->color, intensity);
+	local_color = color_mult(closest_object->color, intensity);
 
 
 	// return (local_color); /* Return color here to skip reflection */
@@ -387,8 +371,8 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 		recursion_depth - 1);
 	/* The more smooth the object is, the more light it reflects */
 	return (color_add(
-		color_with_intensity(local_color, 1- closest_object->reflectivity),
-		color_with_intensity(reflected_color, closest_object->reflectivity)));
+		color_mult(local_color, 1- closest_object->reflectivity),
+		color_mult(reflected_color, closest_object->reflectivity)));
 }
 
 /**
