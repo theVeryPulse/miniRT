@@ -7,6 +7,8 @@ CFLAGS := -Wall -Wextra -Werror -O3
 FILES := main.c \
 	argb.c \
 	handle_keypress_event.c \
+	color_add.c \
+	color_mult.c \
 	minirt.c
 
 FILES := $(addprefix src/, $(FILES))
