@@ -202,7 +202,7 @@ t_object	*find_closest_object(t_scene *scene, t_point ray_origin,
  * @return t_vector 
  * @note Equation: R = 2 * dot(N, L) * N - L
  */
-static inline t_vector	reflect_ray(t_vector normal, t_vector ray)
+static inline t_vector	reflect_ray(t_vector ray, t_vector normal)
 {
 	return (vector_minus(
 			vector_multiply(2 * vector_dot_product(normal, ray), normal), ray));
@@ -272,7 +272,7 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 				t_vector	reflection;
 				double		reflection_dot_view;
 
-				reflection = reflect_ray(normal, light);
+				reflection = reflect_ray(light, normal);
 				reflection_dot_view = vector_dot_product(reflection, view);
 				if (reflection_dot_view > 0)
 				{
