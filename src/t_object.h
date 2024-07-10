@@ -6,14 +6,14 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 17:30:36 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 17:40:04 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/10 23:10:34 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef T_OBJECT_H
 # define T_OBJECT_H
 
-# include "t_point.h"
+# include "geometry/vector/t_point.h"
 # include "argb.h"
 
 typedef enum e_object_type
