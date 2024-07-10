@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/09 01:22:27 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/10 20:32:34 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #include "t_scene.h"
 
 #include <math.h>
+#include <unistd.h> /* STDERR */
 
 #include "../lib/libft/inc/libft.h"
 
@@ -90,7 +91,10 @@ void	draw_pixel_in_raster_space(t_img_vars *img_vars, t_pixel pixel)
 	ptrdiff_t	offset;
 
 	if (pixel.x >= WIDTH || pixel.x < 0 || pixel.y >= HEIGHT || pixel.y < 0)
+	{
+		printf("(%d, %d) outside window\n", pixel.x, pixel.y);
 		return ;
+	}
 	offset = pixel.y * img_vars->line_size
 		+ pixel.x * (img_vars->bits_per_pixel / 8);
 	dst = img_vars->addr + offset;
@@ -121,37 +125,37 @@ void	test_draw_on_image(t_img_vars *img_vars)
 
 
 
-double	vector_dot_product(t_vector a, t_vector b)
+static inline double	vector_dot_product(t_vector a, t_vector b)
 {
 	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 }
 
-t_vector	vector_minus(t_vector a, t_vector b)
+static inline t_vector	vector_minus(t_vector a, t_vector b)
 {
 	return ((t_vector){.x = a.x - b.x, .y = a.y - b.y, .z = a.z - b.z});
 }
 
-t_vector	vector_tail_head(t_vector tail, t_vector head)
+static inline t_vector	vector_tail_head(t_vector tail, t_vector head)
 {
 	return (vector_minus(head, tail));
 }
 
-double	vector_length(t_vector a)
+static inline double	vector_length(t_vector a)
 {
 	return (sqrt(a.x * a.x + a.y * a.y + a.z * a.z));
 }
 
-t_vector	vector_add(t_vector a, t_vector b)
+static inline t_vector	vector_add(t_vector a, t_vector b)
 {
 	return ((t_vector){.x = a.x + b.x, .y = a.y + b.y, .z = a.z + b.z});
 }
 
-t_vector	vector_multiply(double t, t_vector a)
+static inline t_vector	vector_multiply(double t, t_vector a)
 {
 	return ((t_vector){.x = t * a.x, .y = t * a.y, .z = t * a.z});
 }
 
-t_vector	vector_divide(t_vector a, double t)
+static inline t_vector	vector_divide(t_vector a, double t)
 {
 	return ((t_vector){.x = a.x / t, .y = a.y / t, .z = a.z / t});
 }
@@ -188,6 +192,20 @@ t_object	*find_closest_object(t_scene *scene, t_point ray_origin,
 		++i;
 	}
 	return (closest_object);
+}
+
+/**
+ * @brief 
+ * 
+ * @param normal 
+ * @param ray 
+ * @return t_vector 
+ * @note Equation: R = 2 * dot(N, L) * N - L
+ */
+static inline t_vector	reflect_ray(t_vector ray, t_vector normal)
+{
+	return (vector_minus(
+			vector_multiply(2 * vector_dot_product(normal, ray), normal), ray));
 }
 
 /**
@@ -254,9 +272,7 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 				t_vector	reflection;
 				double		reflection_dot_view;
 
-				/*  R = 2 * dot(N, L) * N - L */
-				reflection = vector_multiply(2 * vector_dot_product(normal, light), normal);
-				reflection = vector_minus(reflection, light);
+				reflection = reflect_ray(light, normal);
 				reflection_dot_view = vector_dot_product(reflection, view);
 				if (reflection_dot_view > 0)
 				{
@@ -310,16 +326,8 @@ void	ray_sphere_intersect(double t[2], t_point ray_origin,
 	}
 }
 
-t_argb	color_with_intensity(t_argb color, double intensity)
-{
-	return (argb(0x00,
-		get_r(color) * intensity,
-		get_g(color) * intensity,
-		get_b(color) * intensity));
-}
-
 t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
-		double t_min, double t_max)
+		double t_min, double t_max, uint8_t recursion_depth)
 {
 	double		closest_t;
 	double		t[2];
@@ -327,25 +335,44 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 
 	closest_object = NULL;
 	closest_t = INFINITY;
+
+	/* Closes object and closest_t are the targets */
 	closest_object = find_closest_object(scene, ray_origin, ray_direction,
 		t_min, t_max, &closest_t);
 	if (closest_object == NULL)
 		return (minirt()->background_color);
-	else
-	{
-		t_point		intersection;
-		t_vector	normal;
-		double		intensity;
 
-		intersection = vector_add(ray_origin,
-			vector_multiply(closest_t, ray_direction));
-		normal = vector_minus(intersection, closest_object->position);
-		normal = vector_divide(normal, vector_length(normal));
-		intensity = compute_lighting(scene, intersection, normal,
-			vector_multiply(-1, ray_direction),
-			closest_object->specular_exponent);
-		return(color_with_intensity(closest_object->color, intensity));
-	}
+	t_point		intersection;
+	t_vector	unit_normal;
+	double		intensity;
+	t_argb		local_color;
+
+	intersection = vector_add(ray_origin,
+		vector_multiply(closest_t, ray_direction));
+	unit_normal = vector_minus(intersection, closest_object->position);
+	unit_normal = vector_divide(unit_normal, vector_length(unit_normal));
+	intensity = compute_lighting(scene, intersection, unit_normal,
+		vector_multiply(-1, ray_direction),
+		closest_object->specular_exponent);
+	local_color = color_mult(closest_object->color, intensity);
+
+
+	// return (local_color); /* Return color here to skip reflection */
+
+	/* When recursion limit is hit or the other object does not reflect */
+	if (recursion_depth <= 0 || closest_object->reflectivity <= 0)
+		return (local_color);
+	/* Else computes reflected color */
+	t_vector	reflection;
+	t_argb		reflected_color;
+
+	reflection = reflect_ray(vector_multiply(-1, ray_direction), unit_normal);
+	reflected_color = trace_ray(scene, intersection, reflection, 0.001, INFINITY,
+		recursion_depth - 1);
+	/* The more smooth the object is, the more light it reflects */
+	return (color_add(
+		color_mult(local_color, 1- closest_object->reflectivity),
+		color_mult(reflected_color, closest_object->reflectivity)));
 }
 
 /**
@@ -358,20 +385,21 @@ void	basic_raytracing(t_vars *vars)
 	t_pixel	pixel;
 
 	pixel.y = HEIGHT / 2;
-	while (pixel.y >= - HEIGHT / 2)
+	while (pixel.y > - HEIGHT / 2)
 	{
 		pixel.x = - WIDTH / 2;
-		while (pixel.x <= WIDTH / 2)
+		while (pixel.x < WIDTH / 2)
 		{
 			point_on_canvas = (t_point){.x = pixel.x, .y = pixel.y,
 				.z = (double)(-minirt()->eye_canvas_distance)};
-			pixel.color = trace_ray(&vars->scene, (t_point){0}, point_on_canvas, 1, 
-					INFINITY);
+			pixel.color = trace_ray(&vars->scene, (t_point){0}, point_on_canvas,
+				1, INFINITY, 3);
 			draw_pixel_in_screen_space(&vars->img_vars, pixel);
 			++pixel.x;
 		}
 		--pixel.y;
-		mlx_string_put(vars->mlx_ptr, vars->win_ptr, HEIGHT - 2 * pixel.y, 5, 0x009900, "-");
+		mlx_string_put(vars->mlx_ptr, vars->win_ptr, HEIGHT - 2 * pixel.y, 5,
+			0x009900, "-");
 	}
 	
 }
@@ -400,26 +428,29 @@ int	main(void)
 	vars.scene.objects[0] = (t_object){
 		.type = Sphere,
 		.category = Object,
-		.color = RED,
+		.color = MAGENTA,
 		.position = (t_point){0, 0, -3000},
 		.radius = 500,
-		.specular_exponent = 500 /* Shiny */
+		.specular_exponent = 10, /* Shiny */
+		.reflectivity = 0.2, /* A bit reflective */
 	};
 	vars.scene.objects[1] = (t_object){
 		.type = Sphere,
 		.category = Object,
-		.color = BLUE,
+		.color = CYAN,
 		.position = (t_point){1000, 1000, -5000},
 		.radius = 1800,
-		.specular_exponent = 10 /* Somewhat shiny */
+		.specular_exponent = 100, /* Somewhat shiny */
+		.reflectivity = 0.3 /* A bit more reflective */
 	};
 	vars.scene.objects[2] = (t_object){
 		.type = Sphere,
 		.category = Object,
-		.color = GREEN,
+		.color = YELLOW,
 		.position = (t_point){-1000, -300, -2500},
 		.radius = 300,
-		.specular_exponent = 1000 /* Very shiny */
+		.specular_exponent = 1000, /* Very shiny */
+		.reflectivity = 0.5 /* Half reflective */
 	};
 
 	allocate_lights(&vars.scene, 3);
@@ -427,7 +458,7 @@ int	main(void)
 		.type = PointLight,
 		.category = Light,
 		.intensity = 0.4,
-		.position = (t_point){1000, 2000, -1000},
+		.position = (t_point){0, 0, -1000},
 		.direction = (t_vector){0}
 	};
 #if 0

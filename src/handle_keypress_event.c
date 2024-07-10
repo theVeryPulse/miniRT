@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:21:20 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/09 01:06:14 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/09 12:08:14 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,17 +49,17 @@ static void	switch_focus(t_vars *vars)
 static void	adjust_directional_light(t_object *focus, int key)
 {
 	if (key == XK_Up)
-		focus->direction.y += 1;
+		focus->direction.y += 0.2;
 	else if (key == XK_Down)
-		focus->direction.y -= 1;
+		focus->direction.y -= 0.2;
 	else if (key == XK_Left)
-		focus->direction.x -= 1;
+		focus->direction.x -= 0.2;
 	else if (key == XK_Right)
-		focus->direction.x += 1;
+		focus->direction.x += 0.2;
 	else if (key == XK_i)
-		focus->direction.z -= 1;
+		focus->direction.z -= 0.2;
 	else if (key == XK_o)
-		focus->direction.z += 1;
+		focus->direction.z += 0.2;
 }
 
 static void	move_position(t_object *focus, int key)

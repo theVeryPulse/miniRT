@@ -6,11 +6,12 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 12:42:46 by Philip            #+#    #+#             */
-/*   Updated: 2024/04/08 17:46:01 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/10 20:03:56 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "argb.h"
+#include <stdint.h>
 
 /**
  * @brief Create a int value representing arpg
@@ -21,10 +22,9 @@
  * @param b Blue
  * @return int (0xAARRGGBB)
  */
-t_argb	argb(unsigned char alpha, unsigned char r, unsigned char g,
-				unsigned char b)
+extern inline t_argb	argb(uint8_t alpha, uint8_t r, uint8_t g, uint8_t b)
 {
-	return (*(int *)(unsigned char [4]){b, g, r, alpha});
+	return (*(int *)(uint8_t[4]){b, g, r, alpha});
 }
 
 /**
@@ -33,9 +33,9 @@ t_argb	argb(unsigned char alpha, unsigned char r, unsigned char g,
  * @param argb The 32-bit ARGB color value.
  * @return The alpha component of the color.
  */
-unsigned char	get_a(t_argb argb)
+extern inline uint8_t	get_a(t_argb argb)
 {
-	return (((unsigned char *)&argb)[3]);
+	return (((uint8_t *)&argb)[3]);
 }
 
 /**
@@ -44,9 +44,9 @@ unsigned char	get_a(t_argb argb)
  * @param argb The 32-bit ARGB color value.
  * @return The red component of the color.
  */
-unsigned char	get_r(t_argb argb)
+extern inline uint8_t	red_component(t_argb argb)
 {
-	return (((unsigned char *)&argb)[2]);
+	return (((uint8_t *)&argb)[2]);
 }
 
 /**
@@ -55,9 +55,9 @@ unsigned char	get_r(t_argb argb)
  * @param argb The 32-bit ARGB color value.
  * @return The green component of the color.
  */
-unsigned char	get_g(t_argb argb)
+extern inline uint8_t	green_component(t_argb argb)
 {
-	return (((unsigned char *)&argb)[1]);
+	return (((uint8_t *)&argb)[1]);
 }
 
 /**
@@ -66,7 +66,7 @@ unsigned char	get_g(t_argb argb)
  * @param argb The 32-bit ARGB color value.
  * @return The blue component of the color.
  */
-unsigned char	get_b(t_argb argb)
+extern inline uint8_t	blue_component(t_argb argb)
 {
-	return (((unsigned char *)&argb)[0]);
+	return (((uint8_t *)&argb)[0]);
 }
