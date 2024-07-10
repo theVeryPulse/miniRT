@@ -6,51 +6,14 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 17:48:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/07 00:36:43 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/10 17:33:30 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef T_SCENE_H
 # define T_SCENE_H
 
-# include "t_point.h"
-# include "argb.h"
-
-typedef enum e_object_type
-{
-	UndefinedObject,
-	Sphere,
-	AmbientLight,
-	PointLight,
-	DirectionalLight
-}	t_object_type;
-
-typedef enum e_category
-{
-	UndefinedCategory,
-	Object,
-	Light
-}	t_category;
-
-typedef struct s_object
-{
-	/* Common properties */
-
-	t_object_type	type;
-	t_category		category;
-	t_argb			color;
-	t_point			position;
-
-	/* Light properties */
-
-	double			intensity;
-	t_vector		direction;
-
-	/* Object properties */
-
-	double			radius;
-	double			specular_exponent;
-}	t_object;
+# include "t_object.h"
 
 typedef struct s_scene
 {
