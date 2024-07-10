@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 18:11:19 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/10 19:57:07 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -343,7 +343,7 @@ static inline t_argb	color_add(t_argb a, t_argb b)
 }
 
 t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
-		double t_min, double t_max)
+		double t_min, double t_max, uint8_t recursion_depth)
 {
 	double		closest_t;
 	double		t[2];
@@ -351,25 +351,44 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 
 	closest_object = NULL;
 	closest_t = INFINITY;
+
+	/* Closes object and closest_t are the targets */
 	closest_object = find_closest_object(scene, ray_origin, ray_direction,
 		t_min, t_max, &closest_t);
 	if (closest_object == NULL)
 		return (minirt()->background_color);
-	else
-	{
-		t_point		intersection;
-		t_vector	normal;
-		double		intensity;
 
-		intersection = vector_add(ray_origin,
-			vector_multiply(closest_t, ray_direction));
-		normal = vector_minus(intersection, closest_object->position);
-		normal = vector_divide(normal, vector_length(normal));
-		intensity = compute_lighting(scene, intersection, normal,
-			vector_multiply(-1, ray_direction),
-			closest_object->specular_exponent);
-		return(color_with_intensity(closest_object->color, intensity));
-	}
+	t_point		intersection;
+	t_vector	unit_normal;
+	double		intensity;
+	t_argb		local_color;
+
+	intersection = vector_add(ray_origin,
+		vector_multiply(closest_t, ray_direction));
+	unit_normal = vector_minus(intersection, closest_object->position);
+	unit_normal = vector_divide(unit_normal, vector_length(unit_normal));
+	intensity = compute_lighting(scene, intersection, unit_normal,
+		vector_multiply(-1, ray_direction),
+		closest_object->specular_exponent);
+	local_color = color_with_intensity(closest_object->color, intensity);
+
+
+	// return (local_color); /* Return color here to skip reflection */
+
+	/* When recursion limit is hit or the other object does not reflect */
+	if (recursion_depth <= 0 || closest_object->reflectivity <= 0)
+		return (local_color);
+	/* Else computes reflected color */
+	t_vector	reflection;
+	t_argb		reflected_color;
+
+	reflection = reflect_ray(vector_multiply(-1, ray_direction), unit_normal);
+	reflected_color = trace_ray(scene, intersection, reflection, 0.001, INFINITY,
+		recursion_depth - 1);
+	/* The more smooth the object is, the more light it reflects */
+	return (color_add(
+		color_with_intensity(local_color, 1- closest_object->reflectivity),
+		color_with_intensity(reflected_color, closest_object->reflectivity)));
 }
 
 /**
@@ -389,13 +408,14 @@ void	basic_raytracing(t_vars *vars)
 		{
 			point_on_canvas = (t_point){.x = pixel.x, .y = pixel.y,
 				.z = (double)(-minirt()->eye_canvas_distance)};
-			pixel.color = trace_ray(&vars->scene, (t_point){0}, point_on_canvas, 1, 
-					INFINITY);
+			pixel.color = trace_ray(&vars->scene, (t_point){0}, point_on_canvas,
+				1, INFINITY, 3);
 			draw_pixel_in_screen_space(&vars->img_vars, pixel);
 			++pixel.x;
 		}
 		--pixel.y;
-		mlx_string_put(vars->mlx_ptr, vars->win_ptr, HEIGHT - 2 * pixel.y, 5, 0x009900, "-");
+		mlx_string_put(vars->mlx_ptr, vars->win_ptr, HEIGHT - 2 * pixel.y, 5,
+			0x009900, "-");
 	}
 	
 }
@@ -427,7 +447,7 @@ int	main(void)
 		.color = RED,
 		.position = (t_point){0, 0, -3000},
 		.radius = 500,
-		.specular_exponent = 500, /* Shiny */
+		.specular_exponent = 10, /* Shiny */
 		.reflectivity = 0.2, /* A bit reflective */
 	};
 	vars.scene.objects[1] = (t_object){
@@ -436,7 +456,7 @@ int	main(void)
 		.color = BLUE,
 		.position = (t_point){1000, 1000, -5000},
 		.radius = 1800,
-		.specular_exponent = 10, /* Somewhat shiny */
+		.specular_exponent = 100, /* Somewhat shiny */
 		.reflectivity = 0.3 /* A bit more reflective */
 	};
 	vars.scene.objects[2] = (t_object){
@@ -454,7 +474,7 @@ int	main(void)
 		.type = PointLight,
 		.category = Light,
 		.intensity = 0.4,
-		.position = (t_point){1000, 2000, -1000},
+		.position = (t_point){0, 0, -1000},
 		.direction = (t_vector){0}
 	};
 #if 0
