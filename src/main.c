@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/11 00:30:15 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/11 01:00:21 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@
 #include <unistd.h> /* STDERR */
 
 #include "../lib/libft/inc/libft.h"
+
+#include <stdbool.h>
 
 void	render_image(t_vars *vars);
 void	put_image_to_window_vars(t_vars *vars);
@@ -125,6 +127,30 @@ void	test_draw_on_image(t_img_vars *img_vars)
 		draw_pixel_in_screen_space(img_vars, pixel);	
 }
 
+bool	light_is_blocked(t_scene *scene, t_point ray_origin,
+	t_vector ray_direction, double t_min, double t_max)
+{
+	double		t[2];
+	size_t		i;
+
+	i = 0;
+	while (i < scene->object_count)
+	{
+		if (scene->objects[i].type == Sphere)
+		{
+			ray_sphere_intersect(t, ray_origin, ray_direction,
+				&(scene->objects)[i], vec_dot(ray_direction, ray_direction));
+			if (t[0] >= t_min && t[0] <= t_max)
+				return (true);
+		}
+		else if (scene->objects[i].type != Sphere)
+		{
+		}
+		++i;
+	}
+	return (false);
+}
+
 t_object	*find_closest_object(t_scene *scene, t_point ray_origin,
 	t_vector ray_direction, double t_min, double t_max, double *closest_t)
 {
@@ -140,19 +166,19 @@ t_object	*find_closest_object(t_scene *scene, t_point ray_origin,
 		{
 			ray_sphere_intersect(t, ray_origin, ray_direction,
 				&(scene->objects)[i], vec_dot(ray_direction, ray_direction));
+			if (t[0] >= t_min && t[0] <= t_max && t[0] < *closest_t)
+			{
+				*closest_t = t[0];
+				closest_object = &(scene->objects[i]);
+			}
+			if (t[1] >= t_min && t[1] <= t_max && t[1] < *closest_t)
+			{
+				*closest_t = t[1];
+				closest_object = &(scene->objects[i]);
+			}
 		}
 		else if (scene->objects[i].type != Sphere)
-			;
-
-		if (t[0] >= t_min && t[0] <= t_max && t[0] < *closest_t)
 		{
-			*closest_t = t[0];
-			closest_object = &(scene->objects[i]);
-		}
-		if (t[1] >= t_min && t[1] <= t_max && t[1] < *closest_t)
-		{
-			*closest_t = t[1];
-			closest_object = &(scene->objects[i]);
 		}
 		++i;
 	}
@@ -169,8 +195,7 @@ t_object	*find_closest_object(t_scene *scene, t_point ray_origin,
  */
 static inline t_vector	reflect_ray(t_vector ray, t_vector normal)
 {
-	return (vec_minus(
-			vec_mult(2 * vec_dot(normal, ray), normal), ray));
+	return (vec_minus(vec_mult(2 * vec_dot(normal, ray), normal), ray));
 }
 
 /**
@@ -214,12 +239,7 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 			}
 
 			/* Shadow check */
-			t_object	*shadow_object = NULL;
-			double		shadow_t = INFINITY;
-
-			shadow_object = find_closest_object(scene, point, light, 0.0001,
-				t_max, &shadow_t);
-			if (shadow_object != NULL)
+			if (light_is_blocked(scene, point, light, 0.0001, t_max))
 			{
 				++i;
 				continue;
