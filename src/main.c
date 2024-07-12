@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/12 17:51:56 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/12 21:31:20 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,14 +152,31 @@ bool	light_is_blocked(t_scene *scene, t_point shadow_ray_origin,
 	return (false);
 }
 
-t_object	*find_closest_object(t_scene *scene, t_point ray_origin,
-	t_vector ray_direction, double t_min, double t_max, double *closest_t)
+/**
+ * @brief Checks if a ray hits any object, if hit, record this closest object
+ *        and closest_t.
+ * 
+ * @param scene 
+ * @param ray_origin 
+ * @param ray_direction 
+ * @param t_min 
+ * @param t_max 
+ * @param closest_object 
+ * @param closest_t 
+ * @return bool
+ */
+bool	*trace(t_scene *scene,
+	t_point ray_origin,
+	t_vector ray_direction,
+	double t_min,
+	double t_max,
+	t_object **closest_object, 
+	double *closest_t)
 {
-	double		t[2];
-	t_object	*closest_object;
-	size_t		i;
+	double	t[2];
+	size_t	i;
 
-	closest_object = NULL;
+	*closest_object = NULL;
 	i = 0;
 	while (i < scene->object_count)
 	{
@@ -170,12 +187,12 @@ t_object	*find_closest_object(t_scene *scene, t_point ray_origin,
 			if (t[0] >= t_min && t[0] <= t_max && t[0] < *closest_t)
 			{
 				*closest_t = t[0];
-				closest_object = &(scene->objects[i]);
+				*closest_object = &(scene->objects[i]);
 			}
 			if (t[1] >= t_min && t[1] <= t_max && t[1] < *closest_t)
 			{
 				*closest_t = t[1];
-				closest_object = &(scene->objects[i]);
+				*closest_object = &(scene->objects[i]);
 			}
 		}
 		else if (scene->objects[i].type != Sphere)
@@ -183,7 +200,7 @@ t_object	*find_closest_object(t_scene *scene, t_point ray_origin,
 		}
 		++i;
 	}
-	return (closest_object);
+	return (*closest_object != NULL);
 }
 
 /**
@@ -314,7 +331,7 @@ void	ray_sphere_intersect(double t[2], t_point ray_origin,
 	}
 }
 
-t_argb	trace_then_shade(t_scene *scene, t_point ray_origin, t_vector ray_direction,
+t_argb	cast_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 		double t_min, double t_max, uint8_t recursion_depth)
 {
 	double		closest_t;
@@ -323,12 +340,10 @@ t_argb	trace_then_shade(t_scene *scene, t_point ray_origin, t_vector ray_directi
 	closest_object = NULL;
 	closest_t = INFINITY;
 
-	/* trace(): Finds closest object and closest_t */
-	closest_object = find_closest_object(scene, ray_origin, ray_direction,
-		t_min, t_max, &closest_t);
-	if (closest_object == NULL)
+	if (!trace(scene, ray_origin, ray_direction, t_min, t_max,
+		&closest_object, &closest_t))
 		return (minirt()->background_color);
-	/* trace() end */
+
 	/* shade(): determining the color of the intersect point */
 
 	t_point		intersection;
@@ -354,7 +369,7 @@ t_argb	trace_then_shade(t_scene *scene, t_point ray_origin, t_vector ray_directi
 	t_argb		reflected_color;
 
 	reflection_ray = reflect_ray(vec_mult(-1, ray_direction), unit_normal);
-	reflected_color = trace_then_shade(scene, intersection, reflection_ray,
+	reflected_color = cast_ray(scene, intersection, reflection_ray,
 		0.001, INFINITY, recursion_depth - 1);
 	/* The more smooth the object is, the more light it reflects */
 	return (color_add(
@@ -380,7 +395,7 @@ void	render_image(t_vars *vars)
 		{
 			ray_direction = (t_point){pixel.x, pixel.y,
 				(double)(-minirt()->eye_canvas_distance)};
-			pixel.color = trace_then_shade(&vars->scene, (t_point){0},
+			pixel.color = cast_ray(&vars->scene, (t_point){0},
 				ray_direction, 1, INFINITY, 3);
 			draw_pixel_in_screen_space(&vars->img_vars, pixel);
 			++pixel.x;
