@@ -6,15 +6,15 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 17:30:36 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 17:40:04 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/10 23:43:46 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef T_OBJECT_H
 # define T_OBJECT_H
 
-# include "t_point.h"
-# include "argb.h"
+# include "geometry/vector/t_point.h"
+# include "color/inc/argb.h"
 
 typedef enum e_object_type
 {
@@ -51,6 +51,7 @@ typedef struct s_object
 	double			radius;
 	double			specular_exponent;
 	double			reflectivity;
+	double			radius_squared;
 }	t_object;
 
 #endif /* T_OBJECT_H */

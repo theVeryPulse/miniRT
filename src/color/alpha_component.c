@@ -1,29 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_scene.h                                          :+:      :+:    :+:   */
+/*   alpha_component.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/02 17:48:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 23:30:31 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/10 23:18:03 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/10 23:25:37 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_SCENE_H
-# define T_SCENE_H
+#include "t_argb.h"
+#include <stdint.h>
 
-# include "t_object.h"
-# include <stdint.h>
-
-typedef struct s_scene
+/**
+ * @brief Retrieves the alpha component from a 32-bit ARGB color value.
+ *
+ * @param argb The 32-bit ARGB color value.
+ * @return The alpha component of the color.
+ */
+extern uint8_t	alpha_component(t_argb argb)
 {
-	/* Array of objects */
-	t_object	*objects;
-	uint8_t		object_count;
-	t_object	*lights;
-	uint8_t		light_count;
-	t_object	*focus;
-}	t_scene;
-
-#endif /* T_SCENE_H */
+	return (((uint8_t *)&argb)[3]);
+}

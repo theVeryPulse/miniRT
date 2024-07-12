@@ -1,29 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_scene.h                                          :+:      :+:    :+:   */
+/*   vec_div.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/02 17:48:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 23:30:31 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/10 22:35:33 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/10 22:55:34 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_SCENE_H
-# define T_SCENE_H
+#include "t_point.h"
 
-# include "t_object.h"
-# include <stdint.h>
-
-typedef struct s_scene
+extern t_vector	vec_div(t_vector a, double t)
 {
-	/* Array of objects */
-	t_object	*objects;
-	uint8_t		object_count;
-	t_object	*lights;
-	uint8_t		light_count;
-	t_object	*focus;
-}	t_scene;
-
-#endif /* T_SCENE_H */
+	return ((t_vector){.x = a.x / t, .y = a.y / t, .z = a.z / t});
+}

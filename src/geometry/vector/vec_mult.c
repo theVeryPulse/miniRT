@@ -1,29 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_scene.h                                          :+:      :+:    :+:   */
+/*   vec_mult.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/02 17:48:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 23:30:31 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/10 22:36:12 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/10 22:55:45 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_SCENE_H
-# define T_SCENE_H
+#include "t_point.h"
 
-# include "t_object.h"
-# include <stdint.h>
-
-typedef struct s_scene
+extern t_vector	vec_mult(double t, t_vector a)
 {
-	/* Array of objects */
-	t_object	*objects;
-	uint8_t		object_count;
-	t_object	*lights;
-	uint8_t		light_count;
-	t_object	*focus;
-}	t_scene;
-
-#endif /* T_SCENE_H */
+	return ((t_vector){.x = t * a.x, .y = t * a.y, .z = t * a.z});
+}

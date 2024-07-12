@@ -1,29 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_scene.h                                          :+:      :+:    :+:   */
+/*   t_mx.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/02 17:48:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 23:30:31 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/10 22:18:34 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/10 22:19:02 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_SCENE_H
-# define T_SCENE_H
+#ifndef T_MX_H
+# define T_MX_H
+# define MAX_COL 4
+# define MAX_ROW 4
 
-# include "t_object.h"
-# include <stdint.h>
-
-typedef struct s_scene
+typedef struct s_matrix
 {
-	/* Array of objects */
-	t_object	*objects;
-	uint8_t		object_count;
-	t_object	*lights;
-	uint8_t		light_count;
-	t_object	*focus;
-}	t_scene;
+	int		row_num;
+	int		col_num;
+	double	entries[MAX_ROW][MAX_COL];
+}	t_mx;
 
-#endif /* T_SCENE_H */
+#endif

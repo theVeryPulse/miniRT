@@ -1,29 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_scene.h                                          :+:      :+:    :+:   */
+/*   vector.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/02 17:48:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 23:30:31 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/10 22:32:03 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/10 22:55:50 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_SCENE_H
-# define T_SCENE_H
+#ifndef VECTOR_H
+# define VECTOR_H
 
-# include "t_object.h"
-# include <stdint.h>
+# include "t_point.h"
 
-typedef struct s_scene
-{
-	/* Array of objects */
-	t_object	*objects;
-	uint8_t		object_count;
-	t_object	*lights;
-	uint8_t		light_count;
-	t_object	*focus;
-}	t_scene;
+extern t_vector	vec_add(t_vector a, t_vector b);
+extern t_vector	vec_div(t_vector a, double t);
+extern double	vec_dot(t_vector a, t_vector b);
+extern t_vector	vec_minus(t_vector a, t_vector b);
+extern t_vector	vec_mult(double t, t_vector a);
 
-#endif /* T_SCENE_H */
+extern double	vec_len(t_vector vec);
+
+#endif /* VECTOR_H */

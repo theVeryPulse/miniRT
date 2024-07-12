@@ -1,29 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_scene.h                                          :+:      :+:    :+:   */
+/*   mx_transpose.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/02 17:48:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 23:30:31 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/10 22:17:41 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/10 22:19:45 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_SCENE_H
-# define T_SCENE_H
+#include "t_mx.h"
 
-# include "t_object.h"
-# include <stdint.h>
-
-typedef struct s_scene
+/**
+ * @brief Transposes the given matrix.
+ *
+ * @param mx The matrix to be transposed.
+ * @return The transposed matrix.
+ */
+t_mx	mx_transpose(t_mx mx)
 {
-	/* Array of objects */
-	t_object	*objects;
-	uint8_t		object_count;
-	t_object	*lights;
-	uint8_t		light_count;
-	t_object	*focus;
-}	t_scene;
+	t_mx	mx_t;
+	int		i;
+	int		j;
 
-#endif /* T_SCENE_H */
+	mx_t.col_num = mx.row_num;
+	mx_t.row_num = mx.col_num;
+	i = 0;
+	while (i < MAX_ROW)
+	{
+		j = 0;
+		while (j < MAX_COL)
+		{
+			mx_t.entries[i][j] = mx.entries[j][i];
+			j++;
+		}
+		i++;
+	}
+	return (mx_t);
+}

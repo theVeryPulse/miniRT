@@ -1,29 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_scene.h                                          :+:      :+:    :+:   */
+/*   argb.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/02 17:48:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 23:30:31 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/10 23:20:54 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/10 23:25:40 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_SCENE_H
-# define T_SCENE_H
+#include "t_argb.h"
+#include <stdint-gcc.h>
 
-# include "t_object.h"
-# include <stdint.h>
-
-typedef struct s_scene
+/**
+ * @brief Create a int value representing arpg
+ * 
+ * @param alpha Transparency
+ * @param r Red
+ * @param g Green
+ * @param b Blue
+ * @return int (0xAARRGGBB)
+ */
+extern t_argb	argb(uint8_t alpha, uint8_t r, uint8_t g, uint8_t b)
 {
-	/* Array of objects */
-	t_object	*objects;
-	uint8_t		object_count;
-	t_object	*lights;
-	uint8_t		light_count;
-	t_object	*focus;
-}	t_scene;
-
-#endif /* T_SCENE_H */
+	return (*(int *)(uint8_t[4]){b, g, r, alpha});
+}

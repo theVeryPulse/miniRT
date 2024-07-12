@@ -1,29 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_scene.h                                          :+:      :+:    :+:   */
+/*   matrix.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/02 17:48:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 23:30:31 by Philip           ###   ########.fr       */
+/*   Created: 2024/04/08 17:27:01 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/10 22:26:52 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_SCENE_H
-# define T_SCENE_H
+#ifndef MATRIX_H
+# define MATRIX_H
 
-# include "t_object.h"
-# include <stdint.h>
+# include "t_mx.h"
 
-typedef struct s_scene
-{
-	/* Array of objects */
-	t_object	*objects;
-	uint8_t		object_count;
-	t_object	*lights;
-	uint8_t		light_count;
-	t_object	*focus;
-}	t_scene;
+t_mx	mx_mult(int mx_count, ...);
+t_mx	mx_mult_mx(t_mx mxa, t_mx mxb);
+t_mx	mx_transpose(t_mx mx);
 
-#endif /* T_SCENE_H */
+#endif

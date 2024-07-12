@@ -1,21 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   color_add.c                                        :+:      :+:    :+:   */
+/*   vec_len.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/10 20:04:59 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 20:07:10 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/10 22:36:40 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/10 22:57:57 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "argb.h"
+#include "t_point.h"
+#include <math.h>
 
-extern inline t_argb	color_add(t_argb a, t_argb b)
+extern double	vec_len(t_vector vec)
 {
-	return (argb(0x00,
-			red_component(a) + red_component(b),
-			green_component(a) + green_component(b),
-			blue_component(a) + blue_component(b)));
+	return (sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z));
 }
