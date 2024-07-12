@@ -6,13 +6,13 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 22:35:33 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 22:55:34 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/12 16:19:16 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "t_point.h"
+#include "vector.h"
 
 extern t_vector	vec_div(t_vector a, double t)
 {
-	return ((t_vector){.x = a.x / t, .y = a.y / t, .z = a.z / t});
+	return (vec_mult(1 / t, a));
 }
