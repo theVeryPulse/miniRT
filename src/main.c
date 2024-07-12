@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/11 01:00:21 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/12 16:23:59 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -313,7 +313,7 @@ void	ray_sphere_intersect(double t[2], t_point ray_origin,
 	}
 }
 
-t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
+t_argb	trace_then_shade(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 		double t_min, double t_max, uint8_t recursion_depth)
 {
 	double		closest_t;
@@ -322,11 +322,13 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 	closest_object = NULL;
 	closest_t = INFINITY;
 
-	/* Closes object and closest_t are the targets */
+	/* trace(): Finds closest object and closest_t */
 	closest_object = find_closest_object(scene, ray_origin, ray_direction,
 		t_min, t_max, &closest_t);
 	if (closest_object == NULL)
 		return (minirt()->background_color);
+	/* trace() end */
+	/* shade(): determining the color of the intersect point */
 
 	t_point		intersection;
 	t_vector	unit_normal;
@@ -334,11 +336,10 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 	t_argb		local_color;
 
 	intersection = vec_add(ray_origin, vec_mult(closest_t, ray_direction));
-	unit_normal = vec_minus(intersection, closest_object->position);
-	unit_normal = vec_div(unit_normal, vec_len(unit_normal));
+	unit_normal = vec_normalized(
+		vec_minus(intersection, closest_object->position));
 	intensity = compute_lighting(scene, intersection, unit_normal,
-		vec_mult(-1, ray_direction),
-		closest_object->specular_exponent);
+		vec_mult(-1, ray_direction), closest_object->specular_exponent);
 	local_color = color_mult(closest_object->color, intensity);
 
 
@@ -352,12 +353,13 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 	t_argb		reflected_color;
 
 	reflection = reflect_ray(vec_mult(-1, ray_direction), unit_normal);
-	reflected_color = trace_ray(scene, intersection, reflection, 0.001, INFINITY,
-		recursion_depth - 1);
+	reflected_color = trace_then_shade(scene, intersection, reflection, 0.001,
+		INFINITY, recursion_depth - 1);
 	/* The more smooth the object is, the more light it reflects */
 	return (color_add(
 		color_mult(local_color, 1- closest_object->reflectivity),
 		color_mult(reflected_color, closest_object->reflectivity)));
+	/* shade() end */
 }
 
 /**
@@ -366,8 +368,8 @@ t_argb	trace_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
  */
 void	render_image(t_vars *vars)
 {
-	t_point	point_on_canvas;
-	t_pixel	pixel;
+	t_vector	ray_direction;
+	t_pixel		pixel;
 
 	pixel.y = HEIGHT / 2;
 	while (pixel.y > - HEIGHT / 2)
@@ -375,10 +377,10 @@ void	render_image(t_vars *vars)
 		pixel.x = - WIDTH / 2;
 		while (pixel.x < WIDTH / 2)
 		{
-			point_on_canvas = (t_point){.x = pixel.x, .y = pixel.y,
-				.z = (double)(-minirt()->eye_canvas_distance)};
-			pixel.color = trace_ray(&vars->scene, (t_point){0}, point_on_canvas,
-				1, INFINITY, 3);
+			ray_direction = (t_point){pixel.x, pixel.y,
+				(double)(-minirt()->eye_canvas_distance)};
+			pixel.color = trace_then_shade(&vars->scene, (t_point){0},
+				vec_normalized(ray_direction), 1, INFINITY, 3);
 			draw_pixel_in_screen_space(&vars->img_vars, pixel);
 			++pixel.x;
 		}
