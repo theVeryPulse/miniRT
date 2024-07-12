@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/12 16:23:59 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/12 17:51:56 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,8 +127,8 @@ void	test_draw_on_image(t_img_vars *img_vars)
 		draw_pixel_in_screen_space(img_vars, pixel);	
 }
 
-bool	light_is_blocked(t_scene *scene, t_point ray_origin,
-	t_vector ray_direction, double t_min, double t_max)
+bool	light_is_blocked(t_scene *scene, t_point shadow_ray_origin,
+	t_vector shadow_ray_direction, double t_min, double t_max)
 {
 	double		t[2];
 	size_t		i;
@@ -138,8 +138,9 @@ bool	light_is_blocked(t_scene *scene, t_point ray_origin,
 	{
 		if (scene->objects[i].type == Sphere)
 		{
-			ray_sphere_intersect(t, ray_origin, ray_direction,
-				&(scene->objects)[i], vec_dot(ray_direction, ray_direction));
+			ray_sphere_intersect(t, shadow_ray_origin, shadow_ray_direction,
+				&(scene->objects)[i],
+				vec_dot(shadow_ray_direction, shadow_ray_direction));
 			if (t[0] >= t_min && t[0] <= t_max)
 				return (true);
 		}
@@ -349,12 +350,12 @@ t_argb	trace_then_shade(t_scene *scene, t_point ray_origin, t_vector ray_directi
 	if (recursion_depth <= 0 || closest_object->reflectivity <= 0)
 		return (local_color);
 	/* Else computes reflected color */
-	t_vector	reflection;
+	t_vector	reflection_ray;
 	t_argb		reflected_color;
 
-	reflection = reflect_ray(vec_mult(-1, ray_direction), unit_normal);
-	reflected_color = trace_then_shade(scene, intersection, reflection, 0.001,
-		INFINITY, recursion_depth - 1);
+	reflection_ray = reflect_ray(vec_mult(-1, ray_direction), unit_normal);
+	reflected_color = trace_then_shade(scene, intersection, reflection_ray,
+		0.001, INFINITY, recursion_depth - 1);
 	/* The more smooth the object is, the more light it reflects */
 	return (color_add(
 		color_mult(local_color, 1- closest_object->reflectivity),
@@ -380,7 +381,7 @@ void	render_image(t_vars *vars)
 			ray_direction = (t_point){pixel.x, pixel.y,
 				(double)(-minirt()->eye_canvas_distance)};
 			pixel.color = trace_then_shade(&vars->scene, (t_point){0},
-				vec_normalized(ray_direction), 1, INFINITY, 3);
+				ray_direction, 1, INFINITY, 3);
 			draw_pixel_in_screen_space(&vars->img_vars, pixel);
 			++pixel.x;
 		}
