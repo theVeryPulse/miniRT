@@ -20,6 +20,7 @@ FILES := src/color/alpha_component.c \
 	src/geometry/vector/vec_len.c \
 	src/geometry/vector/vec_minus.c \
 	src/geometry/vector/vec_mult.c \
+	src/geometry/vector/vec_normalized.c \
 	src/handle_keypress_event.c \
 	src/main.c \
 	src/minirt.c
