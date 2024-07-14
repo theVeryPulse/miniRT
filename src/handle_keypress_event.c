@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:21:20 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 22:05:04 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/13 19:05:20 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ static void	switch_focus(t_vars *vars)
 		message = "Focus: Ambience Light ";
 	else if (vars->scene.focus->type == Sphere)
 		message = "Focus: Sphere";
+	else
+		message = "What?";
 	put_image_to_window_vars(vars);
 	mlx_string_put(vars->mlx_ptr, vars->win_ptr, 10, 10, GREEN, message);
 }
@@ -86,7 +88,7 @@ static void	adjust_light_intensity(t_object *light, int key)
 		return ;
 	if (key == XK_Page_Up && light->intensity < 1)
 		factor = 1.05;
-	else if (key == XK_Page_Down)
+	else
 		factor = 0.95;
 	light->intensity *= factor;
 	if (light->intensity >= 1)

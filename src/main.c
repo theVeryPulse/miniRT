@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/12 21:31:20 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/14 01:11:31 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,7 @@ bool	light_is_blocked(t_scene *scene, t_point shadow_ray_origin,
  * @param closest_t 
  * @return bool
  */
-bool	*trace(t_scene *scene,
+bool	trace(t_scene *scene,
 	t_point ray_origin,
 	t_vector ray_direction,
 	double t_min,
@@ -255,6 +255,8 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 				light = scene->lights[i].direction;
 				t_max = INFINITY;
 			}
+			else /* Silencing gcc warning */
+				t_max = INFINITY;
 
 			/* Shadow check */
 			if (light_is_blocked(scene, point, light, 0.0001, t_max))
