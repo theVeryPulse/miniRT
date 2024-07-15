@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/15 17:12:44 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/15 22:33:21 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -382,6 +382,25 @@ t_argb	cast_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 
 /**
  * @brief 
+ * 
+ * @param cam 
+ * @param pt 
+ * @return t_vector 
+ * @note
+ * dx = (ux)(dx)
+ */
+t_vector	calculate_ray_direction(t_camera *cam, t_point pt)
+{
+	t_vector	ray;
+
+	ray.x = cam->u.x * pt.x + cam->v.x * pt.y + cam->w.x * pt.z;
+	ray.y = cam->u.y * pt.x + cam->v.y * pt.y + cam->w.y * pt.z;
+	ray.z = cam->u.z * pt.x + cam->v.z * pt.y + cam->w.z * pt.z;
+	return (ray);
+}
+
+/**
+ * @brief 
  * @ref computer-graphics-from-scratch / 02-basic-raytracing
  */
 void	render_image(t_vars *vars)
@@ -395,8 +414,8 @@ void	render_image(t_vars *vars)
 		pixel.x = - WIDTH / 2;
 		while (pixel.x < WIDTH / 2)
 		{
-			ray_direction = (t_point){pixel.x, pixel.y,
-				(double)(-minirt()->eye_canvas_distance)};
+			ray_direction = calculate_ray_direction(&(vars->scene.camera),
+				(t_point){pixel.x, pixel.y, -(minirt()->eye_canvas_distance)});
 			pixel.color = cast_ray(&vars->scene, (t_point){0},
 				ray_direction, 1, INFINITY, 3);
 			draw_pixel_in_screen_space(&vars->img_vars, pixel);
@@ -443,11 +462,15 @@ int	main(void)
 	set_up_hooks(&vars);
 	minirt_init();
 
-	vars.scene.camera = (t_object){
-		.category = Camera,
-		.type = CameraType,
-		.direction = (t_vector){0, 0, -1},
-		.position = (t_point){0, 0, 0}
+	vars.scene.camera = (t_camera){
+		.position = (t_point){0, 0, 0},
+		.u = (t_vector){1.0, 0.0, 0.0},
+		.v = (t_vector){0.0, 1.0, 0.0},
+		.w = (t_vector){0.0, 0.0, 1.0}
+		// Turn 30 degrees left
+		/* .u = (t_vector){sqrt(3) / 2, 0, -0.5},
+		.v = (t_vector){0, 1, 0},
+		.w = (t_vector){0.5, 0, sqrt(3) / 2} */
 	};
 
 	allocate_objects(&vars.scene, 3);

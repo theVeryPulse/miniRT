@@ -1,31 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_scene.h                                          :+:      :+:    :+:   */
+/*   t_camera.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/02 17:48:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/15 19:50:10 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/15 19:48:08 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/15 19:49:41 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_SCENE_H
-# define T_SCENE_H
+#include "geometry/vector/t_point.h"
 
-# include "t_object.h"
-# include "t_camera.h"
-# include <stdint.h>
-
-typedef struct s_scene
+typedef struct s_camera
 {
-	/* Array of objects */
-	t_object	*objects;
-	uint8_t		object_count;
-	t_object	*lights;
-	uint8_t		light_count;
-	t_object	*focus;
-	t_camera	camera;
-}	t_scene;
-
-#endif /* T_SCENE_H */
+	t_point		position;
+	/* Unit direction vector of x-axis */
+	t_vector	u;
+	/* Unit direction vector of y-axis */
+	t_vector	v;
+	/* Unit direction vector of z-axis */
+	t_vector	w;
+}	t_camera;
