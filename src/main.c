@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/14 01:11:31 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/15 17:12:44 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -442,6 +442,13 @@ int	main(void)
 	set_up_mlx(&vars);
 	set_up_hooks(&vars);
 	minirt_init();
+
+	vars.scene.camera = (t_object){
+		.category = Camera,
+		.type = CameraType,
+		.direction = (t_vector){0, 0, -1},
+		.position = (t_point){0, 0, 0}
+	};
 
 	allocate_objects(&vars.scene, 3);
 	vars.scene.objects[0] = (t_object){

@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 17:30:36 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 23:43:46 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/15 17:06:51 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 typedef enum e_object_type
 {
 	UndefinedObject,
+	CameraType,
 	Sphere,
 	AmbientLight,
 	PointLight,
@@ -28,6 +29,7 @@ typedef enum e_object_type
 typedef enum e_category
 {
 	UndefinedCategory,
+	Camera,
 	Object,
 	Light
 }	t_category;
