@@ -441,6 +441,7 @@ int	main(void)
 
 	set_up_mlx(&vars);
 	set_up_hooks(&vars);
+	minirt_init();
 
 	allocate_objects(&vars.scene, 3);
 	vars.scene.objects[0] = (t_object){
