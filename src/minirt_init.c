@@ -20,4 +20,6 @@ void	minirt_init()
 	minirt()->fov = 90;
 	minirt()->background_color = BLACK;
 	minirt()->scale = tan(minirt()->fov * 0.5 * DEG_TO_RAD);
+	minirt()->eye_canvas_distance = minirt()->eye_canvas_distance = (WIDTH / 2)
+		/ tan((minirt()->fov / 2) * DEG_TO_RAD);
 }
