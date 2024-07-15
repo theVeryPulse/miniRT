@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 16:11:08 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/15 00:58:19 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/15 17:04:14 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,12 @@
 
 typedef struct s_minirt
 {
-	int		eye_canvas_distance;
-	double	fov;
-	t_argb	background_color;
-	double	image_aspect_ratio;
-	double	scale;
+	int			eye_canvas_distance;
+	double		fov;
+	t_argb		background_color;
+	double		image_aspect_ratio;
+	double		scale;
+	uint32_t	unit_one;
 }	t_minirt;
 
 extern t_minirt	*minirt(void);
