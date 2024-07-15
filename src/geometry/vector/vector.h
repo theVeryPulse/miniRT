@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 22:32:03 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/12 16:14:28 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/15 17:41:11 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,6 @@ extern t_vector	vec_mult(double t, t_vector a);
 
 extern double	vec_len(t_vector vec);
 extern t_vector	vec_normalized(t_vector vec);
+extern void		vec_normalize(t_vector *vec);
 
 #endif /* VECTOR_H */
