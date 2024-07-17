@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/17 19:27:41 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/17 19:37:04 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -446,7 +446,7 @@ void	render_image(t_vars *vars)
 		{
 			ray_direction = calculate_ray_direction(&(vars->scene.camera),
 				(t_point){pixel.x, pixel.y, -(minirt()->eye_canvas_distance)});
-			pixel.color = cast_ray(&vars->scene, (t_point){0},
+			pixel.color = cast_ray(&vars->scene, vars->scene.camera.position,
 				ray_direction, 1, INFINITY, 3);
 			draw_pixel_in_screen_space(&vars->img_vars, pixel);
 			++pixel.x;
