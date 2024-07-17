@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/15 22:33:21 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/17 18:59:25 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -303,23 +303,29 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
  * @param point_on_canvas 
  * @param sphere 
  * @note
- * |O+tD-C|^2 - R^2 = 0;
+ * |O+tD-C|^2 - R^2 = 0
+ *  O: ray origin
+ *  D: ray direction, whether normalized or not will affect the range of
+ *     solution of 't'
+ *  C: sphere center
+ *  R: sphere radius
+ * => in the form of: ax^2 + bx + c
  * => a = D^2; b = 2D(O-C); c=|O-C|^2-R^2
  * 
  * a = vec_dot(ray_direction, ray_direction)
- * `a` remains unchanged for the same ray.
+ * 'a' remains unchanged for the same ray.
  */
 void	ray_sphere_intersect(double t[2], t_point ray_origin,
 			t_point ray_direction, t_object *sphere, double a)
 {
 	double		b;
 	double		c;
-	t_vector	c_to_o;
+	t_vector	o_minus_c;
 	double		discriminant;
 
-	c_to_o = vec_minus(ray_origin, sphere->position);
-	b = 2 * vec_dot(c_to_o, ray_direction);
-	c = vec_dot(c_to_o, c_to_o) - sphere->radius_squared;
+	o_minus_c = vec_minus(ray_origin, sphere->position);
+	b = 2 * vec_dot(o_minus_c, ray_direction);
+	c = vec_dot(o_minus_c, o_minus_c) - sphere->radius_squared;
 	discriminant = b * b - 4 * a * c;
 	if (discriminant < 0)
 	{
