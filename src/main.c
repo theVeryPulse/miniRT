@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/17 18:59:25 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/17 19:27:41 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -295,6 +295,14 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 	return (intensity);
 }
 
+double	sign(double n)
+{
+	if (n >= 0)
+		return (1.0);
+	else
+		return (-1.0);
+}
+
 /**
  * @brief 
  * 
@@ -314,6 +322,19 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
  * 
  * a = vec_dot(ray_direction, ray_direction)
  * 'a' remains unchanged for the same ray.
+ * 
+ * => t1 = (-b - sqrt(b^2 - 4ac)) / 2a
+ * => t2 = (-b + sqrt(b^2 - 4ac)) / 2a
+ * 
+ * "However, due to the finite precision with which real numbers are represented 
+ * on computers, this formula can suffer from a loss of significance." A more
+ * stable equation is used instead.
+ * 
+ * q = -0.5 * (b + sign(b) * sqrt(b^2 - 4ac))
+ * => t1 = q / a
+ * => t2 = c / q
+ * 
+ * @ref Scratchpixel: ray sphere intersection
  */
 void	ray_sphere_intersect(double t[2], t_point ray_origin,
 			t_point ray_direction, t_object *sphere, double a)
@@ -334,8 +355,9 @@ void	ray_sphere_intersect(double t[2], t_point ray_origin,
 	}
 	else
 	{
-		t[0] = (-b + sqrt(discriminant)) / (2 * a);
-		t[1] = (-b - sqrt(discriminant)) / (2 * a);
+		double q = -0.5 * (b + sign(b) * sqrt(discriminant));
+		t[0] = q / a;
+		t[1] = c / q;
 	}
 }
 
