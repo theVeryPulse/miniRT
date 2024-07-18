@@ -23,6 +23,7 @@ FILES := src/color/alpha_component.c \
 	src/geometry/vector/vec_normalize.c \
 	src/geometry/vector/vec_normalized.c \
 	src/handle_keypress_event.c \
+	src/checkerboard_color_sphere.c \
 	src/main.c \
 	src/minirt_init.c \
 	src/minirt.c

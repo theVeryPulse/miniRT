@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/17 19:37:04 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/18 23:24:24 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -363,6 +363,8 @@ void	ray_sphere_intersect(double t[2], t_point ray_origin,
 	}
 }
 
+extern t_argb	checkerboard_color_sphere(t_point pt, t_argb color1, t_argb color2);
+
 t_argb	cast_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 		double t_min, double t_max, uint8_t recursion_depth)
 {
@@ -388,7 +390,17 @@ t_argb	cast_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 		vec_minus(intersection, closest_object->position));
 	intensity = compute_lighting(scene, intersection, unit_normal,
 		vec_mult(-1, ray_direction), closest_object->specular_exponent);
-	local_color = color_mult(closest_object->color, intensity);
+	if (closest_object->is_checkerboard)
+		local_color = color_mult(
+			checkerboard_color_sphere(
+				vec_minus(intersection, closest_object->position),
+				WHITE,
+				BLACK
+			),
+			intensity
+		);
+	else
+		local_color = color_mult(closest_object->color, intensity);
 
 
 	// return (local_color); /* Return color here to skip reflection */
@@ -512,6 +524,7 @@ int	main(void)
 		.radius = 500,
 		.specular_exponent = 10, /* Shiny */
 		.reflectivity = 0.2, /* A bit reflective */
+		.is_checkerboard = true
 	};
 	vars.scene.objects[1] = (t_object){
 		.type = Sphere,
@@ -520,7 +533,8 @@ int	main(void)
 		.position = (t_point){1000, 1000, -5000},
 		.radius = 1800,
 		.specular_exponent = 100, /* Somewhat shiny */
-		.reflectivity = 0.3 /* A bit more reflective */
+		.reflectivity = 0.3, /* A bit more reflective */
+		.is_checkerboard = false
 	};
 	vars.scene.objects[2] = (t_object){
 		.type = Sphere,
@@ -529,7 +543,8 @@ int	main(void)
 		.position = (t_point){-1000, -300, -2500},
 		.radius = 300,
 		.specular_exponent = 1000, /* Very shiny */
-		.reflectivity = 0.5 /* Half reflective */
+		.reflectivity = 0.5, /* Half reflective */
+		.is_checkerboard = false
 	};
 	calculate_radius_squared(&vars.scene);
 

@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 17:30:36 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/15 17:06:51 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/18 23:00:50 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "geometry/vector/t_point.h"
 # include "color/inc/argb.h"
+# include <stdbool.h>
 
 typedef enum e_object_type
 {
@@ -54,6 +55,7 @@ typedef struct s_object
 	double			specular_exponent;
 	double			reflectivity;
 	double			radius_squared;
+	bool			is_checkerboard;
 }	t_object;
 
 #endif /* T_OBJECT_H */
