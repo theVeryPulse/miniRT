@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 17:30:36 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/18 23:00:50 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/20 16:35:21 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ typedef enum e_object_type
 	UndefinedObject,
 	CameraType,
 	Sphere,
+	Plane,
 	AmbientLight,
 	PointLight,
 	DirectionalLight
@@ -47,6 +48,7 @@ typedef struct s_object
 	/* Light properties */
 
 	double			intensity;
+	/* Direction for directional light. Normal for plane */
 	t_vector		direction;
 
 	/* Object properties */
