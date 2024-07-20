@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/20 21:16:28 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/20 23:25:58 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,31 +174,48 @@ bool	trace(t_scene *scene,
 	double *closest_t)
 {
 	double	t[2];
-	size_t	i;
+	t_object	*object;
 
 	*closest_object = NULL;
-	i = 0;
-	while (i < scene->object_count)
+	object = scene->objects;
+	while (object < scene->object_count + scene->objects)
 	{
-		if (scene->objects[i].type == Sphere)
+		if (object->type == Sphere)
 		{
 			ray_sphere_intersect(t, ray_origin, ray_direction,
-				&(scene->objects)[i], vec_dot(ray_direction, ray_direction));
+				object, vec_dot(ray_direction, ray_direction));
 			if (t[0] >= t_min && t[0] <= t_max && t[0] < *closest_t)
 			{
 				*closest_t = t[0];
-				*closest_object = &(scene->objects[i]);
+				*closest_object = object;
 			}
 			if (t[1] >= t_min && t[1] <= t_max && t[1] < *closest_t)
 			{
 				*closest_t = t[1];
-				*closest_object = &(scene->objects[i]);
+				*closest_object = object;
 			}
 		}
-		else if (scene->objects[i].type != Sphere)
+		else if (object->type == Plane)
+		{
+			double	denominator;
+
+			denominator = vec_dot(object->direction, ray_direction);
+			if (denominator > 1e-6)
+			{
+				*t = vec_dot(
+					vec_minus(object->position, ray_origin), object->direction)
+					/ denominator;
+				if (*t >= t_min && *t <= t_max && *t < *closest_t)
+				{
+					*closest_t = *t;
+					*closest_object = object;
+				}
+			}
+		}
+		else
 		{
 		}
-		++i;
+		++object;
 	}
 	return (*closest_object != NULL);
 }
@@ -248,7 +265,8 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 			if (scene->lights[i].type == PointLight)
 			{
 				light = vec_minus(scene->lights[i].position, point);
-				t_max = 1;
+				t_max = vec_len(light);
+				light = vec_normalized(light);
 			}
 			else if (scene->lights[i].type == DirectionalLight)
 			{
@@ -259,7 +277,11 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 				t_max = INFINITY;
 
 			/* Shadow check */
-			if (light_is_blocked(scene, point, light, 0.0001, t_max))
+			// if (light_is_blocked(scene, point, light, 0.0001, t_max))
+			t_object	*closest_object;
+			double		closest_t;
+			if (trace(scene, point, light, 1e-4, t_max, &closest_object,
+				&closest_t))
 			{
 				++i;
 				continue;
@@ -386,8 +408,14 @@ t_argb	cast_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 	t_argb		local_color;
 
 	intersection = vec_add(ray_origin, vec_mult(closest_t, ray_direction));
-	unit_normal = vec_normalized(
-		vec_minus(intersection, closest_object->position));
+	if (closest_object->type == Sphere)
+		unit_normal = vec_normalized(
+			vec_minus(intersection, closest_object->position));
+	else if (closest_object->type == Plane)
+		unit_normal = closest_object->direction;
+	else
+	{
+	}
 	intensity = compute_lighting(scene, intersection, unit_normal,
 		vec_mult(-1, ray_direction), closest_object->specular_exponent);
 	if (closest_object->is_checkerboard)
@@ -498,6 +526,21 @@ void	calculate_radius_squared(t_scene *scene)
 	}
 }
 
+void	precompute_values(t_scene *scene)
+{
+	t_object	*object;
+
+	object = scene->objects;
+	while (object < scene->objects + scene->object_count)
+	{
+		if (object->type == Sphere)
+			object->radius_squared = object->radius * object->radius;
+		else if (object->type == Plane || object->type == DirectionalLight)
+			vec_normalize(&object->direction);
+		++object;
+	}
+}
+
 // int	main(int argc, char const *argv[])
 int	main(void)
 {
@@ -518,13 +561,13 @@ int	main(void)
 		.w = (t_vector){0.5, 0, sqrt(3) / 2} */
 	};
 
-	allocate_objects(&vars.scene, 3);
+	allocate_objects(&vars.scene, 7);
 	vars.scene.objects[0] = (t_object){
 		.type = Sphere,
 		.category = Object,
 		.color = MAGENTA,
 		.position = (t_point){0, 0, -3000},
-		.radius = 500,
+		.radius = 500.0,
 		.specular_exponent = 10, /* Shiny */
 		.reflectivity = 0.2, /* A bit reflective */
 		.is_checkerboard = true
@@ -534,7 +577,7 @@ int	main(void)
 		.category = Object,
 		.color = CYAN,
 		.position = (t_point){1000, 1000, -5000},
-		.radius = 1800,
+		.radius = 1800.0,
 		.specular_exponent = 100, /* Somewhat shiny */
 		.reflectivity = 0.3, /* A bit more reflective */
 		.is_checkerboard = false
@@ -544,20 +587,61 @@ int	main(void)
 		.category = Object,
 		.color = YELLOW,
 		.position = (t_point){-1000, -300, -2500},
-		.radius = 300,
+		.radius = 300.0,
 		.specular_exponent = 1000, /* Very shiny */
 		.reflectivity = 0.5, /* Half reflective */
 		.is_checkerboard = false
 	};
-	calculate_radius_squared(&vars.scene);
+	vars.scene.objects[3] = (t_object){
+		.category = Object,
+		.type = Plane,
+		.color = BLUE,
+		.position = (t_point){-960, 0, 0},
+		.direction = (t_point){-1, 0, 0},
+		.specular_exponent = 100,
+		.reflectivity = 0.1,
+		.is_checkerboard = false
+	};
+	vars.scene.objects[4] = (t_object){
+		.category = Object,
+		.type = Plane,
+		.color = CYAN,
+		.position = (t_point){960, 0, 0},
+		.direction = (t_point){1, 0, 0},
+		.specular_exponent = 10,
+		.reflectivity = 0.1,
+		.is_checkerboard = false
+	};
+	vars.scene.objects[5] = (t_object){
+		.category = Object,
+		.type = Plane,
+		.color = WHITE,
+		.position = (t_point){0, 540, 0},
+		.direction = (t_point){0, 1, 0},
+		.specular_exponent = 10,
+		.reflectivity = 0.0,
+		.is_checkerboard = false
+	};
+	vars.scene.objects[6] = (t_object){
+		.category = Object,
+		.type = Plane,
+		.color = 0x808080,
+		.position = (t_point){0, -540, 0},
+		.direction = (t_point){0, -1, 0},
+		.specular_exponent = 10,
+		.reflectivity = 0.0,
+		.is_checkerboard = false
+	};
+	// calculate_radius_squared(&vars.scene);
 
 	allocate_lights(&vars.scene, 3);
 	vars.scene.lights[0] = (t_object){
 		.type = PointLight,
 		.category = Light,
-		.intensity = 0.4,
-		.position = (t_point){0, 0, -1000},
-		.direction = (t_vector){0}
+		.intensity = 0.5,
+		.position = (t_point){-400, 300, -3000},
+		.direction = (t_vector){0},
+		.radius = -1
 	};
 #if 0
 	vars.scene.lights[1] = (t_object){
@@ -570,15 +654,17 @@ int	main(void)
 	vars.scene.lights[1] = (t_object){
 		.type = PointLight,
 		.category = Light,
-		.intensity = 0.4,
-		.position = (t_point){-1000, -2000, -1000},
-		.direction = (t_vector){0}
+		.intensity = 0.5,
+		.position = (t_point){400, -300, -1500},
+		.direction = (t_vector){0},
+		.radius = -1
 	};
 #endif
 	vars.scene.lights[2] = (t_object){
 		.type = AmbientLight,
 		.category = Light,
-		.intensity = 0.2
+		.intensity = 0.05,
+		.radius = -1
 	};
 
 	// allocate_objects(&vars.scene, 2);
@@ -607,6 +693,7 @@ int	main(void)
 	// calculate_radius_squared(&vars.scene);
 
 	vars.scene.focus = &(vars.scene.objects)[0];
+	precompute_values(&vars.scene);
 	render_image(&vars);
 
 	put_image_to_window_vars(&vars);

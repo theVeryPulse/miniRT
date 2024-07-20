@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 17:30:36 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/20 16:35:21 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/20 22:51:42 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ typedef struct s_object
 {
 	/* Common properties */
 
-	t_object_type	type;
 	t_category		category;
-	t_argb			color;
+	t_object_type	type;
 	t_point			position;
+	t_argb			color;
 
 	/* Light properties */
 
@@ -54,9 +54,9 @@ typedef struct s_object
 	/* Object properties */
 
 	double			radius;
+	double			radius_squared;
 	double			specular_exponent;
 	double			reflectivity;
-	double			radius_squared;
 	bool			is_checkerboard;
 }	t_object;
 
