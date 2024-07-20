@@ -1,7 +1,7 @@
 NAME := miniRT
 
 CC := gcc
-CFLAGS := -Wall -Wextra -Werror -O3
+CFLAGS := -Wall -Wextra -Werror
 
 # ls src/**/*.c >> Makefile
 FILES := src/color/alpha_component.c \
