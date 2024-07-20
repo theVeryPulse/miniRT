@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/20 21:47:58 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/20 22:00:24 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,35 +174,35 @@ bool	trace(t_scene *scene,
 	double *closest_t)
 {
 	double	t[2];
-	size_t	i;
+	t_object	*object;
 
 	*closest_object = NULL;
-	i = 0;
-	while (i < scene->object_count)
+	object = scene->objects;
+	while (object < scene->object_count + scene->objects)
 	{
-		if (scene->objects[i].type == Sphere)
+		if (object->type == Sphere)
 		{
 			ray_sphere_intersect(t, ray_origin, ray_direction,
-				&(scene->objects)[i], vec_dot(ray_direction, ray_direction));
+				object, vec_dot(ray_direction, ray_direction));
 			if (t[0] >= t_min && t[0] <= t_max && t[0] < *closest_t)
 			{
 				*closest_t = t[0];
-				*closest_object = &(scene->objects[i]);
+				*closest_object = object;
 			}
 			if (t[1] >= t_min && t[1] <= t_max && t[1] < *closest_t)
 			{
 				*closest_t = t[1];
-				*closest_object = &(scene->objects[i]);
+				*closest_object = object;
 			}
 		}
-		else if (scene->objects[i].type == Plane)
+		else if (object->type == Plane)
 		{
 			/* [ ] Finds closest_t and closest_object */
 		}
 		else
 		{
 		}
-		++i;
+		++object;
 	}
 	return (*closest_object != NULL);
 }
