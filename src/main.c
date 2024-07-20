@@ -536,7 +536,7 @@ void	precompute_values(t_scene *scene)
 	{
 		if (object->type == Sphere)
 			object->radius_squared = object->radius * object->radius;
-		else if (object->type == Plane)
+		else if (object->type == Plane || object->type == DirectionalLight)
 			vec_normalize(&object->direction);
 		++object;
 	}
@@ -604,7 +604,6 @@ int	main(void)
 		.is_checkerboard = false
 	};
 	// calculate_radius_squared(&vars.scene);
-	precompute_values(&vars.scene);
 
 	allocate_lights(&vars.scene, 3);
 	vars.scene.lights[0] = (t_object){
@@ -662,6 +661,7 @@ int	main(void)
 	// calculate_radius_squared(&vars.scene);
 
 	vars.scene.focus = &(vars.scene.objects)[0];
+	precompute_values(&vars.scene);
 	render_image(&vars);
 
 	put_image_to_window_vars(&vars);
