@@ -197,18 +197,17 @@ bool	trace(t_scene *scene,
 		}
 		else if (object->type == Plane)
 		{
-			/* [ ] Finds closest_t and closest_object */
 			double	denominator;
 
 			denominator = vec_dot(object->direction, ray_direction);
 			if (denominator > 1e-6)
 			{
-				t[0] = vec_dot(
+				*t = vec_dot(
 					vec_minus(object->position, ray_origin), object->direction)
 					/ denominator;
-				if (t[0] >= t_min && t[0] <= t_max && t[0] < *closest_t)
+				if (*t >= t_min && *t <= t_max && *t < *closest_t)
 				{
-					*closest_t = t[1];
+					*closest_t = *t;
 					*closest_object = object;
 				}
 			}
