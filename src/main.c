@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/20 22:00:24 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/20 22:37:39 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -611,7 +611,8 @@ int	main(void)
 		.category = Light,
 		.intensity = 0.4,
 		.position = (t_point){0, 0, -1000},
-		.direction = (t_vector){0}
+		.direction = (t_vector){0},
+		.radius = -1
 	};
 #if 0
 	vars.scene.lights[1] = (t_object){
@@ -626,13 +627,15 @@ int	main(void)
 		.category = Light,
 		.intensity = 0.4,
 		.position = (t_point){-1000, -2000, -1000},
-		.direction = (t_vector){0}
+		.direction = (t_vector){0},
+		.radius = -1
 	};
 #endif
 	vars.scene.lights[2] = (t_object){
 		.type = AmbientLight,
 		.category = Light,
-		.intensity = 0.2
+		.intensity = 0.2,
+		.radius = -1
 	};
 
 	// allocate_objects(&vars.scene, 2);
