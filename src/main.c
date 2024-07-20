@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/20 19:44:07 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/20 21:16:28 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -449,6 +449,7 @@ void	render_image(t_vars *vars)
 {
 	t_vector	ray_direction;
 	t_pixel		pixel;
+	double		t_min;
 
 	pixel.y = HEIGHT / 2;
 	while (pixel.y > - HEIGHT / 2)
@@ -458,8 +459,10 @@ void	render_image(t_vars *vars)
 		{
 			ray_direction = calculate_ray_direction(&(vars->scene.camera),
 				(t_point){pixel.x, pixel.y, -(minirt()->eye_canvas_distance)});
+			t_min = vec_len(ray_direction);
+			vec_normalize(&ray_direction);
 			pixel.color = cast_ray(&vars->scene, vars->scene.camera.position,
-				ray_direction, 1, INFINITY, 3);
+				ray_direction, t_min, INFINITY, 3);
 			draw_pixel_in_screen_space(&vars->img_vars, pixel);
 			++pixel.x;
 		}
