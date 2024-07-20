@@ -259,7 +259,11 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 				t_max = INFINITY;
 
 			/* Shadow check */
-			if (light_is_blocked(scene, point, light, 0.0001, t_max))
+			// if (light_is_blocked(scene, point, light, 0.0001, t_max))
+			t_object	*closest_object;
+			double		closest_t;
+			if (trace(scene, point, light, 1e-4, t_max, &closest_object,
+				&closest_t))
 			{
 				++i;
 				continue;
