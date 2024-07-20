@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/20 22:59:14 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/20 23:25:58 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -561,7 +561,7 @@ int	main(void)
 		.w = (t_vector){0.5, 0, sqrt(3) / 2} */
 	};
 
-	allocate_objects(&vars.scene, 5);
+	allocate_objects(&vars.scene, 7);
 	vars.scene.objects[0] = (t_object){
 		.type = Sphere,
 		.category = Object,
@@ -596,20 +596,40 @@ int	main(void)
 		.category = Object,
 		.type = Plane,
 		.color = BLUE,
-		.position = (t_point){0, 0, -5000},
-		.direction = (t_point){0, 0, -1},
-		.specular_exponent = 10,
-		.reflectivity = 0.5,
+		.position = (t_point){-960, 0, 0},
+		.direction = (t_point){-1, 0, 0},
+		.specular_exponent = 100,
+		.reflectivity = 0.1,
 		.is_checkerboard = false
 	};
 	vars.scene.objects[4] = (t_object){
 		.category = Object,
 		.type = Plane,
 		.color = CYAN,
-		.position = (t_point){0, -1000, 0},
+		.position = (t_point){960, 0, 0},
+		.direction = (t_point){1, 0, 0},
+		.specular_exponent = 10,
+		.reflectivity = 0.1,
+		.is_checkerboard = false
+	};
+	vars.scene.objects[5] = (t_object){
+		.category = Object,
+		.type = Plane,
+		.color = WHITE,
+		.position = (t_point){0, 540, 0},
+		.direction = (t_point){0, 1, 0},
+		.specular_exponent = 10,
+		.reflectivity = 0.0,
+		.is_checkerboard = false
+	};
+	vars.scene.objects[6] = (t_object){
+		.category = Object,
+		.type = Plane,
+		.color = 0x808080,
+		.position = (t_point){0, -540, 0},
 		.direction = (t_point){0, -1, 0},
 		.specular_exponent = 10,
-		.reflectivity = 0.5,
+		.reflectivity = 0.0,
 		.is_checkerboard = false
 	};
 	// calculate_radius_squared(&vars.scene);
@@ -618,8 +638,8 @@ int	main(void)
 	vars.scene.lights[0] = (t_object){
 		.type = PointLight,
 		.category = Light,
-		.intensity = 0.4,
-		.position = (t_point){0, 0, -1000},
+		.intensity = 0.5,
+		.position = (t_point){-400, 300, -3000},
 		.direction = (t_vector){0},
 		.radius = -1
 	};
@@ -634,8 +654,8 @@ int	main(void)
 	vars.scene.lights[1] = (t_object){
 		.type = PointLight,
 		.category = Light,
-		.intensity = 0.4,
-		.position = (t_point){-1000, -2000, -1000},
+		.intensity = 0.5,
+		.position = (t_point){400, -300, -1500},
 		.direction = (t_vector){0},
 		.radius = -1
 	};
@@ -643,7 +663,7 @@ int	main(void)
 	vars.scene.lights[2] = (t_object){
 		.type = AmbientLight,
 		.category = Light,
-		.intensity = 0.2,
+		.intensity = 0.05,
 		.radius = -1
 	};
 
