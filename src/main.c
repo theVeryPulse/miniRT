@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/18 23:24:24 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/20 19:44:07 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -577,6 +577,32 @@ int	main(void)
 		.category = Light,
 		.intensity = 0.2
 	};
+
+	// allocate_objects(&vars.scene, 2);
+	// vars.scene.objects[0] = (t_object){
+	// 	.category = Object,
+	// 	.type = Sphere,
+	// 	.color = CYAN,
+	// 	.position = (t_point){600, 0, -2000},
+	// 	.radius = 500,
+	// 	.direction = (t_point){-1, 0, -1},
+	// 	.specular_exponent = 1000, /* Somewhat shiny */
+	// 	.reflectivity = 0.8, /* A bit more reflective */
+	// 	.is_checkerboard = true
+	// };
+	// vars.scene.objects[1] = (t_object){
+	// 	.category = Object,
+	// 	.type = Sphere,
+	// 	.color = CYAN,
+	// 	.position = (t_point){-600, 0, -2000},
+	// 	.radius = 500,
+	// 	.direction = (t_point){-1, 0, -1},
+	// 	.specular_exponent = 100, /* Somewhat shiny */
+	// 	.reflectivity = 0.1, /* A bit more reflective */
+	// 	.is_checkerboard = true
+	// };
+	// calculate_radius_squared(&vars.scene);
+
 	vars.scene.focus = &(vars.scene.objects)[0];
 	render_image(&vars);
 
