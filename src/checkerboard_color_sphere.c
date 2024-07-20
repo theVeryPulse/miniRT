@@ -31,7 +31,6 @@ extern t_argb	checkerboard_color_sphere(t_point pt, t_argb color1, t_argb color2
 		return (color1);
 	else
 		return (color2);
-	return (color_of_cell(u, v, CHECKERBOARD_CELL_COUNT));
 }
 
 static void	convert_to_uv_texture_coordinates(t_point pt, double *u, double *v)
