@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/20 21:16:28 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/20 21:47:58 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,11 @@ bool	trace(t_scene *scene,
 				*closest_object = &(scene->objects[i]);
 			}
 		}
-		else if (scene->objects[i].type != Sphere)
+		else if (scene->objects[i].type == Plane)
+		{
+			/* [ ] Finds closest_t and closest_object */
+		}
+		else
 		{
 		}
 		++i;
@@ -390,8 +394,14 @@ t_argb	cast_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 	t_argb		local_color;
 
 	intersection = vec_add(ray_origin, vec_mult(closest_t, ray_direction));
-	unit_normal = vec_normalized(
-		vec_minus(intersection, closest_object->position));
+	if (closest_object->type == Sphere)
+		unit_normal = vec_normalized(
+			vec_minus(intersection, closest_object->position));
+	else if (closest_object->type == Plane)
+		unit_normal = closest_object->direction;
+	else
+	{
+	}
 	intensity = compute_lighting(scene, intersection, unit_normal,
 		vec_mult(-1, ray_direction), closest_object->specular_exponent);
 	if (closest_object->is_checkerboard)
@@ -502,6 +512,21 @@ void	calculate_radius_squared(t_scene *scene)
 	}
 }
 
+void	precompute_values(t_scene *scene)
+{
+	t_object	*object;
+
+	object = scene->objects;
+	while (object < scene->objects + scene->object_count)
+	{
+		if (object->type == Sphere)
+			object->radius_squared = object->radius * object->radius;
+		else if (object->type == Plane)
+			vec_normalize(&object->direction);
+		++object;
+	}
+}
+
 // int	main(int argc, char const *argv[])
 int	main(void)
 {
@@ -553,7 +578,8 @@ int	main(void)
 		.reflectivity = 0.5, /* Half reflective */
 		.is_checkerboard = false
 	};
-	calculate_radius_squared(&vars.scene);
+	// calculate_radius_squared(&vars.scene);
+	precompute_values(&vars.scene);
 
 	allocate_lights(&vars.scene, 3);
 	vars.scene.lights[0] = (t_object){
