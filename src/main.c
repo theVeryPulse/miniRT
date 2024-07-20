@@ -198,6 +198,20 @@ bool	trace(t_scene *scene,
 		else if (object->type == Plane)
 		{
 			/* [ ] Finds closest_t and closest_object */
+			double	denominator;
+
+			denominator = vec_dot(object->direction, ray_direction);
+			if (denominator > 1e-6)
+			{
+				t[0] = vec_dot(
+					vec_minus(object->position, ray_origin), object->direction)
+					/ denominator;
+				if (t[0] >= t_min && t[0] <= t_max && t[0] < *closest_t)
+				{
+					*closest_t = t[1];
+					*closest_object = object;
+				}
+			}
 		}
 		else
 		{
@@ -547,13 +561,13 @@ int	main(void)
 		.w = (t_vector){0.5, 0, sqrt(3) / 2} */
 	};
 
-	allocate_objects(&vars.scene, 3);
+	allocate_objects(&vars.scene, 4);
 	vars.scene.objects[0] = (t_object){
 		.type = Sphere,
 		.category = Object,
 		.color = MAGENTA,
 		.position = (t_point){0, 0, -3000},
-		.radius = 500,
+		.radius = 500.0,
 		.specular_exponent = 10, /* Shiny */
 		.reflectivity = 0.2, /* A bit reflective */
 		.is_checkerboard = true
@@ -563,7 +577,7 @@ int	main(void)
 		.category = Object,
 		.color = CYAN,
 		.position = (t_point){1000, 1000, -5000},
-		.radius = 1800,
+		.radius = 1800.0,
 		.specular_exponent = 100, /* Somewhat shiny */
 		.reflectivity = 0.3, /* A bit more reflective */
 		.is_checkerboard = false
@@ -573,9 +587,19 @@ int	main(void)
 		.category = Object,
 		.color = YELLOW,
 		.position = (t_point){-1000, -300, -2500},
-		.radius = 300,
+		.radius = 300.0,
 		.specular_exponent = 1000, /* Very shiny */
 		.reflectivity = 0.5, /* Half reflective */
+		.is_checkerboard = false
+	};
+	vars.scene.objects[3] = (t_object){
+		.category = Object,
+		.type = Plane,
+		.color = RED,
+		.position = (t_point){0, -1000, -5000},
+		.direction = (t_point){0, 0, -1},
+		.specular_exponent = 1000,
+		.reflectivity = 0.09,
 		.is_checkerboard = false
 	};
 	// calculate_radius_squared(&vars.scene);
