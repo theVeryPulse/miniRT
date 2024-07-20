@@ -266,7 +266,8 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 			if (scene->lights[i].type == PointLight)
 			{
 				light = vec_minus(scene->lights[i].position, point);
-				t_max = 1;
+				t_max = vec_len(light);
+				light = vec_normalized(light);
 			}
 			else if (scene->lights[i].type == DirectionalLight)
 			{
