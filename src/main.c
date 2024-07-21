@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/21 13:20:55 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/21 17:22:07 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,32 @@ void	ray_plane_intersect(double *t, t_point ray_origin,
 	}
 }
 
+void	ray_disk_intersect(double *t, t_point ray_origin,
+		t_vector ray_direction, t_object *disk, double t_min, double t_max,
+		t_object **closest_object, double *closest_t)
+{
+	double		denominator;
+	t_vector	intersect;
+	t_vector	center_to_intersect;
+	double		distance_squared;
+
+	denominator = vec_dot(disk->direction, ray_direction);
+	if (denominator > 1e-6)
+	{
+		*t = vec_dot(vec_minus(disk->position, ray_origin), disk->direction)
+			/ denominator;
+		intersect = vec_add(ray_origin, vec_mult(*t, ray_direction));
+		center_to_intersect = vec_minus(intersect, disk->position);
+		distance_squared = pow(vec_len(center_to_intersect), 2);
+		if (distance_squared <= disk->radius_squared
+			&& *t >= t_min && *t <= t_max && *t < *closest_t)
+		{
+			*closest_t = *t;
+			*closest_object = disk;
+		}
+	}
+}
+
 /**
  * @brief Checks if a ray hits any object, if hit, record this closest object
  *        and closest_t.
@@ -218,6 +244,11 @@ bool	trace(t_scene *scene,
 		else if (object->type == Plane)
 		{
 			ray_plane_intersect(t, ray_origin, ray_direction, object, t_min,
+				t_max, closest_object, closest_t);
+		}
+		else if (object->type == Disk)
+		{
+			ray_disk_intersect(t, ray_origin, ray_direction, object, t_min,
 				t_max, closest_object, closest_t);
 		}
 		else
@@ -419,7 +450,7 @@ t_argb	cast_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 	if (closest_object->type == Sphere)
 		unit_normal = vec_normalized(
 			vec_minus(intersection, closest_object->position));
-	else if (closest_object->type == Plane)
+	else if (closest_object->type == Plane || closest_object->type == Disk)
 		unit_normal = closest_object->direction;
 	else
 	{
@@ -571,7 +602,7 @@ int	main(void)
 		.w = (t_vector){0.5, 0, sqrt(3) / 2} */
 	};
 
-	allocate_objects(&vars.scene, 7);
+	allocate_objects(&vars.scene, 8);
 	vars.scene.objects[0] = (t_object){
 		.type = Sphere,
 		.category = Object,
@@ -640,6 +671,17 @@ int	main(void)
 		.direction = (t_point){0, -1, 0},
 		.specular_exponent = 10,
 		.reflectivity = 0.0,
+		.is_checkerboard = false
+	};
+	vars.scene.objects[7] = (t_object){
+		.category = Object,
+		.type = Disk,
+		.radius = 300, /* For Disk */
+		.color = WHITE,
+		.position = (t_point){959, 0, -1700},
+		.direction = (t_point){1, 0, 0},
+		.specular_exponent = 1000,
+		.reflectivity = 0.9,
 		.is_checkerboard = false
 	};
 	// calculate_radius_squared(&vars.scene);
