@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/21 18:02:26 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/21 18:34:27 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -715,6 +715,58 @@ void	load_default_scene(t_scene *scene)
 	};
 }
 
+void	load_test_scene(t_scene *scene)
+{
+	scene->camera = (t_camera){
+		.position = (t_point){0, 0, 0},
+		.u = (t_vector){1.0, 0.0, 0.0},
+		.v = (t_vector){0.0, 1.0, 0.0},
+		.w = (t_vector){0.0, 0.0, 1.0}
+	};
+
+	unsigned int	object_count;
+	object_count = 2;
+	allocate_objects(scene, object_count);
+
+	// Wall in back
+	scene->objects[--object_count] = (t_object){
+		.category = Object,
+		.type = Plane,
+		.color = WHITE,
+		.position = (t_point){0, -100, -2000},
+		.direction = (t_vector){0, 0, -1},
+		.specular_exponent = 10,
+		.reflectivity = 0.0,
+		.is_checkerboard = false
+	};
+	scene->objects[--object_count] = (t_object){
+		.category = Object,
+		.type = Sphere,
+		.color = RED,
+		.is_checkerboard = true,
+		.position = (t_point){1000, 10, -2000},
+		.specular_exponent = 100,
+		.reflectivity = 0.0,
+		.radius = 200
+	};
+
+	unsigned int	light_count;
+	light_count = 2;
+	allocate_lights(scene, light_count);
+
+	scene->lights[--light_count] = (t_object){
+		.category = Light,
+		.type = PointLight,
+		.intensity = 0.8,
+		.position = (t_vector){500, 100, -1800}
+	};
+	scene->lights[--light_count] = (t_object){
+		.category = Light,
+		.type = AmbientLight,
+		.intensity = 0.1,
+	};
+}
+
 // int	main(int argc, char const *argv[])
 int	main(void)
 {
@@ -724,7 +776,8 @@ int	main(void)
 	set_up_hooks(&vars);
 	minirt_init();
 
-	load_default_scene(&vars.scene);	
+	// load_default_scene(&vars.scene);
+	load_test_scene(&vars.scene);
 
 	vars.scene.focus = &(vars.scene.objects)[0];
 	precompute_values(&vars.scene);
