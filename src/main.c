@@ -152,6 +152,26 @@ bool	light_is_blocked(t_scene *scene, t_point shadow_ray_origin,
 	return (false);
 }
 
+void	ray_plane_intersect(double *t, t_point ray_origin,
+	t_vector ray_direction, t_object *plane, double t_min, double t_max,
+	t_object **closest_object, double *closest_t)
+{
+	double	denominator;
+
+	denominator = vec_dot(plane->direction, ray_direction);
+	if (denominator > 1e-6)
+	{
+		*t = vec_dot(
+			vec_minus(plane->position, ray_origin), plane->direction)
+			/ denominator;
+		if (*t >= t_min && *t <= t_max && *t < *closest_t)
+		{
+			*closest_t = *t;
+			*closest_object = plane;
+		}
+	}
+}
+
 /**
  * @brief Checks if a ray hits any object, if hit, record this closest object
  *        and closest_t.
@@ -197,20 +217,8 @@ bool	trace(t_scene *scene,
 		}
 		else if (object->type == Plane)
 		{
-			double	denominator;
-
-			denominator = vec_dot(object->direction, ray_direction);
-			if (denominator > 1e-6)
-			{
-				*t = vec_dot(
-					vec_minus(object->position, ray_origin), object->direction)
-					/ denominator;
-				if (*t >= t_min && *t <= t_max && *t < *closest_t)
-				{
-					*closest_t = *t;
-					*closest_object = object;
-				}
-			}
+			ray_plane_intersect(t, ray_origin, ray_direction, object, t_min,
+				t_max, closest_object, closest_t);
 		}
 		else
 		{
