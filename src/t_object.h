@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 17:30:36 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/20 22:51:42 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/21 13:05:42 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,14 @@
 # include "geometry/vector/t_point.h"
 # include "color/inc/argb.h"
 # include <stdbool.h>
+
+typedef enum e_category
+{
+	UndefinedCategory,
+	Camera,
+	Object,
+	Light
+}	t_category;
 
 typedef enum e_object_type
 {
@@ -27,14 +35,6 @@ typedef enum e_object_type
 	PointLight,
 	DirectionalLight
 }	t_object_type;
-
-typedef enum e_category
-{
-	UndefinedCategory,
-	Camera,
-	Object,
-	Light
-}	t_category;
 
 typedef struct s_object
 {
