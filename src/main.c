@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/21 17:22:07 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/21 18:02:26 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -582,16 +582,9 @@ void	precompute_values(t_scene *scene)
 	}
 }
 
-// int	main(int argc, char const *argv[])
-int	main(void)
+void	load_default_scene(t_scene *scene)
 {
-	t_vars	vars;
-
-	set_up_mlx(&vars);
-	set_up_hooks(&vars);
-	minirt_init();
-
-	vars.scene.camera = (t_camera){
+	scene->camera = (t_camera){
 		.position = (t_point){0, 0, 0},
 		.u = (t_vector){1.0, 0.0, 0.0},
 		.v = (t_vector){0.0, 1.0, 0.0},
@@ -602,8 +595,9 @@ int	main(void)
 		.w = (t_vector){0.5, 0, sqrt(3) / 2} */
 	};
 
-	allocate_objects(&vars.scene, 8);
-	vars.scene.objects[0] = (t_object){
+	unsigned int	i = 9;
+	allocate_objects(scene, i);
+	scene->objects[--i] = (t_object){
 		.type = Sphere,
 		.category = Object,
 		.color = MAGENTA,
@@ -613,7 +607,7 @@ int	main(void)
 		.reflectivity = 0.2, /* A bit reflective */
 		.is_checkerboard = true
 	};
-	vars.scene.objects[1] = (t_object){
+	scene->objects[--i] = (t_object){
 		.type = Sphere,
 		.category = Object,
 		.color = CYAN,
@@ -623,7 +617,7 @@ int	main(void)
 		.reflectivity = 0.3, /* A bit more reflective */
 		.is_checkerboard = false
 	};
-	vars.scene.objects[2] = (t_object){
+	scene->objects[--i] = (t_object){
 		.type = Sphere,
 		.category = Object,
 		.color = YELLOW,
@@ -633,7 +627,7 @@ int	main(void)
 		.reflectivity = 0.5, /* Half reflective */
 		.is_checkerboard = false
 	};
-	vars.scene.objects[3] = (t_object){
+	scene->objects[--i] = (t_object){
 		.category = Object,
 		.type = Plane,
 		.color = BLUE,
@@ -643,7 +637,7 @@ int	main(void)
 		.reflectivity = 0.1,
 		.is_checkerboard = false
 	};
-	vars.scene.objects[4] = (t_object){
+	scene->objects[--i] = (t_object){
 		.category = Object,
 		.type = Plane,
 		.color = CYAN,
@@ -653,7 +647,7 @@ int	main(void)
 		.reflectivity = 0.1,
 		.is_checkerboard = false
 	};
-	vars.scene.objects[5] = (t_object){
+	scene->objects[--i] = (t_object){
 		.category = Object,
 		.type = Plane,
 		.color = WHITE,
@@ -663,7 +657,8 @@ int	main(void)
 		.reflectivity = 0.0,
 		.is_checkerboard = false
 	};
-	vars.scene.objects[6] = (t_object){
+	// Floor
+	scene->objects[--i] = (t_object){
 		.category = Object,
 		.type = Plane,
 		.color = 0x808080,
@@ -673,7 +668,7 @@ int	main(void)
 		.reflectivity = 0.0,
 		.is_checkerboard = false
 	};
-	vars.scene.objects[7] = (t_object){
+	scene->objects[--i] = (t_object){
 		.category = Object,
 		.type = Disk,
 		.radius = 300, /* For Disk */
@@ -686,24 +681,24 @@ int	main(void)
 	};
 	// calculate_radius_squared(&vars.scene);
 
-	allocate_lights(&vars.scene, 3);
-	vars.scene.lights[0] = (t_object){
+	allocate_lights(scene, 3);
+	scene->lights[0] = (t_object){
 		.type = PointLight,
 		.category = Light,
-		.intensity = 0.5,
+		.intensity = 0.1,
 		.position = (t_point){-400, 300, -3000},
 		.direction = (t_vector){0},
 		.radius = -1
 	};
 #if 0
-	vars.scene.lights[1] = (t_object){
+	scene->lights[1] = (t_object){
 		.type = DirectionalLight,
 		.category = Light,
 		.intensity = 0.0,
 		.direction = (t_vector){0, 0, 0.1}
 		};
 #else // Two point lights for better shadow effect
-	vars.scene.lights[1] = (t_object){
+	scene->lights[1] = (t_object){
 		.type = PointLight,
 		.category = Light,
 		.intensity = 0.5,
@@ -712,37 +707,24 @@ int	main(void)
 		.radius = -1
 	};
 #endif
-	vars.scene.lights[2] = (t_object){
+	scene->lights[2] = (t_object){
 		.type = AmbientLight,
 		.category = Light,
 		.intensity = 0.05,
 		.radius = -1
 	};
+}
 
-	// allocate_objects(&vars.scene, 2);
-	// vars.scene.objects[0] = (t_object){
-	// 	.category = Object,
-	// 	.type = Sphere,
-	// 	.color = CYAN,
-	// 	.position = (t_point){600, 0, -2000},
-	// 	.radius = 500,
-	// 	.direction = (t_point){-1, 0, -1},
-	// 	.specular_exponent = 1000, /* Somewhat shiny */
-	// 	.reflectivity = 0.8, /* A bit more reflective */
-	// 	.is_checkerboard = true
-	// };
-	// vars.scene.objects[1] = (t_object){
-	// 	.category = Object,
-	// 	.type = Sphere,
-	// 	.color = CYAN,
-	// 	.position = (t_point){-600, 0, -2000},
-	// 	.radius = 500,
-	// 	.direction = (t_point){-1, 0, -1},
-	// 	.specular_exponent = 100, /* Somewhat shiny */
-	// 	.reflectivity = 0.1, /* A bit more reflective */
-	// 	.is_checkerboard = true
-	// };
-	// calculate_radius_squared(&vars.scene);
+// int	main(int argc, char const *argv[])
+int	main(void)
+{
+	t_vars	vars;
+
+	set_up_mlx(&vars);
+	set_up_hooks(&vars);
+	minirt_init();
+
+	load_default_scene(&vars.scene);	
 
 	vars.scene.focus = &(vars.scene.objects)[0];
 	precompute_values(&vars.scene);
