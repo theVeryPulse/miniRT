@@ -6,15 +6,15 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 17:30:36 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/21 13:08:32 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/21 20:33:44 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef T_OBJECT_H
 # define T_OBJECT_H
 
-# include "geometry/vector/t_point.h"
-# include "color/inc/argb.h"
+# include "../geometry/vector/t_point.h"
+# include "../color/inc/argb.h"
 # include <stdbool.h>
 
 typedef enum e_category

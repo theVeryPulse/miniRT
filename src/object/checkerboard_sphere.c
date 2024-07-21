@@ -1,31 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_scene.h                                          :+:      :+:    :+:   */
+/*   checkerboard_sphere.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/02 17:48:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/21 20:30:37 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/21 20:25:40 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/21 20:25:52 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_SCENE_H
-# define T_SCENE_H
+#include "t_object.h"
 
-# include "object/t_object.h"
-# include "t_camera.h"
-# include <stdint.h>
-
-typedef struct s_scene
+t_object	checkerboard_sphere(
+	t_point position,
+	double radius,
+	double specular_exponent,
+	double reflectivity
+)
 {
-	/* Array of objects */
-	t_object	*objects;
-	uint8_t		object_count;
-	t_object	*lights;
-	uint8_t		light_count;
-	t_object	*focus;
-	t_camera	camera;
-}	t_scene;
-
-#endif /* T_SCENE_H */
+	return ((t_object){
+		.category = Object,
+		.type = Sphere,
+		.position = position,
+		.radius = radius,
+		.specular_exponent = specular_exponent,
+		.reflectivity = reflectivity,
+		.is_checkerboard = true
+	});
+}

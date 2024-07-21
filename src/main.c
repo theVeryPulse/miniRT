@@ -6,12 +6,13 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/21 18:34:27 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/21 20:29:54 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/minilibx-linux/mlx.h"
 #include "t_vars.h"
+#include "object/inc/object.h"
 #include "window.h"
 #include "handle_keypress_event.h"
 #include <X11/X.h> /* DestroyNotify, ButtonReleaseMask */
@@ -597,89 +598,26 @@ void	load_default_scene(t_scene *scene)
 
 	unsigned int	i = 9;
 	allocate_objects(scene, i);
-	scene->objects[--i] = (t_object){
-		.type = Sphere,
-		.category = Object,
-		.color = MAGENTA,
-		.position = (t_point){0, 0, -3000},
-		.radius = 500.0,
-		.specular_exponent = 10, /* Shiny */
-		.reflectivity = 0.2, /* A bit reflective */
-		.is_checkerboard = true
-	};
-	scene->objects[--i] = (t_object){
-		.type = Sphere,
-		.category = Object,
-		.color = CYAN,
-		.position = (t_point){1000, 1000, -5000},
-		.radius = 1800.0,
-		.specular_exponent = 100, /* Somewhat shiny */
-		.reflectivity = 0.3, /* A bit more reflective */
-		.is_checkerboard = false
-	};
-	scene->objects[--i] = (t_object){
-		.type = Sphere,
-		.category = Object,
-		.color = YELLOW,
-		.position = (t_point){-1000, -300, -2500},
-		.radius = 300.0,
-		.specular_exponent = 1000, /* Very shiny */
-		.reflectivity = 0.5, /* Half reflective */
-		.is_checkerboard = false
-	};
-	scene->objects[--i] = (t_object){
-		.category = Object,
-		.type = Plane,
-		.color = BLUE,
-		.position = (t_point){-960, 0, 0},
-		.direction = (t_point){-1, 0, 0},
-		.specular_exponent = 100,
-		.reflectivity = 0.1,
-		.is_checkerboard = false
-	};
-	scene->objects[--i] = (t_object){
-		.category = Object,
-		.type = Plane,
-		.color = CYAN,
-		.position = (t_point){960, 0, 0},
-		.direction = (t_point){1, 0, 0},
-		.specular_exponent = 10,
-		.reflectivity = 0.1,
-		.is_checkerboard = false
-	};
-	scene->objects[--i] = (t_object){
-		.category = Object,
-		.type = Plane,
-		.color = WHITE,
-		.position = (t_point){0, 540, 0},
-		.direction = (t_point){0, 1, 0},
-		.specular_exponent = 10,
-		.reflectivity = 0.0,
-		.is_checkerboard = false
-	};
+	scene->objects[--i] = checkerboard_sphere((t_point){0, 0, -3000}, 500.0,
+		10.0, 0.2);
+	scene->objects[--i] = colored_sphere(CYAN, (t_point){1000, 1000, -5000},
+		1800.0, 100.0, 0.3);
+	scene->objects[--i] = colored_sphere(YELLOW, (t_point){-1000, -300, -2500},
+		300.0, 1000.0, 0.5);
+	// Left wall
+	scene->objects[--i] = plane(BLUE, (t_point){-960, 0, 0},
+		(t_vector){-1, 0, 0}, 100.0, 0.1);
+	scene->objects[--i] = plane(CYAN, (t_point){960, 0, 0}, (t_point){1, 0, 0},
+		10.0, 0.1);
+	// Ceiling
+	scene->objects[--i] = plane(WHITE, (t_point){0, 540, 0}, (t_point){0, 1, 0},
+		10.0, 0.0);	
 	// Floor
-	scene->objects[--i] = (t_object){
-		.category = Object,
-		.type = Plane,
-		.color = 0x808080,
-		.position = (t_point){0, -540, 0},
-		.direction = (t_point){0, -1, 0},
-		.specular_exponent = 10,
-		.reflectivity = 0.0,
-		.is_checkerboard = false
-	};
-	scene->objects[--i] = (t_object){
-		.category = Object,
-		.type = Disk,
-		.radius = 300, /* For Disk */
-		.color = WHITE,
-		.position = (t_point){959, 0, -1700},
-		.direction = (t_point){1, 0, 0},
-		.specular_exponent = 1000,
-		.reflectivity = 0.9,
-		.is_checkerboard = false
-	};
-	// calculate_radius_squared(&vars.scene);
+	scene->objects[--i] = plane(0x808080, (t_point){0, -540, 0},
+		(t_point){0, -1, 0}, 10.0, 0.0);
+	// Disk mirror
+	scene->objects[--i] = disk(WHITE, (t_point){959, 0, -1700},
+		(t_point){1, 0, 0}, 300.0, 1000.0, 0.9);
 
 	allocate_lights(scene, 3);
 	scene->lights[0] = (t_object){
@@ -776,8 +714,8 @@ int	main(void)
 	set_up_hooks(&vars);
 	minirt_init();
 
-	// load_default_scene(&vars.scene);
-	load_test_scene(&vars.scene);
+	load_default_scene(&vars.scene);
+	// load_test_scene(&vars.scene);
 
 	vars.scene.focus = &(vars.scene.objects)[0];
 	precompute_values(&vars.scene);
