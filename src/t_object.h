@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 17:30:36 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/21 13:05:42 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/21 13:08:32 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef enum e_object_type
 	CameraType,
 	Sphere,
 	Plane,
+	Disk,
 	AmbientLight,
 	PointLight,
 	DirectionalLight

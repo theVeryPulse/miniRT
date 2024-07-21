@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/20 23:25:58 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/21 13:20:55 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -541,9 +541,11 @@ void	precompute_values(t_scene *scene)
 	object = scene->objects;
 	while (object < scene->objects + scene->object_count)
 	{
-		if (object->type == Sphere)
+		if (object->type == Sphere || object->type == Disk)
 			object->radius_squared = object->radius * object->radius;
-		else if (object->type == Plane || object->type == DirectionalLight)
+		else if (object->type == Plane
+			|| object->type == DirectionalLight
+			|| object->type == Disk)
 			vec_normalize(&object->direction);
 		++object;
 	}
