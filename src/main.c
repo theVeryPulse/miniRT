@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/21 20:29:54 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/22 20:04:45 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -425,7 +425,7 @@ void	ray_sphere_intersect(double t[2], t_point ray_origin,
 	}
 }
 
-extern t_argb	checkerboard_color_sphere(t_point pt, t_argb color1, t_argb color2);
+extern t_argb	get_checkerboard_sphere_color(t_point pt, t_argb color1, t_argb color2);
 
 t_argb	cast_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 		double t_min, double t_max, uint8_t recursion_depth)
@@ -460,7 +460,7 @@ t_argb	cast_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 		vec_mult(-1, ray_direction), closest_object->specular_exponent);
 	if (closest_object->is_checkerboard)
 		local_color = color_mult(
-			checkerboard_color_sphere(
+			get_checkerboard_sphere_color(
 				vec_minus(intersection, closest_object->position),
 				WHITE,
 				BLACK
@@ -598,59 +598,36 @@ void	load_default_scene(t_scene *scene)
 
 	unsigned int	i = 9;
 	allocate_objects(scene, i);
-	scene->objects[--i] = checkerboard_sphere((t_point){0, 0, -3000}, 500.0,
-		10.0, 0.2);
-	scene->objects[--i] = colored_sphere(CYAN, (t_point){1000, 1000, -5000},
-		1800.0, 100.0, 0.3);
-	scene->objects[--i] = colored_sphere(YELLOW, (t_point){-1000, -300, -2500},
-		300.0, 1000.0, 0.5);
+	scene->objects[--i] = checkerboard_sphere(
+		(t_point){0, 0, -3000}, 500.0, 10.0, 0.2);
+	scene->objects[--i] = colored_sphere(
+		CYAN, (t_point){1000, 1000, -5000}, 1800.0, 100.0, 0.3);
+	scene->objects[--i] = colored_sphere(
+		YELLOW, (t_point){-1000, -300, -2500}, 300.0, 1000.0, 0.5);
 	// Left wall
-	scene->objects[--i] = plane(BLUE, (t_point){-960, 0, 0},
-		(t_vector){-1, 0, 0}, 100.0, 0.1);
-	scene->objects[--i] = plane(CYAN, (t_point){960, 0, 0}, (t_point){1, 0, 0},
-		10.0, 0.1);
+	scene->objects[--i] = plane(
+		BLUE, (t_point){-960, 0, 0}, (t_vector){-1, 0, 0}, 100.0, 0.1);
+	scene->objects[--i] = plane(
+		CYAN, (t_point){960, 0, 0}, (t_point){1, 0, 0}, 10.0, 0.1);
 	// Ceiling
-	scene->objects[--i] = plane(WHITE, (t_point){0, 540, 0}, (t_point){0, 1, 0},
-		10.0, 0.0);	
+	scene->objects[--i] = plane(
+		WHITE, (t_point){0, 540, 0}, (t_point){0, 1, 0}, 10.0, 0.0);
 	// Floor
-	scene->objects[--i] = plane(0x808080, (t_point){0, -540, 0},
-		(t_point){0, -1, 0}, 10.0, 0.0);
+	scene->objects[--i] = plane(
+		0x808080, (t_point){0, -540, 0}, (t_point){0, -1, 0}, 10.0, 0.0);
 	// Disk mirror
-	scene->objects[--i] = disk(WHITE, (t_point){959, 0, -1700},
-		(t_point){1, 0, 0}, 300.0, 1000.0, 0.9);
+	scene->objects[--i] = disk(
+		WHITE, (t_point){959, 0, -1700}, (t_point){1, 0, 0}, 300.0, 1000.0,
+		0.9);
 
 	allocate_lights(scene, 3);
-	scene->lights[0] = (t_object){
-		.type = PointLight,
-		.category = Light,
-		.intensity = 0.1,
-		.position = (t_point){-400, 300, -3000},
-		.direction = (t_vector){0},
-		.radius = -1
-	};
+	scene->lights[0] = point_light((t_point){-400, 300, -3000}, 0.1);
 #if 0
-	scene->lights[1] = (t_object){
-		.type = DirectionalLight,
-		.category = Light,
-		.intensity = 0.0,
-		.direction = (t_vector){0, 0, 0.1}
-		};
+	scene->lights[1] = directional_light(0.4, (t_vector){-1, 0, -1});
 #else // Two point lights for better shadow effect
-	scene->lights[1] = (t_object){
-		.type = PointLight,
-		.category = Light,
-		.intensity = 0.5,
-		.position = (t_point){400, -300, -1500},
-		.direction = (t_vector){0},
-		.radius = -1
-	};
+	scene->lights[1] = point_light((t_point){400, -300, -2000}, 0.3);
 #endif
-	scene->lights[2] = (t_object){
-		.type = AmbientLight,
-		.category = Light,
-		.intensity = 0.05,
-		.radius = -1
-	};
+	scene->lights[2] = ambient_light(0.3);
 }
 
 void	load_test_scene(t_scene *scene)
@@ -667,42 +644,18 @@ void	load_test_scene(t_scene *scene)
 	allocate_objects(scene, object_count);
 
 	// Wall in back
-	scene->objects[--object_count] = (t_object){
-		.category = Object,
-		.type = Plane,
-		.color = WHITE,
-		.position = (t_point){0, -100, -2000},
-		.direction = (t_vector){0, 0, -1},
-		.specular_exponent = 10,
-		.reflectivity = 0.0,
-		.is_checkerboard = false
-	};
-	scene->objects[--object_count] = (t_object){
-		.category = Object,
-		.type = Sphere,
-		.color = RED,
-		.is_checkerboard = true,
-		.position = (t_point){1000, 10, -2000},
-		.specular_exponent = 100,
-		.reflectivity = 0.0,
-		.radius = 200
-	};
+	scene->objects[--object_count] = plane(WHITE, (t_point){0, -100, -2000},
+		(t_vector){0, 0, -1}, 10.0, 0.0);
+	scene->objects[--object_count] = checkerboard_sphere(
+		(t_point){1000, 10, -2000}, 200.0, 100, 0.0);
 
 	unsigned int	light_count;
 	light_count = 2;
 	allocate_lights(scene, light_count);
 
-	scene->lights[--light_count] = (t_object){
-		.category = Light,
-		.type = PointLight,
-		.intensity = 0.8,
-		.position = (t_vector){500, 100, -1800}
-	};
-	scene->lights[--light_count] = (t_object){
-		.category = Light,
-		.type = AmbientLight,
-		.intensity = 0.1,
-	};
+	scene->lights[--light_count] = point_light((t_vector){500, 100, -1800},
+		0.8);
+	scene->lights[--light_count] = ambient_light(0.1);
 }
 
 // int	main(int argc, char const *argv[])
@@ -714,8 +667,8 @@ int	main(void)
 	set_up_hooks(&vars);
 	minirt_init();
 
-	load_default_scene(&vars.scene);
-	// load_test_scene(&vars.scene);
+	// load_default_scene(&vars.scene);
+	load_test_scene(&vars.scene);
 
 	vars.scene.focus = &(vars.scene.objects)[0];
 	precompute_values(&vars.scene);

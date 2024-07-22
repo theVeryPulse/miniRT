@@ -28,6 +28,9 @@ FILES := \
 	src/main.c \
 	src/minirt.c \
 	src/minirt_init.c \
+	src/object/light/ambient_light.c \
+	src/object/light/directional_light.c \
+	src/object/light/point_light.c \
 	src/object/objects/checkerboard_sphere.c \
 	src/object/objects/colored_sphere.c \
 	src/object/objects/disk.c \
