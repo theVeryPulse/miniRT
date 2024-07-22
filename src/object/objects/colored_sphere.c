@@ -1,34 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   disk.c                                             :+:      :+:    :+:   */
+/*   colored_sphere.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/21 20:26:46 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/21 20:26:53 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/21 20:22:18 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/22 19:23:30 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "t_object.h"
+#include "../t_object.h"
 
-t_object	disk(
+t_object	colored_sphere(
 	t_argb color,
 	t_point position,
-	t_vector direction,
 	double radius,
 	double specular_exponent,
 	double reflectivity
 )
 {
 	return ((t_object){
+		.type = Sphere,
 		.category = Object,
-		.type = Disk,
-		.radius = radius,
 		.color = color,
 		.position = position,
-		.direction = direction,
-		.specular_exponent = specular_exponent,
-		.reflectivity = reflectivity,
+		.radius = radius,
+		.specular_exponent = specular_exponent, /* Shiny */
+		.reflectivity = reflectivity, /* A bit reflective */
+		.is_checkerboard = false
 	});
 }

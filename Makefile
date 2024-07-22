@@ -28,10 +28,10 @@ FILES := \
 	src/main.c \
 	src/minirt.c \
 	src/minirt_init.c \
-	src/object/checkerboard_sphere.c \
-	src/object/colored_sphere.c \
-	src/object/disk.c \
-	src/object/plane.c
+	src/object/objects/checkerboard_sphere.c \
+	src/object/objects/colored_sphere.c \
+	src/object/objects/disk.c \
+	src/object/objects/plane.c
 
 # FILES := $(addprefix src/, $(FILES))
 OFILES := $(patsubst src/%.c, build/%.o, $(FILES))

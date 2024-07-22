@@ -6,11 +6,11 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:25:40 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/21 20:25:52 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/22 19:23:26 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "t_object.h"
+#include "../t_object.h"
 
 t_object	checkerboard_sphere(
 	t_point position,
