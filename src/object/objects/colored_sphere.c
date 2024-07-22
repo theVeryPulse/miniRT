@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:22:18 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/22 19:23:30 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/22 20:12:39 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ t_object	colored_sphere(
 		.color = color,
 		.position = position,
 		.radius = radius,
-		.specular_exponent = specular_exponent, /* Shiny */
-		.reflectivity = reflectivity, /* A bit reflective */
+		.specular_exponent = specular_exponent,
+		.reflectivity = reflectivity,
 		.is_checkerboard = false
 	});
 }
