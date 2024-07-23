@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/23 16:48:46 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/23 19:04:50 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,6 +244,68 @@ void	ray_disk_intersect(double *t, t_point ray_origin,
 }
 
 /**
+ * @brief 
+ * 
+ * @ref
+ * https://hugi.scene.org/online/hugi24/coding%20graphics%20chris%20dragan%20
+ * raytracing%20shapes.htm
+ */
+void	ray_cylinder_intersect(
+		double t[2],
+		t_point ray_origin,
+		t_vector ray_direction,
+		t_object *cylinder,
+		double t_min,
+		double t_max,
+		t_object **closest_object,
+		double *closest_t)
+{
+	t_vector	d_prime;
+	t_vector	w_prime;
+	t_vector	o_minus_c;
+
+	o_minus_c = vec_minus(ray_origin, cylinder->position);
+	d_prime = vec_minus(ray_direction,
+		vec_mult(vec_dot(ray_direction, cylinder->direction),
+		cylinder->direction));
+	w_prime = vec_minus(o_minus_c,
+		vec_mult(vec_dot(o_minus_c, cylinder->direction),
+		cylinder->direction));
+
+	double	a;
+	double	b;
+	double	c;
+
+	a = vec_dot(d_prime, d_prime);
+	b = 2 * vec_dot(w_prime, d_prime);
+	c = vec_dot(w_prime, w_prime) - cylinder->radius_squared;
+	
+	double	discriminant = b * b - 4 * a * c;
+	if (discriminant < 0)
+	{
+		t[0] = INFINITY;
+		t[1] = INFINITY;
+	}
+	else
+	{
+		double q = -0.5 * (b + sign(b) * sqrt(discriminant));
+		t[0] = q / a;
+		t[1] = c / q;
+	}
+
+	if (t[0] >= t_min && t[0] <= t_max && t[0] < *closest_t)
+	{
+		*closest_t = t[0];
+		*closest_object = cylinder;
+	}
+	if (t[1] >= t_min && t[1] <= t_max && t[1] < *closest_t)
+	{
+		*closest_t = t[1];
+		*closest_object = cylinder;
+	}
+}
+
+/**
  * @brief Checks if a ray hits any object, if hit, record this closest object
  *        and closest_t.
  * 
@@ -297,6 +359,11 @@ bool	trace(t_scene *scene,
 		{
 			ray_disk_intersect(t, ray_origin, ray_direction, object, t_min,
 				t_max, closest_object, closest_t);
+		}
+		else if (object->type == Cylinder)
+		{
+			ray_cylinder_intersect(t, ray_origin, ray_direction, object,
+				t_min, t_max, closest_object, closest_t);
 		}
 		else
 		{
@@ -436,6 +503,13 @@ t_argb	cast_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 		unit_normal = closest_object->direction;
 		if (closest_object->backside)
 			unit_normal = vec_mult(-1.0, unit_normal);
+	}
+	else if (closest_object->type == Cylinder)
+	{
+		t_vector q = vec_minus(intersection, closest_object->position);
+		t_vector q_on_v = vec_mult(vec_dot(q, closest_object->direction),
+			closest_object->direction);
+		unit_normal = vec_normalized(vec_minus(q, q_on_v));
 	}
 	else
 	{
@@ -618,17 +692,19 @@ void	load_test_scene(t_scene *scene)
 
 	// Wall in back
 	scene->objects[--object_count] = plane(WHITE, (t_point){0, -100, -2000},
-		(t_vector){0, 0, -1}, 10.0, 0.0);
-	scene->objects[--object_count] = checkerboard_sphere(
-		(t_point){1000, 10, -2000}, 200.0, 100, 0.0);
+		(t_vector){0, 0, 1}, 10.0, 0.0);
+	// scene->objects[--object_count] = checkerboard_sphere(
+	// 	(t_point){1000, 10, -2000}, 200.0, 100, 0.0);
+	scene->objects[--object_count] = cylinder(RED, (t_point){0, 0, -1500},
+		(t_vector){0, 1, 0}, 200, 1000, 0.0, 0.0);
 
 	unsigned int	light_count;
 	light_count = 2;
 	allocate_lights(scene, light_count);
 
-	scene->lights[--light_count] = point_light((t_vector){500, 100, -1800},
+	scene->lights[--light_count] = point_light((t_vector){500, 1000, -1800},
 		0.8);
-	scene->lights[--light_count] = ambient_light(0.1);
+	scene->lights[--light_count] = ambient_light(0.2);
 }
 
 // int	main(int argc, char const *argv[])

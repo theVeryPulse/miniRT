@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 13:49:01 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/23 15:04:36 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/23 18:59:02 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ t_object	cylinder(
 	double reflectivity)
 {
 	return ((t_object){
-		.type = Cylinder,
 		.category = Object,
+		.type = Cylinder,
 		.color = color,
 		.position = position,
 		.direction = direction,
