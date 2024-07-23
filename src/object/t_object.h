@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 17:30:36 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/23 16:14:31 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/23 22:14:28 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,14 @@ typedef enum e_object_type
 	DirectionalLight
 }	t_object_type;
 
+typedef enum e_intersect
+{
+	UndefinedIntersect,
+	BottomFace,
+	TopFace,
+	CurvedSurface
+}	t_intersect;
+
 typedef struct s_object
 {
 	/* Common properties */
@@ -48,7 +56,9 @@ typedef struct s_object
 
 	/* All light sources */
 	double			intensity;
-	/* Direction for directional light. Normal for plane. Axis for cylinder */
+	/* Direction for directional light.
+	Normal for plane.
+	Axis for cylinder. */
 	t_vector		direction;
 	/* Sphere, disk, cylinder */
 	double			radius;
@@ -59,12 +69,14 @@ typedef struct s_object
 	double			reflectivity;
 	/* All objects */
 	t_argb			color;
-	/* Cylinder */
-	double			height;
 	/* Spheres */
 	bool			is_checkerboard;
 	/* Plane, disk */
 	bool			backside;
+	/* Cylinder */
+	double			height;
+	/* Cylinder */
+	t_intersect		ray_intersects;
 }	t_object;
 
 #endif /* T_OBJECT_H */

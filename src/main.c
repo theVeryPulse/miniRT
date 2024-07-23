@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/23 21:57:42 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/23 23:32:39 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -308,6 +308,7 @@ void	ray_cylinder_intersect(
 	{
 		*closest_t = t[0];
 		*closest_object = cylinder;
+		cylinder->ray_intersects = CurvedSurface;
 	}
 	proj = vec_dot(vec_add(ray_origin, vec_mult(t[1], ray_direction)),
 					cylinder->direction);
@@ -316,6 +317,55 @@ void	ray_cylinder_intersect(
 	{
 		*closest_t = t[1];
 		*closest_object = cylinder;
+		cylinder->ray_intersects = CurvedSurface;
+	}
+
+	/* Caps */
+	double		denominator;
+	t_vector	intersect;
+	t_vector	center_to_intersect;
+	double		distance_squared;
+	
+	/* Bottom cap */
+	denominator = vec_dot(cylinder->direction, ray_direction);
+	if (!equals(denominator, 0.0))
+	{
+		t_point	disk_center = cylinder->position;
+		*t = vec_dot(vec_minus(disk_center, ray_origin),
+			cylinder->direction) / denominator;
+		intersect = vec_add(ray_origin, vec_mult(*t, ray_direction));
+		center_to_intersect = vec_minus(intersect, disk_center);
+		distance_squared = pow(vec_len(center_to_intersect), 2);
+		if (distance_squared <= cylinder->radius_squared
+			&& *t >= t_min && *t <= t_max && *t < *closest_t)
+		{
+			*closest_t = *t;
+			*closest_object = cylinder;
+			if (denominator < 0)
+				(*closest_object)->backside = true;
+		}
+	}
+
+	/* Top cap */
+	denominator = vec_dot(cylinder->direction, ray_direction);
+	if (!equals(denominator, 0.0))
+	{
+		t_point	disk_center;
+		disk_center = vec_add(cylinder->position,
+			vec_mult(cylinder->height, cylinder->direction));
+		*t = vec_dot(vec_minus(disk_center, ray_origin), cylinder->direction)
+			/ denominator;
+		intersect = vec_add(ray_origin, vec_mult(*t, ray_direction));
+		center_to_intersect = vec_minus(intersect, disk_center);
+		distance_squared = pow(vec_len(center_to_intersect), 2);
+		if (distance_squared <= cylinder->radius_squared
+			&& *t >= t_min && *t <= t_max && *t < *closest_t)
+		{
+			*closest_t = *t;
+			*closest_object = cylinder;
+			if (denominator < 0)
+				(*closest_object)->backside = true;
+		}
 	}
 }
 
@@ -520,10 +570,18 @@ t_argb	cast_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 	}
 	else if (closest_object->type == Cylinder)
 	{
-		t_vector q = vec_minus(intersection, closest_object->position);
-		t_vector q_on_v = vec_mult(vec_dot(q, closest_object->direction),
-			closest_object->direction);
-		unit_normal = vec_normalized(vec_minus(q, q_on_v));
+		if (closest_object->ray_intersects == CurvedSurface)
+		{
+			t_vector q = vec_minus(intersection, closest_object->position);
+			t_vector q_on_v = vec_mult(vec_dot(q, closest_object->direction),
+				closest_object->direction);
+			unit_normal = vec_normalized(vec_minus(q, q_on_v));
+		}
+		else if (closest_object->ray_intersects == BottomFace
+			|| closest_object->ray_intersects == TopFace)
+		{
+			unit_normal = vec_mult(1.0, closest_object->direction);
+		}
 	}
 	else
 	{
@@ -697,7 +755,7 @@ void	load_test_scene(t_scene *scene)
 	};
 
 	unsigned int	object_count;
-	object_count = 2;
+	object_count = 3;
 	allocate_objects(scene, object_count);
 
 	// Wall in back
@@ -706,13 +764,15 @@ void	load_test_scene(t_scene *scene)
 	// scene->objects[--object_count] = checkerboard_sphere(
 	// 	(t_point){1000, 10, -2000}, 200.0, 100, 0.0);
 	scene->objects[--object_count] = cylinder(RED, (t_point){0, 0, -1500},
-		(t_vector){0, 1, 0}, 200, 1000, 0.0, 0.0);
+		(t_vector){0, 0.1, 1}, 200, 200, 0.0, 0.0);
+	scene->objects[--object_count] = disk(RED, (t_point){400, 0, -1500},
+		(t_vector){0, 0.1, -1}, 200, 0.0, 0.0);
 
 	unsigned int	light_count;
 	light_count = 2;
 	allocate_lights(scene, light_count);
 
-	scene->lights[--light_count] = point_light((t_vector){500, 1000, -1800},
+	scene->lights[--light_count] = point_light((t_vector){500, 1000, 0},
 		0.8);
 	scene->lights[--light_count] = ambient_light(0.2);
 }
