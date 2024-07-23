@@ -545,11 +545,13 @@ void	precompute_values(t_scene *scene)
 	object = scene->objects;
 	while (object < scene->objects + scene->object_count)
 	{
-		if (object->type == Sphere || object->type == Disk)
+		if (object->type == Sphere || object->type == Disk
+			|| object->type == Cylinder)
 			object->radius_squared = object->radius * object->radius;
 		else if (object->type == Plane
 			|| object->type == DirectionalLight
-			|| object->type == Disk)
+			|| object->type == Disk
+			|| object->type == Cylinder)
 			vec_normalize(&object->direction);
 		++object;
 	}

@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:21:20 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/21 15:42:42 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/23 15:27:07 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ static void	switch_focus(t_vars *vars)
 		message = "Focus: Plane";
 	else if (vars->scene.focus->type == Disk)
 		message = "Focus: Disk";
+	else if (vars->scene.focus->type == Cylinder)
+		message = "Focus: Cylinder";
 	else
 		message = "What?";
 	put_image_to_window_vars(vars);

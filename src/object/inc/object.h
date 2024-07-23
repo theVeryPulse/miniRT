@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:27:16 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/22 19:55:36 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/23 15:05:00 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,15 @@ extern t_object	disk(t_argb color,
 extern t_object	plane(t_argb color,
 					t_point position,
 					t_vector direction,
+					double specular_exponent,
+					double reflectivity);
+
+extern t_object	cylinder(
+					t_argb color,
+					t_point position,
+					t_vector direction,
+					double radius,
+					double height,
 					double specular_exponent,
 					double reflectivity);
 

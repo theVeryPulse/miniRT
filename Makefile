@@ -33,6 +33,7 @@ FILES := \
 	src/object/light/point_light.c \
 	src/object/objects/checkerboard_sphere.c \
 	src/object/objects/colored_sphere.c \
+	src/object/objects/cylinder.c \
 	src/object/objects/disk.c \
 	src/object/objects/plane.c
 

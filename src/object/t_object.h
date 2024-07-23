@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 17:30:36 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/21 20:33:44 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/23 16:14:31 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef enum e_object_type
 	Sphere,
 	Plane,
 	Disk,
+	Cylinder,
 	AmbientLight,
 	PointLight,
 	DirectionalLight
@@ -44,20 +45,23 @@ typedef struct s_object
 	t_category		category;
 	t_object_type	type;
 	t_point			position;
-	t_argb			color;
 
-	/* Light properties */
-
+	/* All light sources */
 	double			intensity;
-	/* Direction for directional light. Normal for plane */
+	/* Direction for directional light. Normal for plane. Axis for cylinder */
 	t_vector		direction;
-
-	/* Object properties */
-
+	/* Sphere, disk, cylinder */
 	double			radius;
 	double			radius_squared;
+	/* All objects */
 	double			specular_exponent;
+	/* All objects */
 	double			reflectivity;
+	/* All objects */
+	t_argb			color;
+	/* Cylinder */
+	double			height;
+	/* Spheres */
 	bool			is_checkerboard;
 }	t_object;
 
