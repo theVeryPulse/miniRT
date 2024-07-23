@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/23 19:04:50 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/23 21:57:42 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -293,12 +293,26 @@ void	ray_cylinder_intersect(
 		t[1] = c / q;
 	}
 
-	if (t[0] >= t_min && t[0] <= t_max && t[0] < *closest_t)
+	/* p0​⋅v ≤ (O+td)⋅v ≤ (p0​+hv)⋅v */
+	double	proj_min;
+	double	proj_max;
+	double	proj;
+	
+	proj_min = vec_dot(cylinder->position, cylinder->direction);
+	proj_max = vec_dot(vec_add(cylinder->position,
+		vec_mult(cylinder->height, cylinder->direction)), cylinder->direction);
+	proj = vec_dot(vec_add(ray_origin, vec_mult(t[0], ray_direction)),
+					cylinder->direction);
+	if (t[0] >= t_min && t[0] <= t_max && t[0] < *closest_t
+		&& proj >= proj_min && proj <= proj_max)
 	{
 		*closest_t = t[0];
 		*closest_object = cylinder;
 	}
-	if (t[1] >= t_min && t[1] <= t_max && t[1] < *closest_t)
+	proj = vec_dot(vec_add(ray_origin, vec_mult(t[1], ray_direction)),
+					cylinder->direction);
+	if (t[1] >= t_min && t[1] <= t_max && t[1] < *closest_t
+		&& proj >= proj_min && proj <= proj_max)
 	{
 		*closest_t = t[1];
 		*closest_object = cylinder;
