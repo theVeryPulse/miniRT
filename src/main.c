@@ -537,19 +537,6 @@ void	allocate_lights(t_scene *scene, unsigned int light_count)
 	scene->light_count = light_count;
 }
 
-void	calculate_radius_squared(t_scene *scene)
-{
-	t_object	*object;
-
-	object = scene->objects;
-	while (object < scene->objects + scene->object_count)
-	{
-		if (object->type == Sphere)
-			object->radius_squared = object->radius * object->radius;
-		++object;
-	}
-}
-
 void	precompute_values(t_scene *scene)
 {
 	t_object	*object;
