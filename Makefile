@@ -6,6 +6,7 @@ CFLAGS := -Wall -Wextra -Werror
 # ls src/**/*.c >> Makefile
 FILES := \
 	src/checkerboard_color_sphere.c \
+	src/equals.c \
 	src/color/alpha_component.c \
 	src/color/argb.c \
 	src/color/blue_component.c \
