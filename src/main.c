@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/23 11:40:16 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/23 16:27:24 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@
 #include "../lib/libft/inc/libft.h"
 
 #include <stdbool.h>
+
+bool	equals(double a, double b);
 
 int	destroy_exit(t_vars *vars)
 {
@@ -198,7 +200,7 @@ void	ray_plane_intersect(double *t, t_point ray_origin,
 	double	denominator;
 
 	denominator = vec_dot(plane->direction, ray_direction);
-	if (denominator > 1e-6)
+	if (!equals(denominator, 0.0))
 	{
 		*t = vec_dot(
 			vec_minus(plane->position, ray_origin), plane->direction)
@@ -207,6 +209,8 @@ void	ray_plane_intersect(double *t, t_point ray_origin,
 		{
 			*closest_t = *t;
 			*closest_object = plane;
+			if (denominator < 0)
+				(*closest_object)->backside = true;
 		}
 	}
 }
@@ -221,7 +225,7 @@ void	ray_disk_intersect(double *t, t_point ray_origin,
 	double		distance_squared;
 
 	denominator = vec_dot(disk->direction, ray_direction);
-	if (denominator > 1e-6)
+	if (!equals(denominator, 0.0))
 	{
 		*t = vec_dot(vec_minus(disk->position, ray_origin), disk->direction)
 			/ denominator;
@@ -233,6 +237,8 @@ void	ray_disk_intersect(double *t, t_point ray_origin,
 		{
 			*closest_t = *t;
 			*closest_object = disk;
+			if (denominator < 0)
+				(*closest_object)->backside = true;
 		}
 	}
 }
@@ -424,7 +430,11 @@ t_argb	cast_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 		unit_normal = vec_normalized(
 			vec_minus(intersection, closest_object->position));
 	else if (closest_object->type == Plane || closest_object->type == Disk)
+	{
 		unit_normal = closest_object->direction;
+		if (closest_object->backside)
+			unit_normal = vec_mult(-1.0, unit_normal);
+	}
 	else
 	{
 	}

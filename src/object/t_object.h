@@ -63,6 +63,8 @@ typedef struct s_object
 	double			height;
 	/* Spheres */
 	bool			is_checkerboard;
+	/* Plane, disk */
+	bool			backside;
 }	t_object;
 
 #endif /* T_OBJECT_H */
