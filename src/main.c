@@ -399,7 +399,7 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 					/ (vec_len(normal) * vec_len(light));
 			
 			/* Specular reflection */
-			if (specular_exponent != -1)
+			if (specular_exponent > 0.0)
 			{
 				t_vector	reflection;
 				double		reflection_dot_view;
