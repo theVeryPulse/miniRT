@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/22 20:04:45 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/23 11:40:16 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,6 @@
 #include "../lib/libft/inc/libft.h"
 
 #include <stdbool.h>
-
-void	render_image(t_vars *vars);
-void	put_image_to_window_vars(t_vars *vars);
-void	ray_sphere_intersect(double t[2], t_point ray_origin,
-			t_point ray_direction, t_object *sphere, double a);
 
 int	destroy_exit(t_vars *vars)
 {
@@ -151,6 +146,74 @@ bool	light_is_blocked(t_scene *scene, t_point shadow_ray_origin,
 		++i;
 	}
 	return (false);
+}
+
+double	sign(double n)
+{
+	if (n >= 0)
+		return (1.0);
+	else
+		return (-1.0);
+}
+
+/**
+ * @brief 
+ * 
+ * @param t 
+ * @param ray_origin 
+ * @param point_on_canvas 
+ * @param sphere 
+ * @note
+ * |O+tD-C|^2 - R^2 = 0
+ *  O: ray origin
+ *  D: ray direction, whether normalized or not will affect the range of
+ *     solution of 't'
+ *  C: sphere center
+ *  R: sphere radius
+ * => in the form of: ax^2 + bx + c
+ * => a = D^2; b = 2D(O-C); c=|O-C|^2-R^2
+ * 
+ * a = vec_dot(ray_direction, ray_direction)
+ * 'a' remains unchanged for the same ray.
+ * 
+ * => t1 = (-b - sqrt(b^2 - 4ac)) / 2a
+ * => t2 = (-b + sqrt(b^2 - 4ac)) / 2a
+ * 
+ * "However, due to the finite precision with which real numbers are represented 
+ * on computers, this formula can suffer from a loss of significance." A more
+ * stable equation is used instead.
+ * 
+ * q = -0.5 * (b + sign(b) * sqrt(b^2 - 4ac))
+ * => t1 = q / a
+ * => t2 = c / q
+ * 
+ * @ref 
+ * https://www.scratchapixel.com/lessons/3d-basic-rendering/
+ * minimal-ray-tracer-rendering-simple-shapes/ray-sphere-intersection.html
+ */
+void	ray_sphere_intersect(double t[2], t_point ray_origin,
+			t_point ray_direction, t_object *sphere, double a)
+{
+	double		b;
+	double		c;
+	t_vector	o_minus_c;
+	double		discriminant;
+
+	o_minus_c = vec_minus(ray_origin, sphere->position);
+	b = 2 * vec_dot(o_minus_c, ray_direction);
+	c = vec_dot(o_minus_c, o_minus_c) - sphere->radius_squared;
+	discriminant = b * b - 4 * a * c;
+	if (discriminant < 0)
+	{
+		t[0] = INFINITY;
+		t[1] = INFINITY;
+	}
+	else
+	{
+		double q = -0.5 * (b + sign(b) * sqrt(discriminant));
+		t[0] = q / a;
+		t[1] = c / q;
+	}
 }
 
 void	ray_plane_intersect(double *t, t_point ray_origin,
@@ -357,74 +420,6 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 	if (intensity >= 1)
 		intensity = 1;
 	return (intensity);
-}
-
-double	sign(double n)
-{
-	if (n >= 0)
-		return (1.0);
-	else
-		return (-1.0);
-}
-
-/**
- * @brief 
- * 
- * @param t 
- * @param ray_origin 
- * @param point_on_canvas 
- * @param sphere 
- * @note
- * |O+tD-C|^2 - R^2 = 0
- *  O: ray origin
- *  D: ray direction, whether normalized or not will affect the range of
- *     solution of 't'
- *  C: sphere center
- *  R: sphere radius
- * => in the form of: ax^2 + bx + c
- * => a = D^2; b = 2D(O-C); c=|O-C|^2-R^2
- * 
- * a = vec_dot(ray_direction, ray_direction)
- * 'a' remains unchanged for the same ray.
- * 
- * => t1 = (-b - sqrt(b^2 - 4ac)) / 2a
- * => t2 = (-b + sqrt(b^2 - 4ac)) / 2a
- * 
- * "However, due to the finite precision with which real numbers are represented 
- * on computers, this formula can suffer from a loss of significance." A more
- * stable equation is used instead.
- * 
- * q = -0.5 * (b + sign(b) * sqrt(b^2 - 4ac))
- * => t1 = q / a
- * => t2 = c / q
- * 
- * @ref 
- * https://www.scratchapixel.com/lessons/3d-basic-rendering/
- * minimal-ray-tracer-rendering-simple-shapes/ray-sphere-intersection.html
- */
-void	ray_sphere_intersect(double t[2], t_point ray_origin,
-			t_point ray_direction, t_object *sphere, double a)
-{
-	double		b;
-	double		c;
-	t_vector	o_minus_c;
-	double		discriminant;
-
-	o_minus_c = vec_minus(ray_origin, sphere->position);
-	b = 2 * vec_dot(o_minus_c, ray_direction);
-	c = vec_dot(o_minus_c, o_minus_c) - sphere->radius_squared;
-	discriminant = b * b - 4 * a * c;
-	if (discriminant < 0)
-	{
-		t[0] = INFINITY;
-		t[1] = INFINITY;
-	}
-	else
-	{
-		double q = -0.5 * (b + sign(b) * sqrt(discriminant));
-		t[0] = q / a;
-		t[1] = c / q;
-	}
 }
 
 extern t_argb	get_checkerboard_sphere_color(t_point pt, t_argb color1, t_argb color2);
