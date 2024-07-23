@@ -123,31 +123,6 @@ void	test_draw_on_image(t_img_vars *img_vars)
 		draw_pixel_in_screen_space(img_vars, pixel);	
 }
 
-bool	light_is_blocked(t_scene *scene, t_point shadow_ray_origin,
-	t_vector shadow_ray_direction, double t_min, double t_max)
-{
-	double		t[2];
-	size_t		i;
-
-	i = 0;
-	while (i < scene->object_count)
-	{
-		if (scene->objects[i].type == Sphere)
-		{
-			ray_sphere_intersect(t, shadow_ray_origin, shadow_ray_direction,
-				&(scene->objects)[i],
-				vec_dot(shadow_ray_direction, shadow_ray_direction));
-			if (t[0] >= t_min && t[0] <= t_max)
-				return (true);
-		}
-		else if (scene->objects[i].type != Sphere)
-		{
-		}
-		++i;
-	}
-	return (false);
-}
-
 double	sign(double n)
 {
 	if (n >= 0)
