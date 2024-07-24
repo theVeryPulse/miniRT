@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/23 23:32:39 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/24 18:18:22 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,6 +211,8 @@ void	ray_plane_intersect(double *t, t_point ray_origin,
 			*closest_object = plane;
 			if (denominator < 0)
 				(*closest_object)->backside = true;
+			else
+				(*closest_object)->backside = false;
 		}
 	}
 }
@@ -239,6 +241,8 @@ void	ray_disk_intersect(double *t, t_point ray_origin,
 			*closest_object = disk;
 			if (denominator < 0)
 				(*closest_object)->backside = true;
+			else
+				(*closest_object)->backside = false;
 		}
 	}
 }
@@ -343,6 +347,8 @@ void	ray_cylinder_intersect(
 			*closest_object = cylinder;
 			if (denominator < 0)
 				(*closest_object)->backside = true;
+			else
+				(*closest_object)->backside = false;
 		}
 	}
 
@@ -365,6 +371,8 @@ void	ray_cylinder_intersect(
 			*closest_object = cylinder;
 			if (denominator < 0)
 				(*closest_object)->backside = true;
+			else
+				(*closest_object)->backside = false;
 		}
 	}
 }
@@ -764,9 +772,9 @@ void	load_test_scene(t_scene *scene)
 	// scene->objects[--object_count] = checkerboard_sphere(
 	// 	(t_point){1000, 10, -2000}, 200.0, 100, 0.0);
 	scene->objects[--object_count] = cylinder(RED, (t_point){0, 0, -1500},
-		(t_vector){0, 0.1, 1}, 200, 200, 0.0, 0.0);
+		(t_vector){0, 0.1, 1}, 200, 200, 1.0, 0.0);
 	scene->objects[--object_count] = disk(RED, (t_point){400, 0, -1500},
-		(t_vector){0, 0.1, -1}, 200, 0.0, 0.0);
+		(t_vector){0, 0.1, -1}, 200, 1.0, 0.0);
 
 	unsigned int	light_count;
 	light_count = 2;
