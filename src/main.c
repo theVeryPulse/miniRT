@@ -763,7 +763,7 @@ void	load_test_scene(t_scene *scene)
 	};
 
 	unsigned int	object_count;
-	object_count = 3;
+	object_count = 2;
 	allocate_objects(scene, object_count);
 
 	// Wall in back
@@ -771,18 +771,18 @@ void	load_test_scene(t_scene *scene)
 		(t_vector){0, 0, 1}, 10.0, 0.0);
 	// scene->objects[--object_count] = checkerboard_sphere(
 	// 	(t_point){1000, 10, -2000}, 200.0, 100, 0.0);
-	scene->objects[--object_count] = cylinder(RED, (t_point){0, 0, -1500},
+	scene->objects[--object_count] = cylinder(RED, (t_point){10, 10, -1500},
 		(t_vector){0, 0.1, 1}, 200, 200, 1.0, 0.0);
-	scene->objects[--object_count] = disk(RED, (t_point){400, 0, -1500},
-		(t_vector){0, 0.1, -1}, 200, 1.0, 0.0);
+	// scene->objects[--object_count] = disk(RED, (t_point){400, 0, -1500},
+	// 	(t_vector){0, 0.1, -1}, 200, 1.0, 0.0);
 
 	unsigned int	light_count;
-	light_count = 2;
+	light_count = 1;
 	allocate_lights(scene, light_count);
 
 	scene->lights[--light_count] = point_light((t_vector){500, 1000, 0},
-		0.8);
-	scene->lights[--light_count] = ambient_light(0.2);
+		1);
+	// scene->lights[--light_count] = ambient_light(0.3);
 }
 
 // int	main(int argc, char const *argv[])
