@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/24 19:08:34 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/24 19:32:43 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -729,37 +729,38 @@ void	load_default_scene(t_scene *scene)
 		.w = (t_vector){0.5, 0, sqrt(3) / 2} */
 	};
 
-	unsigned int	i = 9;
+	unsigned int	i = 11;
 	allocate_objects(scene, i);
 	scene->objects[--i] = checkerboard_sphere(
-		(t_point){0, 0, -3000}, 500.0, 10.0, 0.2);
+		(t_point){10, -150, -2000}, 200.0, 10.0, 0.2);
 	scene->objects[--i] = colored_sphere(
-		CYAN, (t_point){1000, 1000, -5000}, 1800.0, 100.0, 0.3);
+		RED, (t_point){200, 200, -2500}, 300.0, 5.0, 0.1);
 	scene->objects[--i] = colored_sphere(
-		YELLOW, (t_point){-1000, -300, -2500}, 300.0, 1000.0, 0.5);
+		YELLOW, (t_point){-700, -200, -2500}, 300.0, 1000.0, 0.5);
 	// Left wall
 	scene->objects[--i] = plane(
 		BLUE, (t_point){-960, 0, 0}, (t_vector){-1, 0, 0}, 100.0, 0.1);
 	scene->objects[--i] = plane(
-		CYAN, (t_point){960, 0, 0}, (t_point){1, 0, 0}, 10.0, 0.1);
+		CYAN, (t_point){960, 0, 0}, (t_vector){1, 0, 0}, 10.0, 0.0);
 	// Ceiling
 	scene->objects[--i] = plane(
-		WHITE, (t_point){0, 540, 0}, (t_point){0, 1, 0}, 10.0, 0.0);
+		WHITE, (t_point){0, 540, 0}, (t_vector){0, 1, 0}, 10.0, 0.0);
 	// Floor
 	scene->objects[--i] = plane(
-		0x808080, (t_point){0, -540, 0}, (t_point){0, -1, 0}, 10.0, 0.0);
+		0x808080, (t_point){0, -540, 0}, (t_vector){0, -1, 0}, 10.0, 0.1);
+	// Back wall
+	scene->objects[--i] = plane(
+		0x808080, (t_point){0, 0, -3000}, (t_vector){0, 0, -1}, 10.0, 0.0);
 	// Disk mirror
 	scene->objects[--i] = disk(
-		WHITE, (t_point){959, 0, -1700}, (t_point){1, 0, 0}, 300.0, 1000.0,
+		WHITE, (t_point){700, -150, -2500}, (t_vector){1, -0.0, -1}, 300.0, 1000.0,
 		0.9);
+	scene->objects[--i] = cylinder(RED, (t_point){10, -540, -2000},
+		(t_vector){0, 1, 0}, 500, 200, 1.0, 0.5);
 
 	allocate_lights(scene, 3);
-	scene->lights[0] = point_light((t_point){-400, 300, -3000}, 0.1);
-#if 0
-	scene->lights[1] = directional_light(0.4, (t_vector){-1, 0, -1});
-#else // Two point lights for better shadow effect
-	scene->lights[1] = point_light((t_point){400, -300, -2000}, 0.3);
-#endif
+	scene->lights[0] = point_light((t_point){-400, 300, -2900}, 0.5);
+	scene->lights[1] = point_light((t_point){400, -300, -1000}, 0.5);
 	scene->lights[2] = ambient_light(0.3);
 }
 
@@ -804,8 +805,8 @@ int	main(void)
 	set_up_hooks(&vars);
 	minirt_init();
 
-	// load_default_scene(&vars.scene);
-	load_test_scene(&vars.scene);
+	load_default_scene(&vars.scene);
+	// load_test_scene(&vars.scene);
 
 	vars.scene.focus = &(vars.scene.objects)[0];
 	precompute_values(&vars.scene);
