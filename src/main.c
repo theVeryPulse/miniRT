@@ -231,7 +231,7 @@ void	ray_disk_intersect(double *t, t_point ray_origin,
 			/ denominator;
 		intersect = vec_add(ray_origin, vec_mult(*t, ray_direction));
 		center_to_intersect = vec_minus(intersect, disk->position);
-		distance_squared = pow(vec_len(center_to_intersect), 2);
+		distance_squared = vec_squared(center_to_intersect);
 		if (distance_squared <= disk->radius_squared
 			&& *t >= t_min && *t <= t_max && *t < *closest_t)
 		{
@@ -335,7 +335,7 @@ void	ray_cylinder_intersect(
 			cylinder->direction) / denominator;
 		intersect = vec_add(ray_origin, vec_mult(*t, ray_direction));
 		center_to_intersect = vec_minus(intersect, disk_center);
-		distance_squared = pow(vec_len(center_to_intersect), 2);
+		distance_squared = vec_squared(center_to_intersect);
 		if (distance_squared <= cylinder->radius_squared
 			&& *t >= t_min && *t <= t_max && *t < *closest_t)
 		{
@@ -357,7 +357,7 @@ void	ray_cylinder_intersect(
 			/ denominator;
 		intersect = vec_add(ray_origin, vec_mult(*t, ray_direction));
 		center_to_intersect = vec_minus(intersect, disk_center);
-		distance_squared = pow(vec_len(center_to_intersect), 2);
+		distance_squared = vec_squared(center_to_intersect);
 		if (distance_squared <= cylinder->radius_squared
 			&& *t >= t_min && *t <= t_max && *t < *closest_t)
 		{

@@ -25,6 +25,7 @@ FILES := \
 	src/geometry/vector/vec_mult.c \
 	src/geometry/vector/vec_normalize.c \
 	src/geometry/vector/vec_normalized.c \
+	src/geometry/vector/vec_squared.c \
 	src/handle_keypress_event.c \
 	src/main.c \
 	src/minirt.c \

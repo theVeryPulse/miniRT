@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 22:32:03 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/23 13:40:11 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/24 17:51:23 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,6 @@ extern t_vector	vec_cross(t_vector a, t_vector b);
 extern double	vec_len(t_vector vec);
 extern t_vector	vec_normalized(t_vector vec);
 extern void		vec_normalize(t_vector *vec);
+extern double	vec_squared(t_vector vec);
 
 #endif /* VECTOR_H */
