@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/24 18:18:22 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/24 19:08:34 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,9 +217,15 @@ void	ray_plane_intersect(double *t, t_point ray_origin,
 	}
 }
 
-void	ray_disk_intersect(double *t, t_point ray_origin,
-		t_vector ray_direction, t_object *disk, double t_min, double t_max,
-		t_object **closest_object, double *closest_t)
+void	ray_disk_intersect(
+			double *t,
+			t_point ray_origin,
+			t_vector ray_direction,
+			t_object *disk,
+			double t_min,
+			double t_max,
+			t_object **closest_object,
+			double *closest_t)
 {
 	double		denominator;
 	t_vector	intersect;
@@ -349,6 +355,7 @@ void	ray_cylinder_intersect(
 				(*closest_object)->backside = true;
 			else
 				(*closest_object)->backside = false;
+			cylinder->ray_intersects = BottomFace;
 		}
 	}
 
@@ -373,6 +380,7 @@ void	ray_cylinder_intersect(
 				(*closest_object)->backside = true;
 			else
 				(*closest_object)->backside = false;
+			cylinder->ray_intersects = TopFace;
 		}
 	}
 }
@@ -588,7 +596,9 @@ t_argb	cast_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 		else if (closest_object->ray_intersects == BottomFace
 			|| closest_object->ray_intersects == TopFace)
 		{
-			unit_normal = vec_mult(1.0, closest_object->direction);
+			unit_normal = closest_object->direction;
+			if (closest_object->backside)
+				unit_normal = vec_mult(-1, unit_normal);
 		}
 	}
 	else
@@ -772,7 +782,7 @@ void	load_test_scene(t_scene *scene)
 	// scene->objects[--object_count] = checkerboard_sphere(
 	// 	(t_point){1000, 10, -2000}, 200.0, 100, 0.0);
 	scene->objects[--object_count] = cylinder(RED, (t_point){10, 10, -1500},
-		(t_vector){0, 0.1, 1}, 200, 200, 1.0, 0.0);
+		(t_vector){1, 1, 0}, 200, 20, 1.0, 0.0);
 	// scene->objects[--object_count] = disk(RED, (t_point){400, 0, -1500},
 	// 	(t_vector){0, 0.1, -1}, 200, 1.0, 0.0);
 
