@@ -4,7 +4,10 @@ CC := gcc
 CFLAGS := -Wall -Wextra -Werror
 
 # ls src/**/*.c >> Makefile
-FILES := src/color/alpha_component.c \
+FILES := \
+	src/checkerboard_color_sphere.c \
+	src/equals.c \
+	src/color/alpha_component.c \
 	src/color/argb.c \
 	src/color/blue_component.c \
 	src/color/color_add.c \
@@ -22,11 +25,19 @@ FILES := src/color/alpha_component.c \
 	src/geometry/vector/vec_mult.c \
 	src/geometry/vector/vec_normalize.c \
 	src/geometry/vector/vec_normalized.c \
+	src/geometry/vector/vec_squared.c \
 	src/handle_keypress_event.c \
-	src/checkerboard_color_sphere.c \
 	src/main.c \
+	src/minirt.c \
 	src/minirt_init.c \
-	src/minirt.c
+	src/object/light/ambient_light.c \
+	src/object/light/directional_light.c \
+	src/object/light/point_light.c \
+	src/object/objects/checkerboard_sphere.c \
+	src/object/objects/colored_sphere.c \
+	src/object/objects/cylinder.c \
+	src/object/objects/disk.c \
+	src/object/objects/plane.c
 
 # FILES := $(addprefix src/, $(FILES))
 OFILES := $(patsubst src/%.c, build/%.o, $(FILES))

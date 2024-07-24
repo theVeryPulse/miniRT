@@ -1,24 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vec_div.c                                          :+:      :+:    :+:   */
+/*   disk.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/10 22:35:33 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/23 19:44:57 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/21 20:26:46 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/22 19:23:35 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vector.h"
-#include "stdio.h"
+#include "../t_object.h"
 
-extern t_vector	vec_div(t_vector a, double t)
+t_object	disk(
+	t_argb color,
+	t_point position,
+	t_vector direction,
+	double radius,
+	double specular_exponent,
+	double reflectivity
+)
 {
-	if (t == 0)
-	{
-		printf("Warning[vec_div]: zero division");
-		return ((t_point){0});
-	}
-	return (vec_mult(1 / t, a));
+	return ((t_object){
+		.category = Object,
+		.type = Disk,
+		.radius = radius,
+		.color = color,
+		.position = position,
+		.direction = direction,
+		.specular_exponent = specular_exponent,
+		.reflectivity = reflectivity,
+	});
 }

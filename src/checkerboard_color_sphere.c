@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   checkerboard_color_sphere.c                               :+:      :+:    :+:   */
+/*   get_checkerboard_sphere_color.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -18,11 +18,11 @@
 
 #define CHECKERBOARD_CELL_COUNT 8
 
-extern t_argb	checkerboard_color_sphere(t_point pt, t_argb color1, t_argb color2);
+extern t_argb	get_checkerboard_sphere_color(t_point pt, t_argb color1, t_argb color2);
 static void	convert_to_uv_texture_coordinates(t_point pt, double *u, double *v);
 static bool	is_color1(double u, double v, uint8_t square_count);
 
-extern t_argb	checkerboard_color_sphere(t_point pt, t_argb color1, t_argb color2)
+extern t_argb	get_checkerboard_sphere_color(t_point pt, t_argb color1, t_argb color2)
 {
 	double	u;
 	double	v;

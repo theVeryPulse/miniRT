@@ -1,24 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vec_div.c                                          :+:      :+:    :+:   */
+/*   ambient_light.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/10 22:35:33 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/23 19:44:57 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/22 18:54:12 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/22 19:22:29 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vector.h"
-#include "stdio.h"
+#include "../t_object.h"
 
-extern t_vector	vec_div(t_vector a, double t)
+t_object	ambient_light(double intensity)
 {
-	if (t == 0)
-	{
-		printf("Warning[vec_div]: zero division");
-		return ((t_point){0});
-	}
-	return (vec_mult(1 / t, a));
+	return ((t_object){
+		.category = Light,
+		.type = AmbientLight,
+		.intensity = intensity,
+		.radius = -1,
+	});
 }

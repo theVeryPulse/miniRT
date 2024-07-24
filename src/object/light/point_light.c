@@ -1,24 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vec_div.c                                          :+:      :+:    :+:   */
+/*   point_light.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/10 22:35:33 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/23 19:44:57 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/22 18:56:01 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/22 19:10:52 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vector.h"
-#include "stdio.h"
+#include "../t_object.h"
 
-extern t_vector	vec_div(t_vector a, double t)
+t_object	point_light(
+	t_point position,
+	double intensity
+)
 {
-	if (t == 0)
-	{
-		printf("Warning[vec_div]: zero division");
-		return ((t_point){0});
-	}
-	return (vec_mult(1 / t, a));
+	return ((t_object){
+		.type = PointLight,
+		.category = Light,
+		.intensity = intensity,
+		.position = position,
+		.direction = (t_vector){0},
+		.radius = -1
+	});
 }

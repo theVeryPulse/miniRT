@@ -1,24 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vec_div.c                                          :+:      :+:    :+:   */
+/*   equals.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/10 22:35:33 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/23 19:44:57 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/17 19:07:10 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/17 19:08:48 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vector.h"
-#include "stdio.h"
+#include <stdbool.h>
+#include <math.h>
 
-extern t_vector	vec_div(t_vector a, double t)
+#define EPSILON 1e-9
+
+bool	equals(double a, double b)
 {
-	if (t == 0)
-	{
-		printf("Warning[vec_div]: zero division");
-		return ((t_point){0});
-	}
-	return (vec_mult(1 / t, a));
+	return (fabs(a - b) < EPSILON);
 }

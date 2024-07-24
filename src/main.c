@@ -6,12 +6,13 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/20 23:25:58 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/24 19:32:43 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/minilibx-linux/mlx.h"
 #include "t_vars.h"
+#include "object/inc/object.h"
 #include "window.h"
 #include "handle_keypress_event.h"
 #include <X11/X.h> /* DestroyNotify, ButtonReleaseMask */
@@ -35,10 +36,7 @@
 
 #include <stdbool.h>
 
-void	render_image(t_vars *vars);
-void	put_image_to_window_vars(t_vars *vars);
-void	ray_sphere_intersect(double t[2], t_point ray_origin,
-			t_point ray_direction, t_object *sphere, double a);
+bool	equals(double a, double b);
 
 int	destroy_exit(t_vars *vars)
 {
@@ -127,29 +125,264 @@ void	test_draw_on_image(t_img_vars *img_vars)
 		draw_pixel_in_screen_space(img_vars, pixel);	
 }
 
-bool	light_is_blocked(t_scene *scene, t_point shadow_ray_origin,
-	t_vector shadow_ray_direction, double t_min, double t_max)
+double	sign(double n)
 {
-	double		t[2];
-	size_t		i;
+	if (n >= 0)
+		return (1.0);
+	else
+		return (-1.0);
+}
 
-	i = 0;
-	while (i < scene->object_count)
+/**
+ * @brief 
+ * 
+ * @param t 
+ * @param ray_origin 
+ * @param point_on_canvas 
+ * @param sphere 
+ * @note
+ * |O+tD-C|^2 - R^2 = 0
+ *  O: ray origin
+ *  D: ray direction, whether normalized or not will affect the range of
+ *     solution of 't'
+ *  C: sphere center
+ *  R: sphere radius
+ * => in the form of: ax^2 + bx + c
+ * => a = D^2; b = 2D(O-C); c=|O-C|^2-R^2
+ * 
+ * a = vec_dot(ray_direction, ray_direction)
+ * 'a' remains unchanged for the same ray.
+ * 
+ * => t1 = (-b - sqrt(b^2 - 4ac)) / 2a
+ * => t2 = (-b + sqrt(b^2 - 4ac)) / 2a
+ * 
+ * "However, due to the finite precision with which real numbers are represented 
+ * on computers, this formula can suffer from a loss of significance." A more
+ * stable equation is used instead.
+ * 
+ * q = -0.5 * (b + sign(b) * sqrt(b^2 - 4ac))
+ * => t1 = q / a
+ * => t2 = c / q
+ * 
+ * @ref 
+ * https://www.scratchapixel.com/lessons/3d-basic-rendering/
+ * minimal-ray-tracer-rendering-simple-shapes/ray-sphere-intersection.html
+ */
+void	ray_sphere_intersect(double t[2], t_point ray_origin,
+			t_point ray_direction, t_object *sphere, double a)
+{
+	double		b;
+	double		c;
+	t_vector	o_minus_c;
+	double		discriminant;
+
+	o_minus_c = vec_minus(ray_origin, sphere->position);
+	b = 2 * vec_dot(o_minus_c, ray_direction);
+	c = vec_dot(o_minus_c, o_minus_c) - sphere->radius_squared;
+	discriminant = b * b - 4 * a * c;
+	if (discriminant < 0)
 	{
-		if (scene->objects[i].type == Sphere)
-		{
-			ray_sphere_intersect(t, shadow_ray_origin, shadow_ray_direction,
-				&(scene->objects)[i],
-				vec_dot(shadow_ray_direction, shadow_ray_direction));
-			if (t[0] >= t_min && t[0] <= t_max)
-				return (true);
-		}
-		else if (scene->objects[i].type != Sphere)
-		{
-		}
-		++i;
+		t[0] = INFINITY;
+		t[1] = INFINITY;
 	}
-	return (false);
+	else
+	{
+		double q = -0.5 * (b + sign(b) * sqrt(discriminant));
+		t[0] = q / a;
+		t[1] = c / q;
+	}
+}
+
+void	ray_plane_intersect(double *t, t_point ray_origin,
+	t_vector ray_direction, t_object *plane, double t_min, double t_max,
+	t_object **closest_object, double *closest_t)
+{
+	double	denominator;
+
+	denominator = vec_dot(plane->direction, ray_direction);
+	if (!equals(denominator, 0.0))
+	{
+		*t = vec_dot(
+			vec_minus(plane->position, ray_origin), plane->direction)
+			/ denominator;
+		if (*t >= t_min && *t <= t_max && *t < *closest_t)
+		{
+			*closest_t = *t;
+			*closest_object = plane;
+			if (denominator < 0)
+				(*closest_object)->backside = true;
+			else
+				(*closest_object)->backside = false;
+		}
+	}
+}
+
+void	ray_disk_intersect(
+			double *t,
+			t_point ray_origin,
+			t_vector ray_direction,
+			t_object *disk,
+			double t_min,
+			double t_max,
+			t_object **closest_object,
+			double *closest_t)
+{
+	double		denominator;
+	t_vector	intersect;
+	t_vector	center_to_intersect;
+	double		distance_squared;
+
+	denominator = vec_dot(disk->direction, ray_direction);
+	if (!equals(denominator, 0.0))
+	{
+		*t = vec_dot(vec_minus(disk->position, ray_origin), disk->direction)
+			/ denominator;
+		intersect = vec_add(ray_origin, vec_mult(*t, ray_direction));
+		center_to_intersect = vec_minus(intersect, disk->position);
+		distance_squared = vec_squared(center_to_intersect);
+		if (distance_squared <= disk->radius_squared
+			&& *t >= t_min && *t <= t_max && *t < *closest_t)
+		{
+			*closest_t = *t;
+			*closest_object = disk;
+			if (denominator < 0)
+				(*closest_object)->backside = true;
+			else
+				(*closest_object)->backside = false;
+		}
+	}
+}
+
+/**
+ * @brief 
+ * 
+ * @ref
+ * https://hugi.scene.org/online/hugi24/coding%20graphics%20chris%20dragan%20
+ * raytracing%20shapes.htm
+ */
+void	ray_cylinder_intersect(
+		double t[2],
+		t_point ray_origin,
+		t_vector ray_direction,
+		t_object *cylinder,
+		double t_min,
+		double t_max,
+		t_object **closest_object,
+		double *closest_t)
+{
+	t_vector	d_prime;
+	t_vector	w_prime;
+	t_vector	o_minus_c;
+
+	o_minus_c = vec_minus(ray_origin, cylinder->position);
+	d_prime = vec_minus(ray_direction,
+		vec_mult(vec_dot(ray_direction, cylinder->direction),
+		cylinder->direction));
+	w_prime = vec_minus(o_minus_c,
+		vec_mult(vec_dot(o_minus_c, cylinder->direction),
+		cylinder->direction));
+
+	double	a;
+	double	b;
+	double	c;
+
+	a = vec_dot(d_prime, d_prime);
+	b = 2 * vec_dot(w_prime, d_prime);
+	c = vec_dot(w_prime, w_prime) - cylinder->radius_squared;
+	
+	double	discriminant = b * b - 4 * a * c;
+	if (discriminant < 0)
+	{
+		t[0] = INFINITY;
+		t[1] = INFINITY;
+	}
+	else
+	{
+		double q = -0.5 * (b + sign(b) * sqrt(discriminant));
+		t[0] = q / a;
+		t[1] = c / q;
+	}
+
+	/* p0​⋅v ≤ (O+td)⋅v ≤ (p0​+hv)⋅v */
+	double	proj_min;
+	double	proj_max;
+	double	proj;
+	
+	proj_min = vec_dot(cylinder->position, cylinder->direction);
+	proj_max = vec_dot(vec_add(cylinder->position,
+		vec_mult(cylinder->height, cylinder->direction)), cylinder->direction);
+	proj = vec_dot(vec_add(ray_origin, vec_mult(t[0], ray_direction)),
+					cylinder->direction);
+	if (t[0] >= t_min && t[0] <= t_max && t[0] < *closest_t
+		&& proj >= proj_min && proj <= proj_max)
+	{
+		*closest_t = t[0];
+		*closest_object = cylinder;
+		cylinder->ray_intersects = CurvedSurface;
+	}
+	proj = vec_dot(vec_add(ray_origin, vec_mult(t[1], ray_direction)),
+					cylinder->direction);
+	if (t[1] >= t_min && t[1] <= t_max && t[1] < *closest_t
+		&& proj >= proj_min && proj <= proj_max)
+	{
+		*closest_t = t[1];
+		*closest_object = cylinder;
+		cylinder->ray_intersects = CurvedSurface;
+	}
+
+	/* Caps */
+	double		denominator;
+	t_vector	intersect;
+	t_vector	center_to_intersect;
+	double		distance_squared;
+	
+	/* Bottom cap */
+	denominator = vec_dot(cylinder->direction, ray_direction);
+	if (!equals(denominator, 0.0))
+	{
+		t_point	disk_center = cylinder->position;
+		*t = vec_dot(vec_minus(disk_center, ray_origin),
+			cylinder->direction) / denominator;
+		intersect = vec_add(ray_origin, vec_mult(*t, ray_direction));
+		center_to_intersect = vec_minus(intersect, disk_center);
+		distance_squared = vec_squared(center_to_intersect);
+		if (distance_squared <= cylinder->radius_squared
+			&& *t >= t_min && *t <= t_max && *t < *closest_t)
+		{
+			*closest_t = *t;
+			*closest_object = cylinder;
+			if (denominator < 0)
+				(*closest_object)->backside = true;
+			else
+				(*closest_object)->backside = false;
+			cylinder->ray_intersects = BottomFace;
+		}
+	}
+
+	/* Top cap */
+	denominator = vec_dot(cylinder->direction, ray_direction);
+	if (!equals(denominator, 0.0))
+	{
+		t_point	disk_center;
+		disk_center = vec_add(cylinder->position,
+			vec_mult(cylinder->height, cylinder->direction));
+		*t = vec_dot(vec_minus(disk_center, ray_origin), cylinder->direction)
+			/ denominator;
+		intersect = vec_add(ray_origin, vec_mult(*t, ray_direction));
+		center_to_intersect = vec_minus(intersect, disk_center);
+		distance_squared = vec_squared(center_to_intersect);
+		if (distance_squared <= cylinder->radius_squared
+			&& *t >= t_min && *t <= t_max && *t < *closest_t)
+		{
+			*closest_t = *t;
+			*closest_object = cylinder;
+			if (denominator < 0)
+				(*closest_object)->backside = true;
+			else
+				(*closest_object)->backside = false;
+			cylinder->ray_intersects = TopFace;
+		}
+	}
 }
 
 /**
@@ -175,15 +408,17 @@ bool	trace(t_scene *scene,
 {
 	double	t[2];
 	t_object	*object;
+	double	a;
 
 	*closest_object = NULL;
 	object = scene->objects;
+	a = vec_dot(ray_direction, ray_direction);
 	while (object < scene->object_count + scene->objects)
 	{
 		if (object->type == Sphere)
 		{
 			ray_sphere_intersect(t, ray_origin, ray_direction,
-				object, vec_dot(ray_direction, ray_direction));
+				object, a);
 			if (t[0] >= t_min && t[0] <= t_max && t[0] < *closest_t)
 			{
 				*closest_t = t[0];
@@ -197,20 +432,18 @@ bool	trace(t_scene *scene,
 		}
 		else if (object->type == Plane)
 		{
-			double	denominator;
-
-			denominator = vec_dot(object->direction, ray_direction);
-			if (denominator > 1e-6)
-			{
-				*t = vec_dot(
-					vec_minus(object->position, ray_origin), object->direction)
-					/ denominator;
-				if (*t >= t_min && *t <= t_max && *t < *closest_t)
-				{
-					*closest_t = *t;
-					*closest_object = object;
-				}
-			}
+			ray_plane_intersect(t, ray_origin, ray_direction, object, t_min,
+				t_max, closest_object, closest_t);
+		}
+		else if (object->type == Disk)
+		{
+			ray_disk_intersect(t, ray_origin, ray_direction, object, t_min,
+				t_max, closest_object, closest_t);
+		}
+		else if (object->type == Cylinder)
+		{
+			ray_cylinder_intersect(t, ray_origin, ray_direction, object,
+				t_min, t_max, closest_object, closest_t);
 		}
 		else
 		{
@@ -280,6 +513,8 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 			// if (light_is_blocked(scene, point, light, 0.0001, t_max))
 			t_object	*closest_object;
 			double		closest_t;
+			closest_object = NULL;
+			closest_t = INFINITY;
 			if (trace(scene, point, light, 1e-4, t_max, &closest_object,
 				&closest_t))
 			{
@@ -294,7 +529,7 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 					/ (vec_len(normal) * vec_len(light));
 			
 			/* Specular reflection */
-			if (specular_exponent != -1)
+			if (specular_exponent > 0.0)
 			{
 				t_vector	reflection;
 				double		reflection_dot_view;
@@ -317,75 +552,7 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 	return (intensity);
 }
 
-double	sign(double n)
-{
-	if (n >= 0)
-		return (1.0);
-	else
-		return (-1.0);
-}
-
-/**
- * @brief 
- * 
- * @param t 
- * @param ray_origin 
- * @param point_on_canvas 
- * @param sphere 
- * @note
- * |O+tD-C|^2 - R^2 = 0
- *  O: ray origin
- *  D: ray direction, whether normalized or not will affect the range of
- *     solution of 't'
- *  C: sphere center
- *  R: sphere radius
- * => in the form of: ax^2 + bx + c
- * => a = D^2; b = 2D(O-C); c=|O-C|^2-R^2
- * 
- * a = vec_dot(ray_direction, ray_direction)
- * 'a' remains unchanged for the same ray.
- * 
- * => t1 = (-b - sqrt(b^2 - 4ac)) / 2a
- * => t2 = (-b + sqrt(b^2 - 4ac)) / 2a
- * 
- * "However, due to the finite precision with which real numbers are represented 
- * on computers, this formula can suffer from a loss of significance." A more
- * stable equation is used instead.
- * 
- * q = -0.5 * (b + sign(b) * sqrt(b^2 - 4ac))
- * => t1 = q / a
- * => t2 = c / q
- * 
- * @ref 
- * https://www.scratchapixel.com/lessons/3d-basic-rendering/
- * minimal-ray-tracer-rendering-simple-shapes/ray-sphere-intersection.html
- */
-void	ray_sphere_intersect(double t[2], t_point ray_origin,
-			t_point ray_direction, t_object *sphere, double a)
-{
-	double		b;
-	double		c;
-	t_vector	o_minus_c;
-	double		discriminant;
-
-	o_minus_c = vec_minus(ray_origin, sphere->position);
-	b = 2 * vec_dot(o_minus_c, ray_direction);
-	c = vec_dot(o_minus_c, o_minus_c) - sphere->radius_squared;
-	discriminant = b * b - 4 * a * c;
-	if (discriminant < 0)
-	{
-		t[0] = INFINITY;
-		t[1] = INFINITY;
-	}
-	else
-	{
-		double q = -0.5 * (b + sign(b) * sqrt(discriminant));
-		t[0] = q / a;
-		t[1] = c / q;
-	}
-}
-
-extern t_argb	checkerboard_color_sphere(t_point pt, t_argb color1, t_argb color2);
+extern t_argb	get_checkerboard_sphere_color(t_point pt, t_argb color1, t_argb color2);
 
 t_argb	cast_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 		double t_min, double t_max, uint8_t recursion_depth)
@@ -411,8 +578,29 @@ t_argb	cast_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 	if (closest_object->type == Sphere)
 		unit_normal = vec_normalized(
 			vec_minus(intersection, closest_object->position));
-	else if (closest_object->type == Plane)
+	else if (closest_object->type == Plane || closest_object->type == Disk)
+	{
 		unit_normal = closest_object->direction;
+		if (closest_object->backside)
+			unit_normal = vec_mult(-1.0, unit_normal);
+	}
+	else if (closest_object->type == Cylinder)
+	{
+		if (closest_object->ray_intersects == CurvedSurface)
+		{
+			t_vector q = vec_minus(intersection, closest_object->position);
+			t_vector q_on_v = vec_mult(vec_dot(q, closest_object->direction),
+				closest_object->direction);
+			unit_normal = vec_normalized(vec_minus(q, q_on_v));
+		}
+		else if (closest_object->ray_intersects == BottomFace
+			|| closest_object->ray_intersects == TopFace)
+		{
+			unit_normal = closest_object->direction;
+			if (closest_object->backside)
+				unit_normal = vec_mult(-1, unit_normal);
+		}
+	}
 	else
 	{
 	}
@@ -420,7 +608,7 @@ t_argb	cast_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 		vec_mult(-1, ray_direction), closest_object->specular_exponent);
 	if (closest_object->is_checkerboard)
 		local_color = color_mult(
-			checkerboard_color_sphere(
+			get_checkerboard_sphere_color(
 				vec_minus(intersection, closest_object->position),
 				WHITE,
 				BLACK
@@ -513,19 +701,6 @@ void	allocate_lights(t_scene *scene, unsigned int light_count)
 	scene->light_count = light_count;
 }
 
-void	calculate_radius_squared(t_scene *scene)
-{
-	t_object	*object;
-
-	object = scene->objects;
-	while (object < scene->objects + scene->object_count)
-	{
-		if (object->type == Sphere)
-			object->radius_squared = object->radius * object->radius;
-		++object;
-	}
-}
-
 void	precompute_values(t_scene *scene)
 {
 	t_object	*object;
@@ -533,12 +708,92 @@ void	precompute_values(t_scene *scene)
 	object = scene->objects;
 	while (object < scene->objects + scene->object_count)
 	{
-		if (object->type == Sphere)
+		if (object->radius > 0)
 			object->radius_squared = object->radius * object->radius;
-		else if (object->type == Plane || object->type == DirectionalLight)
+		if (!equals(0.0, vec_len(object->direction)))
 			vec_normalize(&object->direction);
 		++object;
 	}
+}
+
+void	load_default_scene(t_scene *scene)
+{
+	scene->camera = (t_camera){
+		.position = (t_point){0, 0, 0},
+		.u = (t_vector){1.0, 0.0, 0.0},
+		.v = (t_vector){0.0, 1.0, 0.0},
+		.w = (t_vector){0.0, 0.0, 1.0}
+		// Turn 30 degrees left
+		/* .u = (t_vector){sqrt(3) / 2, 0, -0.5},
+		.v = (t_vector){0, 1, 0},
+		.w = (t_vector){0.5, 0, sqrt(3) / 2} */
+	};
+
+	unsigned int	i = 11;
+	allocate_objects(scene, i);
+	scene->objects[--i] = checkerboard_sphere(
+		(t_point){10, -150, -2000}, 200.0, 10.0, 0.2);
+	scene->objects[--i] = colored_sphere(
+		RED, (t_point){200, 200, -2500}, 300.0, 5.0, 0.1);
+	scene->objects[--i] = colored_sphere(
+		YELLOW, (t_point){-700, -200, -2500}, 300.0, 1000.0, 0.5);
+	// Left wall
+	scene->objects[--i] = plane(
+		BLUE, (t_point){-960, 0, 0}, (t_vector){-1, 0, 0}, 100.0, 0.1);
+	scene->objects[--i] = plane(
+		CYAN, (t_point){960, 0, 0}, (t_vector){1, 0, 0}, 10.0, 0.0);
+	// Ceiling
+	scene->objects[--i] = plane(
+		WHITE, (t_point){0, 540, 0}, (t_vector){0, 1, 0}, 10.0, 0.0);
+	// Floor
+	scene->objects[--i] = plane(
+		0x808080, (t_point){0, -540, 0}, (t_vector){0, -1, 0}, 10.0, 0.1);
+	// Back wall
+	scene->objects[--i] = plane(
+		0x808080, (t_point){0, 0, -3000}, (t_vector){0, 0, -1}, 10.0, 0.0);
+	// Disk mirror
+	scene->objects[--i] = disk(
+		WHITE, (t_point){700, -150, -2500}, (t_vector){1, -0.0, -1}, 300.0, 1000.0,
+		0.9);
+	scene->objects[--i] = cylinder(RED, (t_point){10, -540, -2000},
+		(t_vector){0, 1, 0}, 500, 200, 1.0, 0.5);
+
+	allocate_lights(scene, 3);
+	scene->lights[0] = point_light((t_point){-400, 300, -2900}, 0.5);
+	scene->lights[1] = point_light((t_point){400, -300, -1000}, 0.5);
+	scene->lights[2] = ambient_light(0.3);
+}
+
+void	load_test_scene(t_scene *scene)
+{
+	scene->camera = (t_camera){
+		.position = (t_point){0, 0, 0},
+		.u = (t_vector){1.0, 0.0, 0.0},
+		.v = (t_vector){0.0, 1.0, 0.0},
+		.w = (t_vector){0.0, 0.0, 1.0}
+	};
+
+	unsigned int	object_count;
+	object_count = 2;
+	allocate_objects(scene, object_count);
+
+	// Wall in back
+	scene->objects[--object_count] = plane(WHITE, (t_point){0, -100, -2000},
+		(t_vector){0, 0, 1}, 10.0, 0.0);
+	// scene->objects[--object_count] = checkerboard_sphere(
+	// 	(t_point){1000, 10, -2000}, 200.0, 100, 0.0);
+	scene->objects[--object_count] = cylinder(RED, (t_point){10, 10, -1500},
+		(t_vector){1, 1, 0}, 200, 20, 1.0, 0.0);
+	// scene->objects[--object_count] = disk(RED, (t_point){400, 0, -1500},
+	// 	(t_vector){0, 0.1, -1}, 200, 1.0, 0.0);
+
+	unsigned int	light_count;
+	light_count = 1;
+	allocate_lights(scene, light_count);
+
+	scene->lights[--light_count] = point_light((t_vector){500, 1000, 0},
+		1);
+	// scene->lights[--light_count] = ambient_light(0.3);
 }
 
 // int	main(int argc, char const *argv[])
@@ -550,147 +805,8 @@ int	main(void)
 	set_up_hooks(&vars);
 	minirt_init();
 
-	vars.scene.camera = (t_camera){
-		.position = (t_point){0, 0, 0},
-		.u = (t_vector){1.0, 0.0, 0.0},
-		.v = (t_vector){0.0, 1.0, 0.0},
-		.w = (t_vector){0.0, 0.0, 1.0}
-		// Turn 30 degrees left
-		/* .u = (t_vector){sqrt(3) / 2, 0, -0.5},
-		.v = (t_vector){0, 1, 0},
-		.w = (t_vector){0.5, 0, sqrt(3) / 2} */
-	};
-
-	allocate_objects(&vars.scene, 7);
-	vars.scene.objects[0] = (t_object){
-		.type = Sphere,
-		.category = Object,
-		.color = MAGENTA,
-		.position = (t_point){0, 0, -3000},
-		.radius = 500.0,
-		.specular_exponent = 10, /* Shiny */
-		.reflectivity = 0.2, /* A bit reflective */
-		.is_checkerboard = true
-	};
-	vars.scene.objects[1] = (t_object){
-		.type = Sphere,
-		.category = Object,
-		.color = CYAN,
-		.position = (t_point){1000, 1000, -5000},
-		.radius = 1800.0,
-		.specular_exponent = 100, /* Somewhat shiny */
-		.reflectivity = 0.3, /* A bit more reflective */
-		.is_checkerboard = false
-	};
-	vars.scene.objects[2] = (t_object){
-		.type = Sphere,
-		.category = Object,
-		.color = YELLOW,
-		.position = (t_point){-1000, -300, -2500},
-		.radius = 300.0,
-		.specular_exponent = 1000, /* Very shiny */
-		.reflectivity = 0.5, /* Half reflective */
-		.is_checkerboard = false
-	};
-	vars.scene.objects[3] = (t_object){
-		.category = Object,
-		.type = Plane,
-		.color = BLUE,
-		.position = (t_point){-960, 0, 0},
-		.direction = (t_point){-1, 0, 0},
-		.specular_exponent = 100,
-		.reflectivity = 0.1,
-		.is_checkerboard = false
-	};
-	vars.scene.objects[4] = (t_object){
-		.category = Object,
-		.type = Plane,
-		.color = CYAN,
-		.position = (t_point){960, 0, 0},
-		.direction = (t_point){1, 0, 0},
-		.specular_exponent = 10,
-		.reflectivity = 0.1,
-		.is_checkerboard = false
-	};
-	vars.scene.objects[5] = (t_object){
-		.category = Object,
-		.type = Plane,
-		.color = WHITE,
-		.position = (t_point){0, 540, 0},
-		.direction = (t_point){0, 1, 0},
-		.specular_exponent = 10,
-		.reflectivity = 0.0,
-		.is_checkerboard = false
-	};
-	vars.scene.objects[6] = (t_object){
-		.category = Object,
-		.type = Plane,
-		.color = 0x808080,
-		.position = (t_point){0, -540, 0},
-		.direction = (t_point){0, -1, 0},
-		.specular_exponent = 10,
-		.reflectivity = 0.0,
-		.is_checkerboard = false
-	};
-	// calculate_radius_squared(&vars.scene);
-
-	allocate_lights(&vars.scene, 3);
-	vars.scene.lights[0] = (t_object){
-		.type = PointLight,
-		.category = Light,
-		.intensity = 0.5,
-		.position = (t_point){-400, 300, -3000},
-		.direction = (t_vector){0},
-		.radius = -1
-	};
-#if 0
-	vars.scene.lights[1] = (t_object){
-		.type = DirectionalLight,
-		.category = Light,
-		.intensity = 0.0,
-		.direction = (t_vector){0, 0, 0.1}
-		};
-#else // Two point lights for better shadow effect
-	vars.scene.lights[1] = (t_object){
-		.type = PointLight,
-		.category = Light,
-		.intensity = 0.5,
-		.position = (t_point){400, -300, -1500},
-		.direction = (t_vector){0},
-		.radius = -1
-	};
-#endif
-	vars.scene.lights[2] = (t_object){
-		.type = AmbientLight,
-		.category = Light,
-		.intensity = 0.05,
-		.radius = -1
-	};
-
-	// allocate_objects(&vars.scene, 2);
-	// vars.scene.objects[0] = (t_object){
-	// 	.category = Object,
-	// 	.type = Sphere,
-	// 	.color = CYAN,
-	// 	.position = (t_point){600, 0, -2000},
-	// 	.radius = 500,
-	// 	.direction = (t_point){-1, 0, -1},
-	// 	.specular_exponent = 1000, /* Somewhat shiny */
-	// 	.reflectivity = 0.8, /* A bit more reflective */
-	// 	.is_checkerboard = true
-	// };
-	// vars.scene.objects[1] = (t_object){
-	// 	.category = Object,
-	// 	.type = Sphere,
-	// 	.color = CYAN,
-	// 	.position = (t_point){-600, 0, -2000},
-	// 	.radius = 500,
-	// 	.direction = (t_point){-1, 0, -1},
-	// 	.specular_exponent = 100, /* Somewhat shiny */
-	// 	.reflectivity = 0.1, /* A bit more reflective */
-	// 	.is_checkerboard = true
-	// };
-	// calculate_radius_squared(&vars.scene);
+	load_default_scene(&vars.scene);
+	// load_test_scene(&vars.scene);
 
 	vars.scene.focus = &(vars.scene.objects)[0];
 	precompute_values(&vars.scene);
