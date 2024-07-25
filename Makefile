@@ -18,6 +18,7 @@ FILES := \
 	src/geometry/matrix/mx_mult_mx.c \
 	src/geometry/matrix/mx_transpose.c \
 	src/geometry/vector/vec_add.c \
+	src/geometry/vector/vec_cross.c \
 	src/geometry/vector/vec_div.c \
 	src/geometry/vector/vec_dot.c \
 	src/geometry/vector/vec_len.c \
