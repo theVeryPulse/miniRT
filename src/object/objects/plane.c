@@ -6,11 +6,13 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:26:12 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/22 19:23:38 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/25 22:23:10 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../t_object.h"
+#include "../../minirt.h"
+#include "../../geometry/inc/geometry.h"
 
 t_object	plane(
 	t_argb color,
@@ -20,14 +22,16 @@ t_object	plane(
 	double reflectivity
 )
 {
-	return ((t_object){
-		.category = Object,
-		.type = Plane,
-		.color = color,
-		.position = position,
-		.direction = direction,
-		.specular_exponent = specular_exponent,
-		.reflectivity = reflectivity,
-		.radius = -1.0
-	});
+
+	t_object	plane;
+
+	plane.category = Object;
+	plane.type = Plane;
+	plane.color = color;
+	plane.position = vec_mult(minirt()->unit_one, position);
+	plane.direction = direction;
+	plane.specular_exponent = specular_exponent;
+	plane.reflectivity = reflectivity;
+	plane.radius = -1;
+	return (plane);
 }

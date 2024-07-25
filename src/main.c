@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/25 22:21:34 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/25 22:24:44 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -774,21 +774,25 @@ void	load_default_scene(t_scene *scene)
 		300.0/960.0, 1000.0, 0.5);
 	// Left wall
 	scene->objects[--i] = plane(
-		BLUE, (t_point){-960, 0, 0}, (t_vector){-1, 0, 0}, 100.0, 0.1);
+		BLUE, (t_raw_point){-960.0/960.0, 0, 0},
+		(t_vector){-1, 0, 0}, 100.0, 0.1);
 	scene->objects[--i] = plane(
-		CYAN, (t_point){960, 0, 0}, (t_vector){1, 0, 0}, 10.0, 0.0);
+		CYAN, (t_raw_point){960.0/960.0, 0, 0}, (t_vector){1, 0, 0}, 10.0, 0.0);
 	// Ceiling
 	scene->objects[--i] = plane(
-		WHITE, (t_point){0, 540, 0}, (t_vector){0, 1, 0}, 10.0, 0.0);
+		WHITE, (t_raw_point){0, 540.0/960.0, 0},
+		(t_vector){0, 1, 0}, 10.0, 0.0);
 	// Floor
 	scene->objects[--i] = plane(
-		0x808080, (t_point){0, -540, 0}, (t_vector){0, -1, 0}, 10.0, 0.1);
+		0x808080, (t_raw_point){0, -540.0/960.0, 0},
+		(t_vector){0, -1, 0}, 10.0, 0.1);
 	// Back wall
 	scene->objects[--i] = plane(
-		0x808080, (t_point){0, 0, -3000}, (t_vector){0, 0, -1}, 10.0, 0.0);
+		0x808080, (t_raw_point){0, 0, -3000.0/960.0},
+		(t_vector){0, 0, -1}, 10.0, 0.0);
 	// Disk mirror
 	scene->objects[--i] = disk(
-		WHITE, (t_point){700.0/960.0, -150.0/960.0, -2500.0/960.0}, 
+		WHITE, (t_raw_point){700.0/960.0, -150.0/960.0, -2500.0/960.0}, 
 		(t_vector){1, 0, -1}, 300.0/960.0, 1000.0,
 		0.9);
 	scene->objects[--i] = cylinder(RED,
