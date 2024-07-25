@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/25 22:27:40 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/25 22:30:57 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -726,11 +726,11 @@ void	precompute_values(t_scene *scene)
  * @param w z-axis (pointing towards viewer) of the camera
  * @return t_camera 
  */
-t_camera	camera(t_point position, t_vector w)
+t_camera	camera(t_raw_point position, t_vector w)
 {
 	t_camera	camera;
 
-	camera.position = position;
+	camera.position = vec_mult(minirt()->unit_one, position);
 	if (w.x == 0 && w.z == 0)
 	{
 		camera.u = (t_vector){1, 0, 0};
