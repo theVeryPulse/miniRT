@@ -6,23 +6,26 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 18:56:01 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/22 19:10:52 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/25 22:27:37 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../t_object.h"
+#include "../../minirt.h"
+#include "../../geometry/inc/geometry.h"
 
 t_object	point_light(
-	t_point position,
+	t_raw_point position,
 	double intensity
 )
 {
-	return ((t_object){
-		.type = PointLight,
-		.category = Light,
-		.intensity = intensity,
-		.position = position,
-		.direction = (t_vector){0},
-		.radius = -1
-	});
+	t_object	point_light;
+
+	point_light.type = PointLight;
+	point_light.category = Light;
+	point_light.intensity = intensity;
+	point_light.position = vec_mult(minirt()->unit_one, position);
+	point_light.direction = (t_vector){0};
+	point_light.radius = -1;
+	return (point_light);
 }

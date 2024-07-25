@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/25 22:24:44 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/25 22:27:40 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -800,8 +800,10 @@ void	load_default_scene(t_scene *scene)
 		(t_vector){0, 1, 0}, 500.0/960.0, 200.0/960.0, 1.0, 0.5);
 
 	allocate_lights(scene, 3);
-	scene->lights[0] = point_light((t_point){-400, 300, -2900}, 0.5);
-	scene->lights[1] = point_light((t_point){400, -300, -1000}, 0.5);
+	scene->lights[0] = point_light(
+		(t_raw_point){-400.0/960.0, 300.0/960.0, -2900.0/960.0}, 0.5);
+	scene->lights[1] = point_light(
+		(t_raw_point){400.0/960.0, -300.0/960.0, -1000.0/960.0}, 0.5);
 	scene->lights[2] = ambient_light(0.3);
 }
 
