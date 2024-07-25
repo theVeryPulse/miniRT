@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:21:20 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/23 15:27:07 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/25 19:43:48 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include <stdlib.h> /* free */
 
 void	put_image_to_window_vars(t_vars *vars);
-int		destroy_exit(t_vars *vars);
+int		clean_exit(int exit_status);
 void	render_image(t_vars *vars);
 
 static void	switch_focus(t_vars *vars)
@@ -108,7 +108,7 @@ extern int	handle_keypress_event(int key, t_vars *vars)
 	focus = vars->scene.focus;
 	printf("%d pressed\n", key);
 	if (key == XK_Escape)
-		destroy_exit(vars);
+		clean_exit(0);
 	else if (key == XK_Tab)
 		switch_focus(vars);
 	else if (key == XK_Up || key == XK_Down || key == XK_Left || key == XK_Right

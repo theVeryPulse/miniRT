@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/24 19:32:43 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/25 20:16:15 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,11 @@
 
 bool	equals(double a, double b);
 
-int	destroy_exit(t_vars *vars)
+int	clean_exit(int exit_status)
 {
+	t_vars	*vars;
+
+	vars = minirt()->vars;
 	printf("exiting...\n");
 	mlx_destroy_image(vars->mlx_ptr, vars->img_vars.img_ptr);
 	mlx_destroy_window(vars->mlx_ptr, vars->win_ptr);
@@ -49,13 +52,13 @@ int	destroy_exit(t_vars *vars)
 		free(vars->scene.objects);
 	if (vars->scene.lights)
 		free(vars->scene.lights);
-	exit (0);
+	exit (exit_status);
 }
 
 void	set_up_hooks(t_vars *vars)
 {
 	mlx_key_hook(vars->win_ptr, handle_keypress_event, vars);
-	mlx_hook(vars->win_ptr, DestroyNotify, ButtonReleaseMask, destroy_exit,
+	mlx_hook(vars->win_ptr, DestroyNotify, ButtonReleaseMask, clean_exit,
 		vars);
 }
 
@@ -716,23 +719,53 @@ void	precompute_values(t_scene *scene)
 	}
 }
 
+/**
+ * @brief 
+ * 
+ * @param position 
+ * @param w z-axis (pointing towards viewer) of the camera
+ * @return t_camera 
+ */
+t_camera	camera(t_point position, t_vector w)
+{
+	t_camera	camera;
+
+	camera.position = position;
+	if (w.x == 0 && w.z == 0)
+	{
+		camera.u = (t_vector){1, 0, 0};
+		if (w.y > 0) /* Facing down from up */
+		{
+				camera.v = (t_vector){0, 0, -1},
+				camera.w = (t_vector){0, 1, 0};
+		}
+		else if (w.y < 0) /* Facing up from down */
+		{
+				camera.v = (t_vector){0, 0, 1},
+				camera.w = (t_vector){0, -1, 0};
+		}
+		else /* invalid vector */
+		{
+			printf("Error: Camera direction cannot be {0, 0, 0}\n");
+			clean_exit(1);
+		}
+	}
+	camera.w = vec_normalized(w);
+	camera.v = (t_vector){.x = 0, .y = 1, .z = 0};
+	camera.u = vec_cross(camera.v, camera.w);
+	camera.v = vec_cross(camera.w, camera.u);
+	return (camera);
+}
+
 void	load_default_scene(t_scene *scene)
 {
-	scene->camera = (t_camera){
-		.position = (t_point){0, 0, 0},
-		.u = (t_vector){1.0, 0.0, 0.0},
-		.v = (t_vector){0.0, 1.0, 0.0},
-		.w = (t_vector){0.0, 0.0, 1.0}
-		// Turn 30 degrees left
-		/* .u = (t_vector){sqrt(3) / 2, 0, -0.5},
-		.v = (t_vector){0, 1, 0},
-		.w = (t_vector){0.5, 0, sqrt(3) / 2} */
-	};
-
+	scene->camera = camera((t_point){0, 0, 0}, (t_vector){0, 0, 1});
 	unsigned int	i = 11;
 	allocate_objects(scene, i);
+	// scene->objects[--i] = checkerboard_sphere(
+	// 	(t_point){10, -150, -2000}, 200.0, 10.0, 0.2);
 	scene->objects[--i] = checkerboard_sphere(
-		(t_point){10, -150, -2000}, 200.0, 10.0, 0.2);
+		(t_raw_point){0, -0.02, -2}, 0.33, 10.0, 0.2);
 	scene->objects[--i] = colored_sphere(
 		RED, (t_point){200, 200, -2500}, 300.0, 5.0, 0.1);
 	scene->objects[--i] = colored_sphere(
@@ -766,12 +799,7 @@ void	load_default_scene(t_scene *scene)
 
 void	load_test_scene(t_scene *scene)
 {
-	scene->camera = (t_camera){
-		.position = (t_point){0, 0, 0},
-		.u = (t_vector){1.0, 0.0, 0.0},
-		.v = (t_vector){0.0, 1.0, 0.0},
-		.w = (t_vector){0.0, 0.0, 1.0}
-	};
+	scene->camera = camera((t_point){0, 0, 0}, (t_vector){0, 0, 1});
 
 	unsigned int	object_count;
 	object_count = 2;
@@ -780,10 +808,10 @@ void	load_test_scene(t_scene *scene)
 	// Wall in back
 	scene->objects[--object_count] = plane(WHITE, (t_point){0, -100, -2000},
 		(t_vector){0, 0, 1}, 10.0, 0.0);
-	// scene->objects[--object_count] = checkerboard_sphere(
-	// 	(t_point){1000, 10, -2000}, 200.0, 100, 0.0);
-	scene->objects[--object_count] = cylinder(RED, (t_point){10, 10, -1500},
-		(t_vector){1, 1, 0}, 200, 20, 1.0, 0.0);
+	scene->objects[--object_count] = checkerboard_sphere(
+		(t_raw_point){0.01, 0.02, -2}, 0.4, 100, 0.0);
+	// scene->objects[--object_count] = cylinder(RED, (t_point){10, 10, -1500},
+	// 	(t_vector){1, 1, 0}, 200, 20, 1.0, 0.0);
 	// scene->objects[--object_count] = disk(RED, (t_point){400, 0, -1500},
 	// 	(t_vector){0, 0.1, -1}, 200, 1.0, 0.0);
 
@@ -801,15 +829,15 @@ int	main(void)
 {
 	t_vars	vars;
 
-	set_up_mlx(&vars);
-	set_up_hooks(&vars);
-	minirt_init();
-
-	load_default_scene(&vars.scene);
-	// load_test_scene(&vars.scene);
+	minirt_init(&vars);
+	// load_default_scene(&vars.scene);
+	load_test_scene(&vars.scene);
 
 	vars.scene.focus = &(vars.scene.objects)[0];
 	precompute_values(&vars.scene);
+
+	set_up_mlx(&vars);
+	set_up_hooks(&vars);
 	render_image(&vars);
 
 	put_image_to_window_vars(&vars);
