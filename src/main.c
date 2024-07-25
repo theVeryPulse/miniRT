@@ -716,19 +716,45 @@ void	precompute_values(t_scene *scene)
 	}
 }
 
+/**
+ * @brief 
+ * 
+ * @param position 
+ * @param w z-axis (pointing towards viewer) of the camera
+ * @return t_camera 
+ */
+t_camera	camera(t_point position, t_vector w)
+{
+	t_camera	camera;
+
+	camera.position = position;
+	if (w.x == 0 && w.z == 0)
+	{
+		camera.u = (t_vector){1, 0, 0};
+		if (w.y > 0) /* Facing down from up */
+		{
+				camera.v = (t_vector){0, 0, -1},
+				camera.w = (t_vector){0, 1, 0};
+		}
+		else if (w.y < 0) /* Facing up from down */
+		{
+				camera.v = (t_vector){0, 0, 1},
+				camera.w = (t_vector){0, -1, 0};
+		}
+		else /* invalid vector */
+		{
+		}
+	}
+	camera.w = vec_normalized(w);
+	camera.v = (t_vector){.x = 0, .y = 1, .z = 0};
+	camera.u = vec_cross(camera.v, camera.w);
+	camera.v = vec_cross(camera.w, camera.u);
+	return (camera);
+}
+
 void	load_default_scene(t_scene *scene)
 {
-	scene->camera = (t_camera){
-		.position = (t_point){0, 0, 0},
-		.u = (t_vector){1.0, 0.0, 0.0},
-		.v = (t_vector){0.0, 1.0, 0.0},
-		.w = (t_vector){0.0, 0.0, 1.0}
-		// Turn 30 degrees left
-		/* .u = (t_vector){sqrt(3) / 2, 0, -0.5},
-		.v = (t_vector){0, 1, 0},
-		.w = (t_vector){0.5, 0, sqrt(3) / 2} */
-	};
-
+	scene->camera = camera((t_point){0, 0, 0}, (t_vector){0, 0, 1});
 	unsigned int	i = 11;
 	allocate_objects(scene, i);
 	scene->objects[--i] = checkerboard_sphere(
@@ -766,12 +792,7 @@ void	load_default_scene(t_scene *scene)
 
 void	load_test_scene(t_scene *scene)
 {
-	scene->camera = (t_camera){
-		.position = (t_point){0, 0, 0},
-		.u = (t_vector){1.0, 0.0, 0.0},
-		.v = (t_vector){0.0, 1.0, 0.0},
-		.w = (t_vector){0.0, 0.0, 1.0}
-	};
+	scene->camera = camera((t_point){0, 0, 0}, (t_vector){0, 0, 1});
 
 	unsigned int	object_count;
 	object_count = 2;
