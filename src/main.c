@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/25 20:16:15 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/25 20:27:51 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -767,9 +767,11 @@ void	load_default_scene(t_scene *scene)
 	scene->objects[--i] = checkerboard_sphere(
 		(t_raw_point){0, -0.02, -2}, 0.33, 10.0, 0.2);
 	scene->objects[--i] = colored_sphere(
-		RED, (t_point){200, 200, -2500}, 300.0, 5.0, 0.1);
+		RED, (t_raw_point){200.0/960.0, 200.0/960.0, -2500.0/960.0},
+		300.0/960.0, 5.0, 0.1);
 	scene->objects[--i] = colored_sphere(
-		YELLOW, (t_point){-700, -200, -2500}, 300.0, 1000.0, 0.5);
+		YELLOW, (t_raw_point){-700.0/960, -200.0/960.0, -2500.0/960.0},
+		300.0/960.0, 1000.0, 0.5);
 	// Left wall
 	scene->objects[--i] = plane(
 		BLUE, (t_point){-960, 0, 0}, (t_vector){-1, 0, 0}, 100.0, 0.1);
@@ -830,8 +832,8 @@ int	main(void)
 	t_vars	vars;
 
 	minirt_init(&vars);
-	// load_default_scene(&vars.scene);
-	load_test_scene(&vars.scene);
+	load_default_scene(&vars.scene);
+	// load_test_scene(&vars.scene);
 
 	vars.scene.focus = &(vars.scene.objects)[0];
 	precompute_values(&vars.scene);
