@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/24 19:32:43 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/25 19:42:58 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,11 @@
 
 bool	equals(double a, double b);
 
-int	destroy_exit(t_vars *vars)
+int	clean_exit(int exit_status)
 {
+	t_vars	*vars;
+
+	vars = minirt()->vars;
 	printf("exiting...\n");
 	mlx_destroy_image(vars->mlx_ptr, vars->img_vars.img_ptr);
 	mlx_destroy_window(vars->mlx_ptr, vars->win_ptr);
@@ -49,13 +52,13 @@ int	destroy_exit(t_vars *vars)
 		free(vars->scene.objects);
 	if (vars->scene.lights)
 		free(vars->scene.lights);
-	exit (0);
+	exit (exit_status);
 }
 
 void	set_up_hooks(t_vars *vars)
 {
 	mlx_key_hook(vars->win_ptr, handle_keypress_event, vars);
-	mlx_hook(vars->win_ptr, DestroyNotify, ButtonReleaseMask, destroy_exit,
+	mlx_hook(vars->win_ptr, DestroyNotify, ButtonReleaseMask, clean_exit,
 		vars);
 }
 
@@ -743,6 +746,8 @@ t_camera	camera(t_point position, t_vector w)
 		}
 		else /* invalid vector */
 		{
+			printf("Error: Camera direction cannot be {0, 0, 0}\n");
+			clean_exit(1);
 		}
 	}
 	camera.w = vec_normalized(w);
@@ -822,15 +827,15 @@ int	main(void)
 {
 	t_vars	vars;
 
-	set_up_mlx(&vars);
-	set_up_hooks(&vars);
-	minirt_init();
-
+	minirt_init(&vars);
 	load_default_scene(&vars.scene);
 	// load_test_scene(&vars.scene);
 
 	vars.scene.focus = &(vars.scene.objects)[0];
 	precompute_values(&vars.scene);
+
+	set_up_mlx(&vars);
+	set_up_hooks(&vars);
 	render_image(&vars);
 
 	put_image_to_window_vars(&vars);
