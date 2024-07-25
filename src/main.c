@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/25 19:42:58 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/25 20:16:15 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -762,8 +762,10 @@ void	load_default_scene(t_scene *scene)
 	scene->camera = camera((t_point){0, 0, 0}, (t_vector){0, 0, 1});
 	unsigned int	i = 11;
 	allocate_objects(scene, i);
+	// scene->objects[--i] = checkerboard_sphere(
+	// 	(t_point){10, -150, -2000}, 200.0, 10.0, 0.2);
 	scene->objects[--i] = checkerboard_sphere(
-		(t_point){10, -150, -2000}, 200.0, 10.0, 0.2);
+		(t_raw_point){0, -0.02, -2}, 0.33, 10.0, 0.2);
 	scene->objects[--i] = colored_sphere(
 		RED, (t_point){200, 200, -2500}, 300.0, 5.0, 0.1);
 	scene->objects[--i] = colored_sphere(
@@ -806,10 +808,10 @@ void	load_test_scene(t_scene *scene)
 	// Wall in back
 	scene->objects[--object_count] = plane(WHITE, (t_point){0, -100, -2000},
 		(t_vector){0, 0, 1}, 10.0, 0.0);
-	// scene->objects[--object_count] = checkerboard_sphere(
-	// 	(t_point){1000, 10, -2000}, 200.0, 100, 0.0);
-	scene->objects[--object_count] = cylinder(RED, (t_point){10, 10, -1500},
-		(t_vector){1, 1, 0}, 200, 20, 1.0, 0.0);
+	scene->objects[--object_count] = checkerboard_sphere(
+		(t_raw_point){0.01, 0.02, -2}, 0.4, 100, 0.0);
+	// scene->objects[--object_count] = cylinder(RED, (t_point){10, 10, -1500},
+	// 	(t_vector){1, 1, 0}, 200, 20, 1.0, 0.0);
 	// scene->objects[--object_count] = disk(RED, (t_point){400, 0, -1500},
 	// 	(t_vector){0, 0.1, -1}, 200, 1.0, 0.0);
 
@@ -828,8 +830,8 @@ int	main(void)
 	t_vars	vars;
 
 	minirt_init(&vars);
-	load_default_scene(&vars.scene);
-	// load_test_scene(&vars.scene);
+	// load_default_scene(&vars.scene);
+	load_test_scene(&vars.scene);
 
 	vars.scene.focus = &(vars.scene.objects)[0];
 	precompute_values(&vars.scene);

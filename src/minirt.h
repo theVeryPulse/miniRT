@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 16:11:08 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/25 19:40:23 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/25 20:05:48 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ typedef struct s_minirt
 	t_argb		background_color;
 	double		image_aspect_ratio;
 	double		scale;
-	uint32_t	unit_one;
+	double		unit_one;
 	t_vars*		vars;
 }	t_minirt;
 

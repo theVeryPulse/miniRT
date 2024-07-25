@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 17:41:00 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/02 19:16:58 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/25 20:00:01 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,5 +21,7 @@ typedef struct s_point
 }	t_point;
 
 typedef t_point	t_vector;
+
+typedef t_point	t_raw_point;
 
 #endif /* T_POINT_H */
