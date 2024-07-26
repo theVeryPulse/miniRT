@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/26 01:13:59 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/26 11:35:49 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,13 +62,33 @@ typedef	struct s_counter
 	uint32_t	cylinder;
 }	t_counter;
 
+int	check_count(t_counter *count)
+{
+	int	error;
+
+	error = 0;
+	if (count->camera < 1)
+		error = printf("Error: camera is not defined.\n");
+	if (count->camera > 1)
+		error = printf("Error: multiple cameras defined.\n");
+	if (count->ambient_light > 1)
+		error = printf("Error: multiple ambient lights defined.\n");
+	if (count->unique_point_light > 1)
+		error = printf("Error: multiple point lights defined.\n");
+	if (count->ambient_light == 0 && count->unique_point_light == 0)
+		printf("Warning: no lights defined.\n");
+	return (error > 0);
+}
+
 void	basic_check(t_list	**all_lines)
 {
-	uint32_t	line_number = 1;
+	uint32_t	line_number;
 	t_counter	count;
 	const char	*iter;
 	t_list		*node;
+	int			error;
 
+	line_number = 1;
 	count = (t_counter){0};
 	node = *all_lines;
 	while (node)
@@ -101,34 +121,7 @@ void	basic_check(t_list	**all_lines)
 		++line_number;
 	}
 
-	int	error;
-	error = 0;
-
-	if (count.camera < 1)
-	{
-		printf("Error: camera is not defined.\n");
-		error = 1;
-	}
-	if (count.camera > 1)
-	{
-		printf("Error: multiple cameras defined.\n");
-		error = 1;
-	}
-	if (count.ambient_light > 1)
-	{
-		printf("Error: multiple ambient lights defined.\n");
-		error = 1;
-	}
-	if (count.unique_point_light > 1)
-	{
-		printf("Error: multiple point lights defined.\n");
-		error = 1;
-	}
-	if (count.ambient_light == 0 && count.unique_point_light == 0)
-	{
-		printf("Warning: no lights defined.\n");
-	}
-
+	error |= check_count(&count);
 	printf("A: %u, C: %u, L: %u, sp: %u, pl: %u, cy: %u\n",
 		count.ambient_light, count.camera, count.unique_point_light,
 		count.sphere, count.plane, count.cylinder); /* Test */
