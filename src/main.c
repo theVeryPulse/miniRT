@@ -738,11 +738,13 @@ t_camera	camera(t_raw_point position, t_vector w)
 		{
 				camera.v = (t_vector){0, 0, -1},
 				camera.w = (t_vector){0, 1, 0};
+				return (camera);
 		}
 		else if (w.y < 0) /* Facing up from down */
 		{
 				camera.v = (t_vector){0, 0, 1},
 				camera.w = (t_vector){0, -1, 0};
+				return (camera);
 		}
 		else /* invalid vector */
 		{
