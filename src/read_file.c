@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/26 11:35:49 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/26 12:47:25 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,47 +80,97 @@ int	check_count(t_counter *count)
 	return (error > 0);
 }
 
-void	basic_check(t_list	**all_lines)
+void	skip_spaces(const char **iter)
 {
-	uint32_t	line_number;
-	t_counter	count;
-	const char	*iter;
+	while (**iter == ' ')
+		++(*iter);
+}
+
+void	skip_number(const char **iter)
+{
+	while (ft_isdigit(**iter))
+		++(*iter);
+	if (**iter == '.')
+		++(*iter);
+	while (ft_isdigit(**iter))
+		++(*iter);
+}
+
+void	skip_rgb(const char **iter)
+{
+	int	i;
+
+	i = 0;
+	while (i < 2)
+	{
+		while (ft_isdigit(**iter))
+			++(*iter);
+		if (**iter == ',')
+			++(*iter);
+		++i;
+	}
+	while (ft_isdigit(**iter))
+		++(*iter);
+}
+
+int	check_format(t_list **all_lines, t_counter *count)
+{
 	t_list		*node;
 	int			error;
+	int			line_number;
+	const char	*iter;
+	int			line_error;
 
 	line_number = 1;
-	count = (t_counter){0};
 	node = *all_lines;
+	error = 0;
 	while (node)
 	{
+		line_error = 0;
 		iter = node->content;
-		while (*iter == ' ')
-			++iter;
+		skip_spaces(&iter);
 		if (!ft_strncmp("\n", iter, 2))
 			;
 		else if (!ft_strncmp("A ", iter, 2))
-			++count.ambient_light;
-		else if (!ft_strncmp("C ", iter, 2))
-			++count.camera;
-		else if (!ft_strncmp("L ", iter, 2))
-			++count.unique_point_light;
-		else if (!ft_strncmp("sp ", iter, 3))
-			++count.sphere;
-		else if (!ft_strncmp("pl ", iter, 3))
-			++count.plane;
-		else if (!ft_strncmp("cy ", iter, 3))
-			++count.cylinder;
-		else
 		{
+			++count->ambient_light;
+			++iter;
+			skip_spaces(&iter);
+			skip_number(&iter);
+			skip_spaces(&iter);
+			skip_rgb(&iter);
+			skip_spaces(&iter);
+			line_error |= (*iter != '\n') && (*iter != '\0');
+		}
+		else if (!ft_strncmp("C ", iter, 2))
+			++count->camera;
+		else if (!ft_strncmp("L ", iter, 2))
+			++count->unique_point_light;
+		else if (!ft_strncmp("sp ", iter, 3))
+			++count->sphere;
+		else if (!ft_strncmp("pl ", iter, 3))
+			++count->plane;
+		else if (!ft_strncmp("cy ", iter, 3))
+			++count->cylinder;
+		else
+			line_error |= 1;
+		if (line_error)
 			printf("Error: line %d unrecognised: %s", line_number,
 				(char *)node->content);
-			ft_lstclear(all_lines, free);
-			exit(1);
-		}
+		error |= line_error;
 		node = node->next;
 		++line_number;
 	}
+	return (error > 0);
+}
 
+void	basic_check(t_list	**all_lines)
+{
+	t_counter	count;
+	int			error;
+
+	count = (t_counter){0};
+	error |= check_format(all_lines, &count);
 	error |= check_count(&count);
 	printf("A: %u, C: %u, L: %u, sp: %u, pl: %u, cy: %u\n",
 		count.ambient_light, count.camera, count.unique_point_light,
