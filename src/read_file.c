@@ -113,6 +113,17 @@ void	skip_rgb(const char **iter)
 		++(*iter);
 }
 
+int	check_ambient_light_line(const char **iter)
+{
+	++(*iter);
+	skip_spaces(iter);
+	skip_number(iter);
+	skip_spaces(iter);
+	skip_rgb(iter);
+	skip_spaces(iter);
+	return ((**iter != '\n') && (**iter != '\0'));
+}
+
 int	check_format(t_list **all_lines, t_counter *count)
 {
 	t_list		*node;
@@ -134,13 +145,7 @@ int	check_format(t_list **all_lines, t_counter *count)
 		else if (!ft_strncmp("A ", iter, 2))
 		{
 			++count->ambient_light;
-			++iter;
-			skip_spaces(&iter);
-			skip_number(&iter);
-			skip_spaces(&iter);
-			skip_rgb(&iter);
-			skip_spaces(&iter);
-			line_error |= (*iter != '\n') && (*iter != '\0');
+			line_error |= check_ambient_light_line(&iter);
 		}
 		else if (!ft_strncmp("C ", iter, 2))
 			++count->camera;
