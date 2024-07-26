@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/25 22:30:57 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/26 12:57:54 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -818,22 +818,23 @@ void	load_test_scene(t_scene *scene)
 	allocate_objects(scene, object_count);
 
 	// Wall in back
-	scene->objects[--object_count] = plane(WHITE, (t_point){0, -100, -2000},
+	scene->objects[--object_count] = plane(WHITE, (t_point){0.0/960.0, -100.0/960.0, -2000.0/960.0},
 		(t_vector){0, 0, 1}, 10.0, 0.0);
-	scene->objects[--object_count] = checkerboard_sphere(
-		(t_raw_point){0.01, 0.02, -2}, 0.4, 100, 0.0);
-	// scene->objects[--object_count] = cylinder(RED, (t_point){10, 10, -1500},
-	// 	(t_vector){1, 1, 0}, 200, 20, 1.0, 0.0);
-	// scene->objects[--object_count] = disk(RED, (t_point){400, 0, -1500},
-	// 	(t_vector){0, 0.1, -1}, 200, 1.0, 0.0);
+	// scene->objects[--object_count] = checkerboard_sphere(
+	// 	(t_raw_point){0.01, 0.02, -2}, 0.5, 100, 0.0);
+	scene->objects[--object_count] = cylinder(RED,
+		(t_point){10.0/960.0, 10.0/960.0, -1500.0/960.0},
+		(t_vector){0, 0, 1}, 200.0/960.0, 200.0/960.0, 1.0, 0.0);
+	// scene->objects[--object_count] = disk(RED, (t_point){400.0/960.0, 0, -1500.0/960.0},
+	// 	(t_vector){0, 0.1, -1}, 200.0/960.0, 1.0, 0.0);
 
 	unsigned int	light_count;
-	light_count = 1;
+	light_count = 2;
 	allocate_lights(scene, light_count);
 
-	scene->lights[--light_count] = point_light((t_vector){500, 1000, 0},
-		1);
-	// scene->lights[--light_count] = ambient_light(0.3);
+	scene->lights[--light_count] = point_light(
+		(t_vector){500.0/960.0, 1000.0/960.0, -1000.0/960.0}, 1);
+	scene->lights[--light_count] = ambient_light(0.3);
 }
 
 // int	main(int argc, char const *argv[])
@@ -842,8 +843,8 @@ int	main(void)
 	t_vars	vars;
 
 	minirt_init(&vars);
-	load_default_scene(&vars.scene);
-	// load_test_scene(&vars.scene);
+	// load_default_scene(&vars.scene);
+	load_test_scene(&vars.scene);
 
 	vars.scene.focus = &(vars.scene.objects)[0];
 	precompute_values(&vars.scene);
