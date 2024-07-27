@@ -6,10 +6,12 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/27 12:57:27 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/27 14:42:00 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "scene/inc/scene.h"
+#include "t_vars.h"
 #include "../lib/libft/inc/libft.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,7 +20,7 @@
 #include <fcntl.h>
 #include <stdint.h>
 
-#define TEST 1
+#define TEST 0
 
 void	check_argc(int argc)
 {
@@ -328,7 +330,7 @@ int	check_format(t_list **all_lines, t_counter *count)
 	return (error > 0);
 }
 
-void	basic_check(t_list	**all_lines)
+t_counter	basic_check(t_list	**all_lines)
 {
 	t_counter	count;
 	int			error;
@@ -345,9 +347,10 @@ void	basic_check(t_list	**all_lines)
 		ft_lstclear(all_lines, free);
 		exit(1);
 	}
+	return (count);
 }
 
-void	load_scene(const char* filename)
+void	load_scene_from_file(t_vars *vars, const char* filename)
 {
 	int		file;
 	char	*line;
@@ -367,17 +370,37 @@ void	load_scene(const char* filename)
 		ft_lstadd_back(&all_lines, ft_lstnew(line));
 		line = get_next_line(file);
 	}
-	basic_check(&all_lines);
+	t_counter	count;
+
+	count = basic_check(&all_lines);
+	/* initialize objects */
+	allocate_objects(&vars->scene, count.cylinder + count.plane + count.sphere);
+	allocate_lights(&vars->scene, count.ambient_light + count.point_light
+		+ count.unique_point_light);
+	// load_objects(vars, &all_lines);
+	// load_lights(vars, &all_lines);
+	/* initialize objects end */
 	ft_lstclear(&all_lines, free);
+	free(vars->scene.lights);
+	free(vars->scene.objects);
 }
 
 #if TEST
 
+#include "minirt.h"
+
 int	main(int argc, const char **argv)
 {
+	t_vars	vars;
+
+	minirt_init(&vars);
+
+	/* load scene from file */
 	check_argc(argc);
 	check_filename(argv[1]);
-	load_scene(argv[1]);
+	load_scene_from_file(&vars, argv[1]);
+	/* load scene from file ends */
+
 	return (0);
 }
 
