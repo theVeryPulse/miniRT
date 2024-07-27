@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/27 10:13:52 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/27 11:15:33 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,7 @@ int	check_camera_line(const char **iter)
  */
 int	check_point_light_line(const char **iter)
 {
-	if (**iter == 'L')
+	if (**iter == 'L' || **iter == 'l')
 		++(*iter);
 	skip_spaces(iter);
 	skip_coordinate(iter);
@@ -258,6 +258,11 @@ int	check_format(t_list **all_lines, t_counter *count)
 			++count->unique_point_light;
 			line_error |= check_point_light_line(&iter);
 		}
+		else if (ft_strncmp("l ", iter, 2) == 0)
+		{
+			++count->point_light;
+			line_error |= check_point_light_line(&iter);
+		}
 		else if (!ft_strncmp("sp ", iter, 3))
 		{
 			++count->sphere;
@@ -288,9 +293,9 @@ void	basic_check(t_list	**all_lines)
 	error = 0;
 	error |= check_format(all_lines, &count);
 	error |= check_count(&count);
-	printf("A: %u, C: %u, L: %u, sp: %u, pl: %u, cy: %u\n",
+	printf("A: %u, C: %u, L: %u, sp: %u, pl: %u, cy: %u, l: %u\n",
 		count.ambient_light, count.camera, count.unique_point_light,
-		count.sphere, count.plane, count.cylinder); /* Test */
+		count.sphere, count.plane, count.cylinder, count.point_light);
 	if (error)
 	{
 		ft_lstclear(all_lines, free);
