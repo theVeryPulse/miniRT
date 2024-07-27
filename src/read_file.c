@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/27 11:15:33 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/27 11:36:37 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,6 +213,28 @@ int	check_sphere_line(const char **iter)
 }
 
 /**
+ * @brief 
+ * 
+ * @param iter 
+ * @return int 
+ * plane line format: 'pl', coordinate, normal vector, rgv
+ * pl 0,0,0             0,1.0,0                     255,0,225
+ */
+int	check_plane_line(const char **iter)
+{
+	if (ft_strncmp("pl ", *iter, 3) == 0)
+		(*iter) += 2;
+	skip_spaces(iter);
+	skip_coordinate(iter);
+	skip_spaces(iter);
+	skip_coordinate(iter);
+	skip_spaces(iter);
+	skip_coordinate(iter);
+	skip_spaces(iter);
+	return (((**iter) != '\n') && ((**iter) != '\0'));
+}
+
+/**
  * @brief Checks the format of each line, including:
  *        1) numbers with decimal points,
  *        2) rbg (comma separated integers),
@@ -269,7 +291,10 @@ int	check_format(t_list **all_lines, t_counter *count)
 			line_error |= check_sphere_line(&iter);
 		}
 		else if (!ft_strncmp("pl ", iter, 3))
+		{
 			++count->plane;
+			line_error |= check_plane_line(&iter);
+		}
 		else if (!ft_strncmp("cy ", iter, 3))
 			++count->cylinder;
 		else
