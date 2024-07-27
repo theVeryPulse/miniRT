@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/26 12:47:25 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/27 08:04:05 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,6 +175,7 @@ void	basic_check(t_list	**all_lines)
 	int			error;
 
 	count = (t_counter){0};
+	error = 0;
 	error |= check_format(all_lines, &count);
 	error |= check_count(&count);
 	printf("A: %u, C: %u, L: %u, sp: %u, pl: %u, cy: %u\n",
