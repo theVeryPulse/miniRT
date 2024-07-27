@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/27 08:44:23 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/27 09:15:52 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,6 +188,19 @@ int	check_point_light_line(const char **iter)
 	return (((**iter) != '\n') && ((**iter) != '\0'));
 }
 
+/**
+ * @brief Checks the format of each line, including:
+ *        1) numbers with decimal points,
+ *        2) rbg (comma separated integers),
+ *        3) coordinate (comma separated numbers with decimal points).
+ *        
+ *        Does not check the values. For example, does not check if fov is a
+ *        positive value.
+ * 
+ * @param all_lines 
+ * @param count 
+ * @return int 
+ */
 int	check_format(t_list **all_lines, t_counter *count)
 {
 	t_list		*node;
