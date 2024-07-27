@@ -74,7 +74,7 @@ int	check_count(t_counter *count)
 	if (count->ambient_light > 1)
 		error = printf("Error: multiple ambient lights defined.\n");
 	if (count->unique_point_light > 1)
-		error = printf("Error: multiple point lights defined.\n");
+		error = printf("Error: defining multiple lights with 'L'.\n");
 	if (count->ambient_light == 0 && count->unique_point_light == 0)
 		printf("Warning: no lights defined.\n");
 	return (error > 0);
@@ -163,6 +163,31 @@ int	check_camera_line(const char **iter)
 	return ((**iter != '\n') && (**iter != '\0'));
 }
 
+/**
+ * @brief 
+ * 
+ * @param iter 
+ * @return int
+ * @note
+ * point light line format: 'L', coordinate, intensity, rgb
+ * example:
+ *     L -40,0,30                        0.7            255,255,255
+ * 
+ */
+int	check_point_light_line(const char **iter)
+{
+	if (**iter == 'L')
+		++(*iter);
+	skip_spaces(iter);
+	skip_coordinate(iter);
+	skip_spaces(iter);
+	skip_number(iter);
+	skip_spaces(iter);
+	skip_rgb(iter);
+	skip_spaces(iter);
+	return (((**iter) != '\n') && ((**iter) != '\0'));
+}
+
 int	check_format(t_list **all_lines, t_counter *count)
 {
 	t_list		*node;
@@ -192,7 +217,10 @@ int	check_format(t_list **all_lines, t_counter *count)
 			line_error |= check_camera_line(&iter);
 		}
 		else if (!ft_strncmp("L ", iter, 2))
+		{
 			++count->unique_point_light;
+			line_error |= check_point_light_line(&iter);
+		}
 		else if (!ft_strncmp("sp ", iter, 3))
 			++count->sphere;
 		else if (!ft_strncmp("pl ", iter, 3))
