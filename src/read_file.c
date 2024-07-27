@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/27 12:49:55 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/27 12:57:27 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,28 +265,28 @@ int	check_cylinder_line(const char **iter)
 	return (((**iter) != '\n') && ((**iter) != '\0'));
 }
 
-int	check_line(const char **iter, t_counter *count)
+int	check_line(const char *iter, t_counter *count)
 {
 	int	line_error;
 
 	line_error = 0;
-	skip_spaces(iter);
-	if (ft_strncmp("\n", *iter, 2) == 0)
+	skip_spaces(&iter);
+	if (ft_strncmp("\n", iter, 2) == 0)
 		;
-	else if (ft_strncmp("A ", *iter, 2) == 0 && ++count->ambient_light)
-		line_error |= check_ambient_light_line(iter);
-	else if (ft_strncmp("C ", *iter, 2) == 0 && ++count->camera)
-		line_error |= check_camera_line(iter);
-	else if (ft_strncmp("L ", *iter, 2) == 0 && ++count->unique_point_light)
-		line_error |= check_point_light_line(iter);
-	else if (ft_strncmp("l ", *iter, 2) == 0 && ++count->point_light)
-		line_error |= check_point_light_line(iter);
-	else if (ft_strncmp("sp ",*iter, 3) == 0 && ++count->sphere)
-		line_error |= check_sphere_line(iter);
-	else if (ft_strncmp("pl ", *iter, 3) == 0 && ++count->plane)
-		line_error |= check_plane_line(iter);
-	else if (ft_strncmp("cy ", *iter, 3) == 0 && ++count->cylinder)
-		line_error |= check_cylinder_line(iter);
+	else if (ft_strncmp("A ", iter, 2) == 0 && ++count->ambient_light)
+		line_error |= check_ambient_light_line(&iter);
+	else if (ft_strncmp("C ", iter, 2) == 0 && ++count->camera)
+		line_error |= check_camera_line(&iter);
+	else if (ft_strncmp("L ", iter, 2) == 0 && ++count->unique_point_light)
+		line_error |= check_point_light_line(&iter);
+	else if (ft_strncmp("l ", iter, 2) == 0 && ++count->point_light)
+		line_error |= check_point_light_line(&iter);
+	else if (ft_strncmp("sp ",iter, 3) == 0 && ++count->sphere)
+		line_error |= check_sphere_line(&iter);
+	else if (ft_strncmp("pl ", iter, 3) == 0 && ++count->plane)
+		line_error |= check_plane_line(&iter);
+	else if (ft_strncmp("cy ", iter, 3) == 0 && ++count->cylinder)
+		line_error |= check_cylinder_line(&iter);
 	else
 		line_error |= 1;
 	return (line_error);
@@ -310,7 +310,6 @@ int	check_format(t_list **all_lines, t_counter *count)
 	t_list		*node;
 	int			error;
 	int			line_number;
-	const char	*iter;
 	int			line_error;
 
 	line_number = 1;
@@ -318,53 +317,7 @@ int	check_format(t_list **all_lines, t_counter *count)
 	error = 0;
 	while (node)
 	{
-		line_error = 0;
-		iter = node->content;
-#define check_line_function_test 0
-#if check_line_function_test
-		skip_spaces(&iter);
-		if (!ft_strncmp("\n", iter, 2))
-			;
-		else if (!ft_strncmp("A ", iter, 2))
-		{
-			++count->ambient_light;
-			line_error |= check_ambient_light_line(&iter);
-		}
-		else if (!ft_strncmp("C ", iter, 2))
-		{
-			++count->camera;
-			line_error |= check_camera_line(&iter);
-		}
-		else if (!ft_strncmp("L ", iter, 2))
-		{
-			++count->unique_point_light;
-			line_error |= check_point_light_line(&iter);
-		}
-		else if (ft_strncmp("l ", iter, 2) == 0)
-		{
-			++count->point_light;
-			line_error |= check_point_light_line(&iter);
-		}
-		else if (!ft_strncmp("sp ", iter, 3))
-		{
-			++count->sphere;
-			line_error |= check_sphere_line(&iter);
-		}
-		else if (!ft_strncmp("pl ", iter, 3))
-		{
-			++count->plane;
-			line_error |= check_plane_line(&iter);
-		}
-		else if (!ft_strncmp("cy ", iter, 3))
-		{
-			++count->cylinder;
-			line_error |= check_cylinder_line(&iter);
-		}
-		else
-			line_error |= 1;
-#else
-		line_error = check_line(&iter, count);
-#endif
+		line_error = check_line(node->content, count);
 		if (line_error)
 			printf("Error: line %d unrecognised: %s", line_number,
 				(char *)node->content);
