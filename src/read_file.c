@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/27 11:58:35 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/27 12:07:16 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,6 +237,35 @@ int	check_plane_line(const char **iter)
 }
 
 /**
+ * @brief 
+ * 
+ * @param iter 
+ * @return int 
+ * @note
+ * cylinder line format: 'cy', coordinate of center, axis vector, diameter,
+ *                       height, rgb
+ * cy 50.0,0.0,20.6     0,0,1.0      14.2  21.42    10,0,255
+ * 
+ */
+int	check_cylinder_line(const char **iter)
+{
+	if (ft_strncmp("cy ", *iter, 3) == 0)
+		(*iter) += 2;
+	skip_spaces(iter);
+	skip_coordinate(iter);
+	skip_spaces(iter);
+	skip_coordinate(iter);
+	skip_spaces(iter);
+	skip_number(iter);
+	skip_spaces(iter);
+	skip_number(iter);
+	skip_spaces(iter);
+	skip_rgb(iter);
+	skip_spaces(iter);
+	return (((**iter) != '\n') && ((**iter) != '\0'));
+}
+
+/**
  * @brief Checks the format of each line, including:
  *        1) numbers with decimal points,
  *        2) rbg (comma separated integers),
@@ -298,7 +327,10 @@ int	check_format(t_list **all_lines, t_counter *count)
 			line_error |= check_plane_line(&iter);
 		}
 		else if (!ft_strncmp("cy ", iter, 3))
+		{
 			++count->cylinder;
+			line_error |= check_cylinder_line(&iter);
+		}
 		else
 			line_error |= 1;
 		if (line_error)
