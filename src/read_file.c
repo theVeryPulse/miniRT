@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/27 08:04:05 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/27 08:44:23 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,8 @@ void	skip_spaces(const char **iter)
 
 void	skip_number(const char **iter)
 {
+	if (**iter == '-' || **iter == '+')
+		++(*iter);
 	while (ft_isdigit(**iter))
 		++(*iter);
 	if (**iter == '.')
@@ -113,13 +115,50 @@ void	skip_rgb(const char **iter)
 		++(*iter);
 }
 
+void	skip_coordinate(const char **iter)
+{
+	skip_number(iter);
+	if (**iter == ',')
+		++(*iter);
+	skip_number(iter);
+	if (**iter == ',')
+		++(*iter);
+	skip_number(iter);
+}
+
 int	check_ambient_light_line(const char **iter)
 {
-	++(*iter);
+	if (**iter == 'A')
+		++(*iter);
 	skip_spaces(iter);
 	skip_number(iter);
 	skip_spaces(iter);
 	skip_rgb(iter);
+	skip_spaces(iter);
+	return ((**iter != '\n') && (**iter != '\0'));
+}
+
+/**
+ * @brief 
+ * 
+ * @param iter 
+ * @return int 
+ * @note
+ * camera line format: C, coordinate, angle vector, fov
+ * camera line example:
+ *     C -50,0,20           0,0,1        70
+ * 
+ */
+int	check_camera_line(const char **iter)
+{
+	if (**iter == 'C')
+		++(*iter);
+	skip_spaces(iter);
+	skip_coordinate(iter);
+	skip_spaces(iter);
+	skip_coordinate(iter);
+	skip_spaces(iter);
+	skip_number(iter);
 	skip_spaces(iter);
 	return ((**iter != '\n') && (**iter != '\0'));
 }
@@ -148,7 +187,10 @@ int	check_format(t_list **all_lines, t_counter *count)
 			line_error |= check_ambient_light_line(&iter);
 		}
 		else if (!ft_strncmp("C ", iter, 2))
+		{
 			++count->camera;
+			line_error |= check_camera_line(&iter);
+		}
 		else if (!ft_strncmp("L ", iter, 2))
 			++count->unique_point_light;
 		else if (!ft_strncmp("sp ", iter, 3))
