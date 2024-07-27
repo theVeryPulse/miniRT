@@ -18,7 +18,11 @@ test_case() {
     print_return_value $?
 }
 
-gcc src/read_file.c -o $exec lib/libft/lib/libft.a -g -Wall -Wextra
+gcc src/load_file/load_scene_from_file.c -o $exec lib/libft/lib/libft.a -g -Wall -Wextra \
+    src/scene/*.c \
+    src/minirt.c \
+    src/minirt_init.c \
+    -lm
 echo without arguments ">>>"
 $exec
 print_return_value $?

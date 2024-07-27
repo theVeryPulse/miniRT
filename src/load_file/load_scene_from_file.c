@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   read_file.c                                        :+:      :+:    :+:   */
+/*   load_scene_from_file.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/27 14:42:00 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/27 14:55:40 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "scene/inc/scene.h"
-#include "t_vars.h"
-#include "../lib/libft/inc/libft.h"
+#include "../scene/inc/scene.h"
+#include "../t_vars.h"
+#include "../../lib/libft/inc/libft.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -20,7 +20,7 @@
 #include <fcntl.h>
 #include <stdint.h>
 
-#define TEST 0
+#define TEST 1
 
 void	check_argc(int argc)
 {
@@ -387,7 +387,7 @@ void	load_scene_from_file(t_vars *vars, const char* filename)
 
 #if TEST
 
-#include "minirt.h"
+#include "../minirt.h"
 
 int	main(int argc, const char **argv)
 {
