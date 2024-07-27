@@ -32,6 +32,13 @@ test_case "...."
 test_case "....."
 test_case "......"
 test_case "......."
+test_case demo/camera.rt
+test_case demo/cylinder.rt
 test_case demo/multiple_A.rt
 test_case demo/multiple_C.rt
+test_case demo/multiple_l_point_light.rt
 test_case demo/no_lights.rt
+test_case demo/plane.rt
+test_case demo/point_light.rt
+test_case demo/scene1.rt
+test_case demo/sphere.rt
