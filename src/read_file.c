@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/27 11:36:37 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/27 11:58:35 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,15 +68,17 @@ int	check_count(t_counter *count)
 
 	error = 0;
 	if (count->camera < 1)
-		error = printf("Error: camera is not defined.\n");
+		error = printf("Error: camera undefined.\n");
 	if (count->camera > 1)
 		error = printf("Error: multiple cameras defined.\n");
 	if (count->ambient_light > 1)
 		error = printf("Error: multiple ambient lights defined.\n");
 	if (count->unique_point_light > 1)
-		error = printf("Error: defining multiple lights with 'L'.\n");
+		error = printf("Error: multiple lights defined with 'L'.\n");
 	if (count->ambient_light == 0 && count->unique_point_light == 0)
 		printf("Warning: no lights defined.\n");
+	if (count->unique_point_light > 0 && count->point_light > 0)
+		error = printf("Error: lights defined with both 'L' and 'l'\n");
 	return (error > 0);
 }
 
