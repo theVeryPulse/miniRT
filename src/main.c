@@ -6,15 +6,16 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/26 12:57:54 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/27 13:49:27 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../lib/minilibx-linux/mlx.h"
 #include "t_vars.h"
+#include "scene/inc/scene.h"
 #include "object/inc/object.h"
 #include "window.h"
 #include "handle_keypress_event.h"
+#include "../lib/minilibx-linux/mlx.h"
 #include <X11/X.h> /* DestroyNotify, ButtonReleaseMask */
 #include <X11/keysym.h> /* XK_escape */
 
@@ -27,7 +28,6 @@
 #include <stddef.h> /* ptrdiff_t */
 
 #include "geometry/inc/geometry.h"
-#include "t_scene.h"
 
 #include <math.h>
 #include <unistd.h> /* STDERR */
@@ -690,18 +690,6 @@ void	render_image(t_vars *vars)
 			0x009900, "-");
 	}
 	
-}
-
-void	allocate_objects(t_scene *scene, unsigned int object_count)
-{
-	scene->objects = (t_object *)ft_calloc(object_count, sizeof(t_object));
-	scene->object_count = object_count;
-}
-
-void	allocate_lights(t_scene *scene, unsigned int light_count)
-{
-	scene->lights = (t_object *)ft_calloc(light_count, sizeof(t_object));
-	scene->light_count = light_count;
 }
 
 void	precompute_values(t_scene *scene)

@@ -38,7 +38,10 @@ FILES := \
 	src/object/objects/colored_sphere.c \
 	src/object/objects/cylinder.c \
 	src/object/objects/disk.c \
-	src/object/objects/plane.c
+	src/object/objects/plane.c \
+	src/scene/allocate_lights.c \
+	src/scene/allocate_objects.c
+
 
 # FILES := $(addprefix src/, $(FILES))
 OFILES := $(patsubst src/%.c, build/%.o, $(FILES))

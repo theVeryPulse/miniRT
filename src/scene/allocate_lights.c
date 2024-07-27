@@ -1,35 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_vars.h                                           :+:      :+:    :+:   */
+/*   allocate_lights.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/02 02:11:29 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/27 13:44:22 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/27 13:35:43 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/27 13:46:24 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_VARS_H
-# define T_VARS_H
+#include "t_scene.h"
+#include "../../lib/libft/inc/libft.h"
 
-# include "scene/t_scene.h"
-
-typedef struct s_img_vars
+extern void	allocate_lights(t_scene *scene, unsigned int light_count)
 {
-	void	*img_ptr;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_size;
-	int		endian;
-}	t_img_vars;
-
-typedef struct s_vars
-{
-	void		*mlx_ptr;
-	void		*win_ptr;
-	t_img_vars	img_vars;
-	t_scene		scene;
-}	t_vars;
-
-#endif /* T_VARS_H */
+	scene->lights = (t_object *)ft_calloc(light_count, sizeof(t_object));
+	scene->light_count = light_count;
+}

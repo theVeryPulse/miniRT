@@ -1,31 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_scene.h                                          :+:      :+:    :+:   */
+/*   scene.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/02 17:48:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/21 20:30:37 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/27 13:44:45 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/27 13:46:52 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_SCENE_H
-# define T_SCENE_H
+#ifndef SCENE_H
+# define SCENE_H
 
-# include "object/t_object.h"
-# include "t_camera.h"
-# include <stdint.h>
+# include "../t_scene.h"
 
-typedef struct s_scene
-{
-	/* Array of objects */
-	t_object	*objects;
-	uint8_t		object_count;
-	t_object	*lights;
-	uint8_t		light_count;
-	t_object	*focus;
-	t_camera	camera;
-}	t_scene;
+extern void	allocate_lights(t_scene *scene, unsigned int light_count);
+extern void	allocate_objects(t_scene *scene, unsigned int object_count);
 
-#endif /* T_SCENE_H */
+#endif

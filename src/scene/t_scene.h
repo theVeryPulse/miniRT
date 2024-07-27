@@ -1,35 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_vars.h                                           :+:      :+:    :+:   */
+/*   t_scene.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/02 02:11:29 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/27 13:44:22 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/02 17:48:23 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/27 13:47:35 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_VARS_H
-# define T_VARS_H
+#ifndef T_SCENE_H
+# define T_SCENE_H
 
-# include "scene/t_scene.h"
+# include "../object/t_object.h"
+# include "../t_camera.h"
+# include <stdint.h>
 
-typedef struct s_img_vars
+typedef struct s_scene
 {
-	void	*img_ptr;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_size;
-	int		endian;
-}	t_img_vars;
+	/* Array of objects */
+	t_object	*objects;
+	uint8_t		object_count;
+	t_object	*lights;
+	uint8_t		light_count;
+	t_object	*focus;
+	t_camera	camera;
+}	t_scene;
 
-typedef struct s_vars
-{
-	void		*mlx_ptr;
-	void		*win_ptr;
-	t_img_vars	img_vars;
-	t_scene		scene;
-}	t_vars;
-
-#endif /* T_VARS_H */
+#endif /* T_SCENE_H */
