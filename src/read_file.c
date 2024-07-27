@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/27 09:15:52 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/27 10:13:52 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,6 +189,30 @@ int	check_point_light_line(const char **iter)
 }
 
 /**
+ * @brief 
+ * 
+ * @param iter 
+ * @return int 
+ * @note
+ * sphere line format: 'sp', coordinate, radius, rgb
+ * Example:
+ * sp 0,0,20                         20             255,0,0
+ */
+int	check_sphere_line(const char **iter)
+{
+	if (ft_strncmp("sp ", *iter, 3) == 0)
+		(*iter) += 2;
+	skip_spaces(iter);
+	skip_coordinate(iter);
+	skip_spaces(iter);
+	skip_number(iter);
+	skip_spaces(iter);
+	skip_rgb(iter);
+	skip_spaces(iter);
+	return (((**iter) != '\n') && ((**iter) != '\0'));
+}
+
+/**
  * @brief Checks the format of each line, including:
  *        1) numbers with decimal points,
  *        2) rbg (comma separated integers),
@@ -235,7 +259,10 @@ int	check_format(t_list **all_lines, t_counter *count)
 			line_error |= check_point_light_line(&iter);
 		}
 		else if (!ft_strncmp("sp ", iter, 3))
+		{
 			++count->sphere;
+			line_error |= check_sphere_line(&iter);
+		}
 		else if (!ft_strncmp("pl ", iter, 3))
 			++count->plane;
 		else if (!ft_strncmp("cy ", iter, 3))
