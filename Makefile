@@ -28,6 +28,7 @@ FILES := \
 	src/geometry/vector/vec_normalized.c \
 	src/geometry/vector/vec_squared.c \
 	src/handle_keypress_event.c \
+	src/load_file/load_scene_from_file.c \
 	src/main.c \
 	src/minirt.c \
 	src/minirt_init.c \

@@ -6,11 +6,12 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/27 13:49:27 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/27 16:13:37 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "t_vars.h"
+#include "load_file/inc/load_file.h"
 #include "scene/inc/scene.h"
 #include "object/inc/object.h"
 #include "window.h"
@@ -825,21 +826,57 @@ void	load_test_scene(t_scene *scene)
 	scene->lights[--light_count] = ambient_light(0.3);
 }
 
-// int	main(int argc, char const *argv[])
-int	main(void)
+void	check_argc(int argc)
+{
+	if (argc == 1)
+		exit(0);
+	else if (argc > 2)
+	{
+		printf("Error: there should only be 1 argument.\n");
+		exit(1);
+	}
+}
+
+void	check_filename(const char *filename)
+{
+	if (ft_strlen(filename) <= 3)
+	{
+		printf("Error: invalid filename: \"%s\"\n", filename);
+		exit(1);
+	}
+	if (!ft_strchr(filename, '.'))
+	{
+		printf("Error: unrecognised file format.\n");
+		exit(1);
+	}
+	else if (ft_strncmp(".rt", ft_strrchr(filename, '.'), 4))
+	{
+		printf("Error: unrecognised file format: \"%s\"\n",
+			ft_strrchr(filename, '.'));
+		exit(1);
+	}
+}
+
+int	main(int argc, char const *argv[])
+// int	main(void)
 {
 	t_vars	vars;
 
+	check_argc(argc);
+	check_filename(argv[1]);
+	
+
 	minirt_init(&vars);
 	// load_default_scene(&vars.scene);
-	load_test_scene(&vars.scene);
+	// load_test_scene(&vars.scene);
+	load_scene_from_file(&vars, argv[1]);
 
 	vars.scene.focus = &(vars.scene.objects)[0];
 	precompute_values(&vars.scene);
 
 	set_up_mlx(&vars);
 	set_up_hooks(&vars);
-	render_image(&vars);
+	// render_image(&vars);
 
 	put_image_to_window_vars(&vars);
 	mlx_loop(vars.mlx_ptr);
