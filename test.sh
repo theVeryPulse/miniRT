@@ -13,11 +13,12 @@ print_return_value() {
 
 test_case() {
     test_case=$1
-    echo -n -e $test_case ">>> "
+    echo -e "test case >>> " $test_case
     $exec $test_case
     print_return_value $?
 }
 
+gcc src/read_file.c -o $exec lib/libft/lib/libft.a -g -Wall -Wextra
 echo without arguments ">>>"
 $exec
 print_return_value $?
@@ -31,3 +32,6 @@ test_case "...."
 test_case "....."
 test_case "......"
 test_case "......."
+test_case demo/multiple_A.rt
+test_case demo/multiple_C.rt
+test_case demo/no_lights.rt
