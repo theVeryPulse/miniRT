@@ -6,12 +6,13 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/28 16:20:06 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/28 17:47:53 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../scene/inc/scene.h"
 #include "../t_vars.h"
+#include "../object/inc/object.h"
 #include "../../lib/libft/inc/libft.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -321,6 +322,86 @@ t_counter	basic_check(t_list	**all_lines)
 	return (count);
 }
 
+/**
+ * @brief 
+ * 
+ * @param line 
+ * @return t_object 
+ * @note
+ * Ambient light format: 'A', intensity, rgb
+ * Example:
+ * A  0.2                                         255,255,255   
+ * 
+ */
+t_object	load_ambient_light_from_line(const char *line)
+{
+	const char	*iter;
+	t_object	a;
+
+	iter = line;
+	if (ft_strncmp("A ", line, 2) == 0)
+		iter += 2;
+	skip_spaces(&iter);
+	a = ambient_light(ft_atof(iter));
+	if (a.intensity < 0.0
+		|| a.intensity > 1.0)
+	{
+		printf("Error: ambient light intensity out of range [0, 1]: %f\n",
+			a.intensity);
+		a.error = true;
+	}
+	return (a);
+}
+
+t_object	load_object_from_line(const char *line)
+{
+	const char	*iter;
+
+	iter = line;
+	skip_spaces(&iter);
+	if (ft_strncmp("A ", iter, 2) == 0)
+		return (load_ambient_light_from_line(iter));
+	else if (ft_strncmp("C ", iter, 2) == 0)
+	{
+	}
+	else if (ft_strncmp("L ", iter, 2) == 0)
+	{
+	}
+	else if (ft_strncmp("l ", iter, 2) == 0)
+	{
+	}
+	else if (ft_strncmp("sp ", iter, 3) == 0)
+	{
+	}
+	else if (ft_strncmp("pl ", iter, 3) == 0)
+	{
+	}
+	else if (ft_strncmp("cy ", iter, 3) == 0)
+	{
+	}
+	else
+	{
+	}
+}
+
+void	load_objects(t_vars *vars, t_list **all_lines)
+{
+	t_list	*node;
+	int		line_number;
+	t_object	*object;
+
+	node = *all_lines;
+	line_number = 1;
+	object = vars->scene.objects;
+	while (node)
+	{
+		*object = load_object_from_line(node->content);
+		node = node->next;
+		++line_number;
+		++object;
+	}
+}
+
 void	load_scene_from_file(t_vars *vars, const char* filename)
 {
 	int		file;
@@ -341,6 +422,8 @@ void	load_scene_from_file(t_vars *vars, const char* filename)
 		ft_lstadd_back(&all_lines, ft_lstnew(line));
 		line = get_next_line(file);
 	}
+	close(file);
+
 	t_counter	count;
 
 	count = basic_check(&all_lines);
@@ -348,9 +431,12 @@ void	load_scene_from_file(t_vars *vars, const char* filename)
 	allocate_objects(&vars->scene, count.cylinder + count.plane + count.sphere);
 	allocate_lights(&vars->scene, count.ambient_light + count.point_light
 		+ count.unique_point_light);
-	// load_objects(vars, &all_lines);
+	load_objects(vars, &all_lines);
 	// load_lights(vars, &all_lines);
 	/* initialize objects end */
+
+	/* [ ] Check if any light or object has error, if yes, free and exit */
+
 	ft_lstclear(&all_lines, free);
 }
 
