@@ -399,11 +399,10 @@ void	load_objects(t_vars *vars, t_list **all_lines)
 	}
 }
 
-void	load_scene_from_file(t_vars *vars, const char* filename)
+void	get_all_lines(t_list **all_lines, const char *filename)
 {
 	int		file;
 	char	*line;
-	t_list	*all_lines;
 
 	file = open(filename, O_RDONLY);
 	if (file == -1)
@@ -412,14 +411,21 @@ void	load_scene_from_file(t_vars *vars, const char* filename)
 		perror(filename);
 		exit(1);
 	}
-	all_lines = NULL;
+	*all_lines = NULL;
 	line = get_next_line(file);
 	while (line)
 	{
-		ft_lstadd_back(&all_lines, ft_lstnew(line));
+		ft_lstadd_back(all_lines, ft_lstnew(line));
 		line = get_next_line(file);
 	}
 	close(file);
+}
+
+void	load_scene_from_file(t_vars *vars, const char* filename)
+{
+	t_list	*all_lines;
+
+	get_all_lines(&all_lines, filename);
 
 	t_counter	count;
 
