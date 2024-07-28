@@ -6,7 +6,6 @@ CFLAGS := -Wall -Wextra -Werror
 # ls src/**/*.c >> Makefile
 FILES := \
 	src/checkerboard_color_sphere.c \
-	src/equals.c \
 	src/color/alpha_component.c \
 	src/color/argb.c \
 	src/color/blue_component.c \
@@ -14,6 +13,7 @@ FILES := \
 	src/color/color_mult.c \
 	src/color/green_component.c \
 	src/color/red_component.c \
+	src/equals.c \
 	src/geometry/matrix/mx_mult.c \
 	src/geometry/matrix/mx_mult_mx.c \
 	src/geometry/matrix/mx_transpose.c \
@@ -29,6 +29,10 @@ FILES := \
 	src/geometry/vector/vec_squared.c \
 	src/handle_keypress_event.c \
 	src/load_file/load_scene_from_file.c \
+	src/load_file/skip/skip_coordinate.c \
+	src/load_file/skip/skip_number.c \
+	src/load_file/skip/skip_rgb.c \
+	src/load_file/skip/skip_spaces.c \
 	src/main.c \
 	src/minirt.c \
 	src/minirt_init.c \

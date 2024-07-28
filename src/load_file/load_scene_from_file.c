@@ -6,10 +6,11 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/28 19:37:21 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/28 21:15:43 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "skip/skip.h"
 #include "../scene/inc/scene.h"
 #include "../t_vars.h"
 #include "../object/inc/object.h"
@@ -55,52 +56,6 @@ int	check_count(t_counter *count)
 	if (count->unique_point_light > 0 && count->point_light > 0)
 		error = printf("Error: lights defined with both 'L' and 'l'\n");
 	return (error > 0);
-}
-
-void	skip_spaces(const char **iter)
-{
-	while (**iter == ' ')
-		++(*iter);
-}
-
-void	skip_number(const char **iter)
-{
-	if (**iter == '-' || **iter == '+')
-		++(*iter);
-	while (ft_isdigit(**iter))
-		++(*iter);
-	if (**iter == '.')
-		++(*iter);
-	while (ft_isdigit(**iter))
-		++(*iter);
-}
-
-void	skip_rgb(const char **iter)
-{
-	int	i;
-
-	i = 0;
-	while (i < 2)
-	{
-		while (ft_isdigit(**iter))
-			++(*iter);
-		if (**iter == ',')
-			++(*iter);
-		++i;
-	}
-	while (ft_isdigit(**iter))
-		++(*iter);
-}
-
-void	skip_coordinate(const char **iter)
-{
-	skip_number(iter);
-	if (**iter == ',')
-		++(*iter);
-	skip_number(iter);
-	if (**iter == ',')
-		++(*iter);
-	skip_number(iter);
 }
 
 int	check_ambient_light_line(const char **iter)
@@ -381,7 +336,7 @@ void	load_point_light_from_line(t_object *l, const char *line)
 	skip_spaces(&ptr);
 	intensity = ft_atof(ptr);
 	*l = point_light(position, intensity);
-	if (l->intensity >= 0.0 && l->intensity <= 1.0)
+	if (l->intensity < 0.0 && l->intensity > 1.0)
 	{
 		printf("Error: point light intensity out of range [0, 1]: %f\n",
 			l->intensity);
