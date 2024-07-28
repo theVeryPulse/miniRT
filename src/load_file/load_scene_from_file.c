@@ -351,7 +351,44 @@ void	load_ambient_light_from_line(t_object *a, const char *line)
 	}
 }
 
-void	load_light_from_line(t_object *object, const char *line)
+/**
+ * @brief 
+ * 
+ * @param pl 
+ * @param line 
+ * @note
+ * Point light format: 'L', coordinate, intensity, rgb
+ * Example:
+ *     L -40,0,30                        0.7            255,255,255
+ * 
+ */
+void	load_point_light_from_line(t_object *l, const char *line)
+{
+	const char	*ptr;
+	t_raw_point	position;
+	double		intensity;
+
+	ptr = line;
+	if (ft_strncmp("L ", line, 2) == 0)
+		ptr += 2;
+	skip_spaces(&ptr);
+	position.x = ft_atof(ptr);
+	ptr = ft_strchr(ptr, ',') + 1;
+	position.y = ft_atof(ptr);
+	ptr = ft_strchr(ptr, ',') + 1;
+	position.z = ft_atof(ptr);
+	skip_number(&ptr);
+	skip_spaces(&ptr);
+	intensity = ft_atof(ptr);
+	*l = point_light(position, intensity);
+	if (l->intensity >= 0.0 && l->intensity <= 1.0)
+	{
+		printf("Error: point light intensity out of range [0, 1]: %f\n",
+			l->intensity);
+		l->error = true;
+	}
+}
+
 {
 	const char	*iter;
 
