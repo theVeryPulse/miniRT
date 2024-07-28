@@ -482,21 +482,21 @@ void	load_scene_from_file(t_vars *vars, const char* filename)
 	t_object	*object;
 	t_object	*light;
 	t_list		*node;
-	const char	*iter;
+	const char	*ptr;
 
 	object = vars->scene.objects;
 	light = vars->scene.lights;
 	node = all_lines;
 	while (node)
 	{
-		iter = node->content;
-		skip_spaces(&iter);
-		if (*iter == 'C')
-			load_camera_from_line(&vars->scene.camera, node->content);
-		else if (*iter == 's' || *iter == 'p' || *iter == 'c')
-			load_object_from_line(object++, node->content);
-		else if (*iter == 'A' || *iter == 'L' || *iter == 'l')
-			load_light_from_line(light++, node->content);
+		ptr = node->content;
+		skip_spaces(&ptr);
+		if (*ptr == 'C')
+			load_camera_from_line(&vars->scene.camera, ptr);
+		else if (*ptr == 's' || *ptr == 'p' || *ptr == 'c')
+			load_object_from_line(object++, ptr);
+		else if (*ptr == 'A' || *ptr == 'L' || *ptr == 'l')
+			load_light_from_line(light++, ptr);
 		node = node->next;
 	}
 	/* initialize objects end */
