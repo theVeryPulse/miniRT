@@ -333,34 +333,31 @@ t_counter	basic_check(t_list	**all_lines)
  * A  0.2                                         255,255,255   
  * 
  */
-t_object	load_ambient_light_from_line(const char *line)
+void	load_ambient_light_from_line(t_object *a, const char *line)
 {
 	const char	*iter;
-	t_object	a;
 
 	iter = line;
 	if (ft_strncmp("A ", line, 2) == 0)
 		iter += 2;
 	skip_spaces(&iter);
-	a = ambient_light(ft_atof(iter));
-	if (a.intensity < 0.0
-		|| a.intensity > 1.0)
+	*a = ambient_light(ft_atof(iter));
+	if (a->intensity < 0.0 || a->intensity > 1.0)
 	{
 		printf("Error: ambient light intensity out of range [0, 1]: %f\n",
-			a.intensity);
-		a.error = true;
+			a->intensity);
+		a->error = true;
 	}
-	return (a);
 }
 
-t_object	load_object_from_line(const char *line)
+void	load_object_from_line(t_object *object, const char *line)
 {
 	const char	*iter;
 
 	iter = line;
 	skip_spaces(&iter);
 	if (ft_strncmp("A ", iter, 2) == 0)
-		return (load_ambient_light_from_line(iter));
+		load_ambient_light_from_line(object, iter);
 	else if (ft_strncmp("C ", iter, 2) == 0)
 	{
 	}
