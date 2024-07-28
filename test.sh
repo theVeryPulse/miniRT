@@ -18,31 +18,40 @@ test_case() {
     print_return_value $?
 }
 
-gcc src/load_file/load_scene_from_file.c -o $exec lib/libft/lib/libft.a -g -Wall -Wextra \
+rm -f $exec
+
+if gcc src/load_file/load_scene_from_file.c lib/libft/lib/libft.a
+    -o $exec \
+    -g -Wall -Wextra \
     src/scene/*.c \
     src/minirt.c \
     src/minirt_init.c \
-    -lm
-echo without arguments ">>>"
-$exec
-print_return_value $?
+    -lm -D TEST=1; then
+    echo -e "$exec compile complete"
 
-test_case "1"
-test_case "1 2"
-test_case "."
-test_case ".."
-test_case "..."
-test_case "...."
-test_case "....."
-test_case "......"
-test_case "......."
-test_case demo/camera.rt
-test_case demo/cylinder.rt
-test_case demo/multiple_A.rt
-test_case demo/multiple_C.rt
-test_case demo/multiple_l_point_light.rt
-test_case demo/no_lights.rt
-test_case demo/plane.rt
-test_case demo/point_light.rt
-test_case demo/scene1.rt
-test_case demo/sphere.rt
+    echo without arguments ">>>"
+    $exec
+    print_return_value $?
+
+    test_case "1"
+    test_case "1 2"
+    test_case "."
+    test_case ".."
+    test_case "..."
+    test_case "...."
+    test_case "....."
+    test_case "......"
+    test_case "......."
+    test_case demo/camera.rt
+    test_case demo/cylinder.rt
+    test_case demo/multiple_A.rt
+    test_case demo/multiple_C.rt
+    test_case demo/multiple_l_point_light.rt
+    test_case demo/no_lights.rt
+    test_case demo/plane.rt
+    test_case demo/point_light.rt
+    test_case demo/scene1.rt
+    test_case demo/sphere.rt
+else
+    echo "$exec compile failed"
+fi

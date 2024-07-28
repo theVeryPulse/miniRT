@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/27 16:15:03 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/28 16:20:06 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@
 #include <fcntl.h>
 #include <stdint.h>
 
-#define TEST 0
+#ifndef TEST
+# define TEST 0
+#endif
 
 typedef	struct s_counter
 {
