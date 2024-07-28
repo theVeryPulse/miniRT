@@ -324,7 +324,7 @@ void	load_point_light_from_line(t_object *l, const char *line)
 	double		intensity;
 
 	ptr = line;
-	if (ft_strncmp("L ", line, 2) == 0)
+	if (ft_strncmp("L ", line, 2) == 0 || ft_strncmp("l ", line, 2) == 0)
 		ptr += 2;
 	skip_spaces(&ptr);
 	position.x = ft_atof(ptr);
@@ -336,7 +336,7 @@ void	load_point_light_from_line(t_object *l, const char *line)
 	skip_spaces(&ptr);
 	intensity = ft_atof(ptr);
 	*l = point_light(position, intensity);
-	if (l->intensity < 0.0 && l->intensity > 1.0)
+	if (l->intensity < 0.0 || l->intensity > 1.0)
 	{
 		printf("Error: point light intensity out of range [0, 1]: %f\n",
 			l->intensity);
@@ -344,19 +344,20 @@ void	load_point_light_from_line(t_object *l, const char *line)
 	}
 }
 
+void	load_light_from_line(t_object *object, const char *line)
 {
-	const char	*iter;
+	const char	*ptr;
 
-	iter = line;
-	skip_spaces(&iter);
-	if (ft_strncmp("A ", iter, 2) == 0)
-		load_ambient_light_from_line(object, iter);
-	else if (ft_strncmp("L ", iter, 2) == 0)
-	{
-	}
-	else if (ft_strncmp("l ", iter, 2) == 0)
-	{
-	}
+	ptr = line;
+	skip_spaces(&ptr);
+	if (ft_strncmp("A ", ptr, 2) == 0)
+		load_ambient_light_from_line(object, ptr);
+	else if (ft_strncmp("L ", ptr, 2) == 0)
+		load_point_light_from_line(object, ptr);
+	else if (ft_strncmp("l ", ptr, 2) == 0)
+		load_point_light_from_line(object, ptr);
+	else
+		printf("Error: unrecognised light type: %s\n", ptr);
 }
 
 void	load_object_from_line(t_object *object, const char *line)
