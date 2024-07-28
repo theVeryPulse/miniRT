@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/28 21:15:43 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/28 21:38:27 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -327,11 +327,15 @@ void	load_point_light_from_line(t_object *l, const char *line)
 	if (ft_strncmp("L ", line, 2) == 0 || ft_strncmp("l ", line, 2) == 0)
 		ptr += 2;
 	skip_spaces(&ptr);
+
+	/* Load coordinate */
 	position.x = ft_atof(ptr);
 	ptr = ft_strchr(ptr, ',') + 1;
 	position.y = ft_atof(ptr);
 	ptr = ft_strchr(ptr, ',') + 1;
 	position.z = ft_atof(ptr);
+	/* Load coordinate ends */
+
 	skip_number(&ptr);
 	skip_spaces(&ptr);
 	intensity = ft_atof(ptr);
@@ -393,43 +397,37 @@ void	load_object_from_line(t_object *object, const char *line)
  */
 void	load_camera_from_line(t_camera *camera, const char *line)
 {
-	const char	*iter;
+	const char	*ptr;
 
-	iter = line;
+	ptr = line;
 	if (ft_strncmp("C ", line, 2) == 0)
-		iter += 2;
+		ptr += 2;
 
-	skip_spaces(&iter);
+	skip_spaces(&ptr);
 
-	camera->position.x = ft_atof(iter);
-	skip_number(&iter);
-	if (*iter == ',')
-		++iter;
-	camera->position.y = ft_atof(iter);
-	skip_number(&iter);
-	if (*iter == ',')
-		++iter;
-	camera->position.z = ft_atof(iter);
-	skip_number(&iter);
+	/* load coordinate */
+	camera->position.x = ft_atof(ptr);
+	ptr = ft_strchr(ptr, ',') + 1;
+	camera->position.y = ft_atof(ptr);
+	ptr = ft_strchr(ptr, ',') + 1;
+	camera->position.z = ft_atof(ptr);
+	/* load coordinate ends */
 
-	skip_spaces(&iter);
+	skip_number(&ptr);
+	skip_spaces(&ptr);
 
-	camera->w.x = ft_atof(iter);
-	skip_number(&iter);
-	if (*iter == ',')
-		++iter;
-	camera->w.y = ft_atof(iter);
-	skip_number(&iter);
-	if (*iter == ',')
-		++iter;
-	camera->w.z = ft_atof(iter);
-	skip_number(&iter);
-	if (*iter == ',')
-		++iter;
+	/* load vector */
+	camera->w.x = ft_atof(ptr);
+	ptr = ft_strchr(ptr, ',') + 1;
+	camera->w.y = ft_atof(ptr);
+	ptr = ft_strchr(ptr, ',') + 1;
+	camera->w.z = ft_atof(ptr);
+	skip_number(&ptr);
+	/* load vector ends */
 
-	skip_spaces(&iter);
+	skip_spaces(&ptr);
 
-	minirt()->fov = ft_atof(iter);
+	minirt()->fov = ft_atof(ptr);
 	if (minirt()->fov < 0.0 || minirt()->fov > 180.0)
 	{
 		printf("Error: camera field of view out of range (0, 180): %f\n",
