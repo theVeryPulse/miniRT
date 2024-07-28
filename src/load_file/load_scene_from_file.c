@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/28 17:47:53 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/28 19:37:21 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "../t_vars.h"
 #include "../object/inc/object.h"
 #include "../../lib/libft/inc/libft.h"
+#include "../minirt.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -350,7 +351,7 @@ void	load_ambient_light_from_line(t_object *a, const char *line)
 	}
 }
 
-void	load_object_from_line(t_object *object, const char *line)
+void	load_light_from_line(t_object *object, const char *line)
 {
 	const char	*iter;
 
@@ -358,16 +359,21 @@ void	load_object_from_line(t_object *object, const char *line)
 	skip_spaces(&iter);
 	if (ft_strncmp("A ", iter, 2) == 0)
 		load_ambient_light_from_line(object, iter);
-	else if (ft_strncmp("C ", iter, 2) == 0)
-	{
-	}
 	else if (ft_strncmp("L ", iter, 2) == 0)
 	{
 	}
 	else if (ft_strncmp("l ", iter, 2) == 0)
 	{
 	}
-	else if (ft_strncmp("sp ", iter, 3) == 0)
+}
+
+void	load_object_from_line(t_object *object, const char *line)
+{
+	const char	*iter;
+
+	iter = line;
+	skip_spaces(&iter);
+	if (ft_strncmp("sp ", iter, 3) == 0)
 	{
 	}
 	else if (ft_strncmp("pl ", iter, 3) == 0)
@@ -381,21 +387,66 @@ void	load_object_from_line(t_object *object, const char *line)
 	}
 }
 
-void	load_objects(t_vars *vars, t_list **all_lines)
+/**
+ * @brief 
+ * 
+ * @param camera 
+ * @param line 
+ * @note
+ * Camera line format: 'C', coordinate, angle vector, fov
+ * Example:
+ * C -50,0,20           0,0,1        70
+ * 
+ */
+void	load_camera_from_line(t_camera *camera, const char *line)
 {
-	t_list	*node;
-	int		line_number;
-	t_object	*object;
+	const char	*iter;
 
-	node = *all_lines;
-	line_number = 1;
-	object = vars->scene.objects;
-	while (node)
+	iter = line;
+	if (ft_strncmp("C ", line, 2) == 0)
+		iter += 2;
+
+	skip_spaces(&iter);
+
+	camera->position.x = ft_atof(iter);
+	skip_number(&iter);
+	if (*iter == ',')
+		++iter;
+	camera->position.y = ft_atof(iter);
+	skip_number(&iter);
+	if (*iter == ',')
+		++iter;
+	camera->position.z = ft_atof(iter);
+	skip_number(&iter);
+
+	skip_spaces(&iter);
+
+	camera->w.x = ft_atof(iter);
+	skip_number(&iter);
+	if (*iter == ',')
+		++iter;
+	camera->w.y = ft_atof(iter);
+	skip_number(&iter);
+	if (*iter == ',')
+		++iter;
+	camera->w.z = ft_atof(iter);
+	skip_number(&iter);
+	if (*iter == ',')
+		++iter;
+
+	skip_spaces(&iter);
+
+	minirt()->fov = ft_atof(iter);
+	if (minirt()->fov < 0.0 || minirt()->fov > 180.0)
 	{
-		*object = load_object_from_line(node->content);
-		node = node->next;
-		++line_number;
-		++object;
+		printf("Error: camera field of view out of range (0, 180): %f\n",
+			minirt()->fov);
+		camera->error = true;
+	}
+	if (camera->w.x == 0.0 && camera->w.y == 0.0 && camera->w.z == 0.0)
+	{
+		printf("Error: camera direction vector cannot be zero.\n");
+		camera->error = true;
 	}
 }
 
@@ -434,11 +485,31 @@ void	load_scene_from_file(t_vars *vars, const char* filename)
 	allocate_objects(&vars->scene, count.cylinder + count.plane + count.sphere);
 	allocate_lights(&vars->scene, count.ambient_light + count.point_light
 		+ count.unique_point_light);
-	load_objects(vars, &all_lines);
-	// load_lights(vars, &all_lines);
+
+	t_object	*object;
+	t_object	*light;
+	t_list		*node;
+	const char	*iter;
+
+	object = vars->scene.objects;
+	light = vars->scene.lights;
+	node = all_lines;
+	while (node)
+	{
+		iter = node->content;
+		skip_spaces(&iter);
+		if (*iter == 'C')
+			load_camera_from_line(&vars->scene.camera, node->content);
+		else if (*iter == 's' || *iter == 'p' || *iter == 'c')
+			load_object_from_line(object++, node->content);
+		else if (*iter == 'A' || *iter == 'L' || *iter == 'l')
+			load_light_from_line(light++, node->content);
+		node = node->next;
+	}
 	/* initialize objects end */
 
-	/* [ ] Check if any light or object has error, if yes, free and exit */
+	/* [ ] Check if any lights, object, or camera has error, if yes, free and
+	exit */
 
 	ft_lstclear(&all_lines, free);
 }
