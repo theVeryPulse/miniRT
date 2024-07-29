@@ -6,13 +6,14 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 17:52:10 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/29 18:16:21 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "t_counter.h"
 #include "skip/inc/skip.h"
 #include "line_check/inc/line_check.h"
+#include "load_from_line/inc/load_from_line.h"
 
 #include "../scene/inc/scene.h"
 #include "../object/inc/object.h"
@@ -105,169 +106,6 @@ t_counter	basic_check(t_list	**all_lines)
 		exit(1);
 	}
 	return (count);
-}
-
-/**
- * @brief 
- * 
- * @param line 
- * @return t_object 
- * @note
- * Ambient light format: 'A', intensity, rgb
- * Example:
- * A  0.2                                         255,255,255   
- * 
- */
-void	load_ambient_light_from_line(t_object *a, const char *line)
-{
-	const char	*iter;
-
-	iter = line;
-	if (ft_strncmp("A ", line, 2) == 0)
-		iter += 2;
-	skip_spaces(&iter);
-	*a = ambient_light(ft_atof(iter));
-	if (a->intensity < 0.0 || a->intensity > 1.0)
-	{
-		printf("Error: ambient light intensity out of range [0, 1]: %f\n",
-			a->intensity);
-		a->error = true;
-	}
-}
-
-/**
- * @brief 
- * 
- * @param pl 
- * @param line 
- * @note
- * Point light format: 'L', coordinate, intensity, rgb
- * Example:
- *     L -40,0,30                        0.7            255,255,255
- * 
- */
-void	load_point_light_from_line(t_object *l, const char *line)
-{
-	const char	*ptr;
-	t_raw_point	position;
-	double		intensity;
-
-	ptr = line;
-	if (ft_strncmp("L ", line, 2) == 0 || ft_strncmp("l ", line, 2) == 0)
-		ptr += 2;
-	skip_spaces(&ptr);
-
-	/* Load coordinate */
-	position.x = ft_atof(ptr);
-	ptr = ft_strchr(ptr, ',') + 1;
-	position.y = ft_atof(ptr);
-	ptr = ft_strchr(ptr, ',') + 1;
-	position.z = ft_atof(ptr);
-	/* Load coordinate ends */
-
-	skip_number(&ptr);
-	skip_spaces(&ptr);
-	intensity = ft_atof(ptr);
-	*l = point_light(position, intensity);
-	if (l->intensity < 0.0 || l->intensity > 1.0)
-	{
-		printf("Error: point light intensity out of range [0, 1]: %f\n",
-			l->intensity);
-		l->error = true;
-	}
-}
-
-void	load_light_from_line(t_object *object, const char *line)
-{
-	const char	*ptr;
-
-	ptr = line;
-	skip_spaces(&ptr);
-	if (ft_strncmp("A ", ptr, 2) == 0)
-		load_ambient_light_from_line(object, ptr);
-	else if (ft_strncmp("L ", ptr, 2) == 0)
-		load_point_light_from_line(object, ptr);
-	else if (ft_strncmp("l ", ptr, 2) == 0)
-		load_point_light_from_line(object, ptr);
-	else
-		printf("Error: unrecognised light type: %s\n", ptr);
-}
-
-void	load_object_from_line(t_object *object, const char *line)
-{
-	const char	*iter;
-
-	iter = line;
-	skip_spaces(&iter);
-	if (ft_strncmp("sp ", iter, 3) == 0)
-	{
-	}
-	else if (ft_strncmp("pl ", iter, 3) == 0)
-	{
-	}
-	else if (ft_strncmp("cy ", iter, 3) == 0)
-	{
-	}
-	else
-	{
-	}
-}
-
-/**
- * @brief 
- * 
- * @param camera 
- * @param line 
- * @note
- * Camera line format: 'C', coordinate, angle vector, fov
- * Example:
- * C -50,0,20           0,0,1        70
- * 
- */
-void	load_camera_from_line(t_camera *camera, const char *line)
-{
-	const char	*ptr;
-
-	ptr = line;
-	if (ft_strncmp("C ", line, 2) == 0)
-		ptr += 2;
-
-	skip_spaces(&ptr);
-
-	/* load coordinate */
-	camera->position.x = ft_atof(ptr);
-	ptr = ft_strchr(ptr, ',') + 1;
-	camera->position.y = ft_atof(ptr);
-	ptr = ft_strchr(ptr, ',') + 1;
-	camera->position.z = ft_atof(ptr);
-	/* load coordinate ends */
-
-	skip_number(&ptr);
-	skip_spaces(&ptr);
-
-	/* load vector */
-	camera->w.x = ft_atof(ptr);
-	ptr = ft_strchr(ptr, ',') + 1;
-	camera->w.y = ft_atof(ptr);
-	ptr = ft_strchr(ptr, ',') + 1;
-	camera->w.z = ft_atof(ptr);
-	skip_number(&ptr);
-	/* load vector ends */
-
-	skip_spaces(&ptr);
-
-	minirt()->fov = ft_atof(ptr);
-	if (minirt()->fov < 0.0 || minirt()->fov > 180.0)
-	{
-		printf("Error: camera field of view out of range (0, 180): %f\n",
-			minirt()->fov);
-		camera->error = true;
-	}
-	if (camera->w.x == 0.0 && camera->w.y == 0.0 && camera->w.z == 0.0)
-	{
-		printf("Error: camera direction vector cannot be zero.\n");
-		camera->error = true;
-	}
 }
 
 void	get_all_lines(t_list **all_lines, const char *filename)

@@ -1,31 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_camera.h                                         :+:      :+:    :+:   */
+/*   load_object_from_line.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/15 19:48:08 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 18:18:53 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/29 18:08:40 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/29 18:27:21 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_CAMERA_H
-# define T_CAMERA_H
+#include "../skip/inc/skip.h"
+#include "../../object/inc/object.h"
+#include "../../../lib/libft/inc/libft.h"
+#include <stdio.h>
 
-#include "geometry/vector/t_point.h"
-#include <stdbool.h>
-
-typedef struct s_camera
+extern void	load_object_from_line(t_object *object, const char *line)
 {
-	t_point		position;
-	/* Unit direction vector of x-axis */
-	t_vector	u;
-	/* Unit direction vector of y-axis */
-	t_vector	v;
-	/* Unit direction vector of z-axis */
-	t_vector	w;
-	bool		error;
-}	t_camera;
+	const char	*iter;
 
-#endif /* T_CAMERA_H */
+	iter = line;
+	skip_spaces(&iter);
+	if (ft_strncmp("sp ", iter, 3) == 0)
+	{
+	}
+	else if (ft_strncmp("pl ", iter, 3) == 0)
+	{
+	}
+	else if (ft_strncmp("cy ", iter, 3) == 0)
+	{
+	}
+	else
+	{
+	}
+}
