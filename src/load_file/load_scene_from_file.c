@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 22:21:46 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/29 22:29:11 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ int	check_count(t_counter *count)
 		printf(ORANGE_WARNING"no lights defined.\n");
 	if (count->unique_point_light > 0 && count->point_light > 0)
 		error = printf(RED_ERROR"lights defined with both 'L' and 'l'\n");
+	if (count->sphere == 0 && count->plane == 0 && count->cylinder == 0)
+		printf(ORANGE_WARNING"no objects defined.\n");
 	return (error > 0);
 }
 
