@@ -6,13 +6,13 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 17:29:12 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 17:42:14 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/29 17:51:41 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../t_counter.h"
 #include "check_line_components.h"
-#include "../skip/skip.h"
+#include "../skip/inc/skip.h"
 #include "../../../lib/libft/inc/libft.h"
 
 int	check_line(const char *iter, t_counter *count)

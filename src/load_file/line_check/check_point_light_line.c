@@ -6,11 +6,11 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 17:28:06 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 17:28:14 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/29 17:51:41 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../skip/skip.h"
+#include "../skip/inc/skip.h"
 
 /**
  * @brief 

@@ -6,12 +6,12 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 17:36:22 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/29 17:52:10 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "t_counter.h"
-#include "skip/skip.h"
+#include "skip/inc/skip.h"
 #include "line_check/inc/line_check.h"
 
 #include "../scene/inc/scene.h"
