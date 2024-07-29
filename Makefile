@@ -38,6 +38,7 @@ FILES := \
 	src/load_file/load_from_line/load_camera_from_line.c \
 	src/load_file/load_from_line/load_light_from_line.c \
 	src/load_file/load_from_line/load_object_from_line.c \
+	src/load_file/load_from_line/load_vector.c \
 	src/load_file/load_scene_from_file.c \
 	src/load_file/skip/skip_coordinate.c \
 	src/load_file/skip/skip_number.c \
