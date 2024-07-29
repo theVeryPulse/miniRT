@@ -6,16 +6,20 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/28 21:38:27 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/29 17:36:22 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "t_counter.h"
 #include "skip/skip.h"
+#include "line_check/inc/line_check.h"
+
 #include "../scene/inc/scene.h"
-#include "../t_vars.h"
 #include "../object/inc/object.h"
-#include "../../lib/libft/inc/libft.h"
+#include "../t_vars.h"
 #include "../minirt.h"
+#include "../../lib/libft/inc/libft.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -26,17 +30,6 @@
 #ifndef TEST
 # define TEST 0
 #endif
-
-typedef	struct s_counter
-{
-	uint32_t	ambient_light;
-	uint32_t	camera;
-	uint32_t	unique_point_light;
-	uint32_t	point_light;
-	uint32_t	sphere;
-	uint32_t	plane;
-	uint32_t	cylinder;
-}	t_counter;
 
 int	check_count(t_counter *count)
 {
@@ -56,170 +49,6 @@ int	check_count(t_counter *count)
 	if (count->unique_point_light > 0 && count->point_light > 0)
 		error = printf("Error: lights defined with both 'L' and 'l'\n");
 	return (error > 0);
-}
-
-int	check_ambient_light_line(const char **iter)
-{
-	if (**iter == 'A')
-		++(*iter);
-	skip_spaces(iter);
-	skip_number(iter);
-	skip_spaces(iter);
-	skip_rgb(iter);
-	skip_spaces(iter);
-	return ((**iter != '\n') && (**iter != '\0'));
-}
-
-/**
- * @brief 
- * 
- * @param iter 
- * @return int 
- * @note
- * camera line format: C, coordinate, angle vector, fov
- * camera line example:
- *     C -50,0,20           0,0,1        70
- * 
- */
-int	check_camera_line(const char **iter)
-{
-	if (**iter == 'C')
-		++(*iter);
-	skip_spaces(iter);
-	skip_coordinate(iter);
-	skip_spaces(iter);
-	skip_coordinate(iter);
-	skip_spaces(iter);
-	skip_number(iter);
-	skip_spaces(iter);
-	return ((**iter != '\n') && (**iter != '\0'));
-}
-
-/**
- * @brief 
- * 
- * @param iter 
- * @return int
- * @note
- * point light line format: 'L', coordinate, intensity, rgb
- * example:
- *     L -40,0,30                        0.7            255,255,255
- * 
- */
-int	check_point_light_line(const char **iter)
-{
-	if (**iter == 'L' || **iter == 'l')
-		++(*iter);
-	skip_spaces(iter);
-	skip_coordinate(iter);
-	skip_spaces(iter);
-	skip_number(iter);
-	skip_spaces(iter);
-	skip_rgb(iter);
-	skip_spaces(iter);
-	return (((**iter) != '\n') && ((**iter) != '\0'));
-}
-
-/**
- * @brief 
- * 
- * @param iter 
- * @return int 
- * @note
- * sphere line format: 'sp', coordinate, radius, rgb
- * Example:
- * sp 0,0,20                         20             255,0,0
- */
-int	check_sphere_line(const char **iter)
-{
-	if (ft_strncmp("sp ", *iter, 3) == 0)
-		(*iter) += 2;
-	skip_spaces(iter);
-	skip_coordinate(iter);
-	skip_spaces(iter);
-	skip_number(iter);
-	skip_spaces(iter);
-	skip_rgb(iter);
-	skip_spaces(iter);
-	return (((**iter) != '\n') && ((**iter) != '\0'));
-}
-
-/**
- * @brief 
- * 
- * @param iter 
- * @return int 
- * plane line format: 'pl', coordinate, normal vector, rgv
- * pl 0,0,0             0,1.0,0                     255,0,225
- */
-int	check_plane_line(const char **iter)
-{
-	if (ft_strncmp("pl ", *iter, 3) == 0)
-		(*iter) += 2;
-	skip_spaces(iter);
-	skip_coordinate(iter);
-	skip_spaces(iter);
-	skip_coordinate(iter);
-	skip_spaces(iter);
-	skip_coordinate(iter);
-	skip_spaces(iter);
-	return (((**iter) != '\n') && ((**iter) != '\0'));
-}
-
-/**
- * @brief 
- * 
- * @param iter 
- * @return int 
- * @note
- * cylinder line format: 'cy', coordinate of center, axis vector, diameter,
- *                       height, rgb
- * cy 50.0,0.0,20.6     0,0,1.0      14.2  21.42    10,0,255
- * 
- */
-int	check_cylinder_line(const char **iter)
-{
-	if (ft_strncmp("cy ", *iter, 3) == 0)
-		(*iter) += 2;
-	skip_spaces(iter);
-	skip_coordinate(iter);
-	skip_spaces(iter);
-	skip_coordinate(iter);
-	skip_spaces(iter);
-	skip_number(iter);
-	skip_spaces(iter);
-	skip_number(iter);
-	skip_spaces(iter);
-	skip_rgb(iter);
-	skip_spaces(iter);
-	return (((**iter) != '\n') && ((**iter) != '\0'));
-}
-
-int	check_line(const char *iter, t_counter *count)
-{
-	int	line_error;
-
-	line_error = 0;
-	skip_spaces(&iter);
-	if (ft_strncmp("\n", iter, 2) == 0)
-		;
-	else if (ft_strncmp("A ", iter, 2) == 0 && ++count->ambient_light)
-		line_error |= check_ambient_light_line(&iter);
-	else if (ft_strncmp("C ", iter, 2) == 0 && ++count->camera)
-		line_error |= check_camera_line(&iter);
-	else if (ft_strncmp("L ", iter, 2) == 0 && ++count->unique_point_light)
-		line_error |= check_point_light_line(&iter);
-	else if (ft_strncmp("l ", iter, 2) == 0 && ++count->point_light)
-		line_error |= check_point_light_line(&iter);
-	else if (ft_strncmp("sp ",iter, 3) == 0 && ++count->sphere)
-		line_error |= check_sphere_line(&iter);
-	else if (ft_strncmp("pl ", iter, 3) == 0 && ++count->plane)
-		line_error |= check_plane_line(&iter);
-	else if (ft_strncmp("cy ", iter, 3) == 0 && ++count->cylinder)
-		line_error |= check_cylinder_line(&iter);
-	else
-		line_error |= 1;
-	return (line_error);
 }
 
 /**
@@ -462,6 +291,17 @@ void	get_all_lines(t_list **all_lines, const char *filename)
 	}
 	close(file);
 }
+
+// CAMERA
+// [x] C(amera)
+// LIGHTS
+// [x] A(mbient)
+// [x] L(ight)
+// [x] l(ight)
+// OBJECT
+// [ ] sp(here)
+// [ ] pl(ane)
+// [ ] cy(linder)
 
 void	load_scene_from_file(t_vars *vars, const char* filename)
 {

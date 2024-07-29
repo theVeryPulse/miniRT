@@ -28,6 +28,13 @@ FILES := \
 	src/geometry/vector/vec_normalized.c \
 	src/geometry/vector/vec_squared.c \
 	src/handle_keypress_event.c \
+	src/load_file/line_check/check_ambient_light_line.c \
+	src/load_file/line_check/check_camera_line.c \
+	src/load_file/line_check/check_cylinder_line.c \
+	src/load_file/line_check/check_line.c \
+	src/load_file/line_check/check_plane_line.c \
+	src/load_file/line_check/check_point_light_line.c \
+	src/load_file/line_check/check_sphere_line.c \
 	src/load_file/load_scene_from_file.c \
 	src/load_file/skip/skip_coordinate.c \
 	src/load_file/skip/skip_number.c \
@@ -94,4 +101,5 @@ debug: CFLAGS := -g -Wall -Wextra
 debug: re
 
 .PHONY: all, clean, fclean, re, debug
+
 
