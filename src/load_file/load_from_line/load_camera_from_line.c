@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 18:03:46 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 19:40:34 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/29 19:46:08 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,19 +41,19 @@ extern void	load_camera_from_line(t_camera *camera, const char *line)
 	load_vector(&camera->w, &line);
 	skip_spaces(&line);
 	minirt()->fov = ft_atof(line);
-	printf("Camera loaded: position: (%.1f, %.1f, %.1f), "
+	printf("\nCamera\nposition: (%.1f, %.1f, %.1f), "
 		"direction: (%.1f, %.1f, %.1f), fov: %.1f\n",
 		camera->position.x, camera->position.y, camera->position.z,
 		camera->w.x, camera->w.y, camera->w.z, minirt()->fov);
 	if (minirt()->fov <= 0.0 || minirt()->fov >= 180.0)
 	{
-		printf(RED_ERROR"camera field of view out of range (0, 180): %.1f\n",
+		printf(RED_ERROR"field of view out of range (0, 180): %.1f\n",
 			minirt()->fov);
 		camera->error = true;
 	}
 	if (camera->w.x == 0.0 && camera->w.y == 0.0 && camera->w.z == 0.0)
 	{
-		printf(RED_ERROR"camera direction vector cannot be zero.\n");
+		printf(RED_ERROR"direction vector cannot be zero.\n");
 		camera->error = true;
 	}
 }
