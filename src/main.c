@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 22:13:20 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/29 23:38:37 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -878,7 +878,7 @@ int	main(int argc, char const *argv[])
 
 	set_up_mlx(&vars);
 	set_up_hooks(&vars);
-	// render_image(&vars);
+	render_image(&vars);
 
 	put_image_to_window_vars(&vars);
 	mlx_loop(vars.mlx_ptr);

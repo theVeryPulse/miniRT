@@ -1,7 +1,8 @@
 NAME := miniRT
 
 CC := gcc
-CFLAGS := -Wall -Wextra -Werror
+# CFLAGS := -Wall -Wextra -Werror
+CFLAGS := -Wall -Wextra -g
 
 # ls src/**/*.c >> Makefile
 FILES := \
