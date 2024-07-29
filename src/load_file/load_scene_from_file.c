@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 18:16:21 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/29 22:21:46 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,23 +32,26 @@
 # define TEST 0
 #endif
 
+#define RED_ERROR "\033[91merror: \033[0m"
+#define ORANGE_WARNING "\033[93mwarning: \033[0m"
+
 int	check_count(t_counter *count)
 {
 	int	error;
 
 	error = 0;
 	if (count->camera < 1)
-		error = printf("Error: camera undefined.\n");
+		error = printf(RED_ERROR"camera undefined.\n");
 	if (count->camera > 1)
-		error = printf("Error: multiple cameras defined.\n");
+		error = printf(RED_ERROR"multiple cameras defined.\n");
 	if (count->ambient_light > 1)
-		error = printf("Error: multiple ambient lights defined.\n");
+		error = printf(RED_ERROR"multiple ambient lights defined.\n");
 	if (count->unique_point_light > 1)
-		error = printf("Error: multiple lights defined with 'L'.\n");
+		error = printf(RED_ERROR"multiple lights defined with 'L'.\n");
 	if (count->ambient_light == 0 && count->unique_point_light == 0)
-		printf("Warning: no lights defined.\n");
+		printf(ORANGE_WARNING"no lights defined.\n");
 	if (count->unique_point_light > 0 && count->point_light > 0)
-		error = printf("Error: lights defined with both 'L' and 'l'\n");
+		error = printf(RED_ERROR"lights defined with both 'L' and 'l'\n");
 	return (error > 0);
 }
 
@@ -79,7 +82,7 @@ int	check_format(t_list **all_lines, t_counter *count)
 	{
 		line_error = check_line(node->content, count);
 		if (line_error)
-			printf("Error: line %d unrecognised: %s", line_number,
+			printf(RED_ERROR"line %d unrecognised: %s", line_number,
 				(char *)node->content);
 		error |= line_error;
 		node = node->next;
@@ -110,13 +113,15 @@ t_counter	basic_check(t_list	**all_lines)
 
 void	get_all_lines(t_list **all_lines, const char *filename)
 {
-	int		file;
-	char	*line;
+	int					file;
+	char				*line;
+	static const char	*cannot_open_message = RED_ERROR"cannot open ";
 
 	file = open(filename, O_RDONLY);
 	if (file == -1)
 	{
-		write(STDOUT_FILENO, "Error: cannot open ", 20);
+		write(STDOUT_FILENO, cannot_open_message,
+			ft_strlen(cannot_open_message));
 		perror(filename);
 		exit(1);
 	}
@@ -193,7 +198,7 @@ void	check_argc(int argc)
 		exit(0);
 	else if (argc > 2)
 	{
-		printf("Error: there should only be 1 argument.\n");
+		printf(RED_ERROR"there should only be 1 argument.\n");
 		exit(1);
 	}
 }
@@ -202,17 +207,17 @@ void	check_filename(const char *filename)
 {
 	if (ft_strlen(filename) <= 3)
 	{
-		printf("Error: invalid filename: \"%s\"\n", filename);
+		printf(RED_ERROR"invalid filename: \"%s\"\n", filename);
 		exit(1);
 	}
 	if (!ft_strchr(filename, '.'))
 	{
-		printf("Error: unrecognised file format.\n");
+		printf(RED_ERROR"unrecognised file format.\n");
 		exit(1);
 	}
 	else if (ft_strncmp(".rt", ft_strrchr(filename, '.'), 4))
 	{
-		printf("Error: unrecognised file format: \"%s\"\n",
+		printf(RED_ERROR"unrecognised file format: \"%s\"\n",
 			ft_strrchr(filename, '.'));
 		exit(1);
 	}

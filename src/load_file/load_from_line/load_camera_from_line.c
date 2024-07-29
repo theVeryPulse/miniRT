@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 18:03:46 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 19:57:02 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/29 22:14:04 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#define RED_ERROR "\033[31merror: \033[0m"
+#define RED_ERROR "\033[91merror: \033[0m"
 
 /**
  * @brief 

@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/27 16:13:37 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/29 22:13:20 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@
 #include "../lib/libft/inc/libft.h"
 
 #include <stdbool.h>
+
+#define RED_ERROR "\033[91merror: \033[0m"
 
 bool	equals(double a, double b);
 
@@ -737,7 +739,7 @@ t_camera	camera(t_raw_point position, t_vector w)
 		}
 		else /* invalid vector */
 		{
-			printf("Error: Camera direction cannot be {0, 0, 0}\n");
+			printf(RED_ERROR"Camera direction cannot be {0, 0, 0}\n");
 			clean_exit(1);
 		}
 	}
@@ -832,7 +834,7 @@ void	check_argc(int argc)
 		exit(0);
 	else if (argc > 2)
 	{
-		printf("Error: there should only be 1 argument.\n");
+		printf(RED_ERROR"there should only be 1 argument.\n");
 		exit(1);
 	}
 }
@@ -841,17 +843,17 @@ void	check_filename(const char *filename)
 {
 	if (ft_strlen(filename) <= 3)
 	{
-		printf("Error: invalid filename: \"%s\"\n", filename);
+		printf(RED_ERROR"invalid filename: \"%s\"\n", filename);
 		exit(1);
 	}
 	if (!ft_strchr(filename, '.'))
 	{
-		printf("Error: unrecognised file format.\n");
+		printf(RED_ERROR"unrecognised file format.\n");
 		exit(1);
 	}
 	else if (ft_strncmp(".rt", ft_strrchr(filename, '.'), 4))
 	{
-		printf("Error: unrecognised file format: \"%s\"\n",
+		printf(RED_ERROR"unrecognised file format: \"%s\"\n",
 			ft_strrchr(filename, '.'));
 		exit(1);
 	}

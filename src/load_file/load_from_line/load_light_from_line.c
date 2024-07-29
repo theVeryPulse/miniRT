@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 18:06:46 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 19:58:16 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/29 22:14:04 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "../../../lib/libft/inc/libft.h"
 #include <stdio.h>
 
-#define RED_ERROR "\033[31merror: \033[0m"
+#define RED_ERROR "\033[91merror: \033[0m"
 
 extern void	load_light_from_line(t_object *object, const char *line);
 
