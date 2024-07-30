@@ -1,8 +1,16 @@
-gcc src/load_file/skip/skip_number.c \
-    tests/skip_number_test.c \
+test=skip_number
+gcc src/load_file/skip/"$test".c \
+    tests/"$test"_test.c \
     lib/libft/lib/libft.a \
-    -o skip_number_test \
-    -g -D SKIP_NUMBER_UNIT_TEST=1 \
-    && ./skip_number_test \
-    && rm skip_number_test
+    -o "$test"_test -g -Wall -Wextra \
+    && ./"$test"_test \
+    && rm "$test"_test
+
+test=skip_rgb
+gcc src/load_file/skip/"$test".c \
+    tests/"$test"_test.c \
+    lib/libft/lib/libft.a \
+    -o "$test"_test -g -Wall -Wextra \
+    && ./"$test"_test \
+    && rm "$test"_test
 
