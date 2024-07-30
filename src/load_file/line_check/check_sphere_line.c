@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 17:28:30 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 17:51:41 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/30 17:45:21 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,17 @@
  */
 int	check_sphere_line(const char **iter)
 {
+	int	error;
+
+	error = 0;
 	if (ft_strncmp("sp ", *iter, 3) == 0)
 		(*iter) += 2;
 	skip_spaces(iter);
-	skip_coordinate(iter);
+	error |= skip_coordinate(iter);
 	skip_spaces(iter);
-	skip_number(iter);
+	error |= skip_number(iter);
 	skip_spaces(iter);
-	skip_rgb(iter);
+	error |= skip_rgb(iter);
 	skip_spaces(iter);
-	return (((**iter) != '\n') && ((**iter) != '\0'));
+	return (error || (**iter != '\n' && **iter != '\0'));
 }
