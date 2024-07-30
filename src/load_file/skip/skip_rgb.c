@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 20:42:11 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 22:05:57 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/30 15:46:39 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,17 @@ void	skip_rgb(const char **iter)
 	while (ft_isdigit(**iter))
 		++(*iter);
 	if (**iter != ',')
-		return ;
+		return ((void)--(*iter));
 	++(*iter);
 	if (!ft_isdigit(**iter))
-		return ;
+		return ((void)--(*iter));
 	while (ft_isdigit(**iter))
 		++(*iter);
 	if (**iter != ',')
-		return ;
+		return ((void)--(*iter));
 	++(*iter);
 	if (!ft_isdigit(**iter))
-		return ;
+		return ((void)--(*iter));
 	while (ft_isdigit(**iter))
 		++(*iter);
 }

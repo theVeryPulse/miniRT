@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 20:41:33 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 22:05:33 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/30 15:37:32 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,18 @@
 void	skip_coordinate(const char **iter)
 {
 	if (**iter != '-' && **iter != '+' && !ft_isdigit(**iter))
-		return ;
+		return ((void)--(*iter));
 	skip_number(iter);
 	if (**iter != ',')
-		return ;
+		return ((void)--(*iter));
 	++(*iter);
 	if (**iter != '-' && **iter != '+' && !ft_isdigit(**iter))
-		return ;
+		return ((void)--(*iter));
 	skip_number(iter);
 	if (**iter != ',')
-		return ;
+		return ((void)--(*iter));
 	++(*iter);
 	if (**iter != '-' && **iter != '+' && !ft_isdigit(**iter))
-		return ;
+		return ((void)--(*iter));
 	skip_number(iter);
 }
