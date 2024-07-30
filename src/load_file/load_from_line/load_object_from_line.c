@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 18:08:40 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/30 00:13:05 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/30 17:58:37 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@
 extern void	load_object_from_line(t_object *object, const char *line);
 
 static int	load_rgb(t_argb *rgb, const char **line);
-static void	load_sphere_from_line(t_object *object, const char *line);
+static void	load_sphere_from_line(t_object *sphere, const char *line);
+static void	load_plane_from_line(t_object *plane, const char *line);
 
 /**
  * @brief 
@@ -45,8 +46,7 @@ extern void	load_object_from_line(t_object *object, const char *line)
 	if (ft_strncmp("sp ", line, 3) == 0)
 		load_sphere_from_line(object, line);
 	else if (ft_strncmp("pl ", line, 3) == 0)
-	{
-	}
+		load_plane_from_line(object, line);
 	else if (ft_strncmp("cy ", line, 3) == 0)
 	{
 	}
@@ -57,22 +57,24 @@ extern void	load_object_from_line(t_object *object, const char *line)
 
 static int	load_rgb(t_argb *rgb, const char **line)
 {
-	int	red;
-	int	green;
-	int	blue;
+	int	r;
+	int	g;
+	int	b;
 	int	error;
 
 	error = 0;
-	red = ft_atoi(*line);
+	r = ft_atoi(*line);
 	*line = ft_strchr(*line, ',') + 1;
-	green = ft_atoi(*line);
+	g = ft_atoi(*line);
 	*line = ft_strchr(*line, ',') + 1;
-	blue = ft_atoi(*line);
-	if (red < 0 || red > 255 || green < 0 || green > 255
-		|| blue < 0 || blue > 255)
-		error = printf("  "RED_ERROR"rgb out of range [0, 255]: %d,%d,%d\n",
-				red, green, blue);
-	*rgb = argb(0xFF, (uint8_t)red, (uint8_t)green, (uint8_t)blue);
+	b = ft_atoi(*line);
+	printf("  RGB: %d,%d,%d\n", r, g, b);
+	if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
+	{
+		printf("  "RED_ERROR"RGB out of range [0, 255]: %d,%d,%d\n", r, g, b);
+		error = 1;
+	}
+	*rgb = argb(0xFF, (uint8_t)r, (uint8_t)g, (uint8_t)b);
 	return (error > 0);
 }
 
@@ -104,9 +106,40 @@ static void	load_sphere_from_line(t_object *sphere, const char *line)
 	*sphere = colored_sphere((t_argb){0}, position, radius, SPEC_EXPO, REFLECT);
 	if (load_rgb(&(sphere->color), &line) != 0)
 		sphere->error = true;
-	else
-		printf("  color: %d,%d,%d\n", red_component(sphere->color),
-			green_component(sphere->color), blue_component(sphere->color));
 	if (radius <= 0 && printf("  "RED_ERROR"invalid radius: %.1f\n", radius))
 		sphere->error = true;
+}
+
+/**
+ * @brief 
+ * 
+ * @param plane 
+ * @param line 
+ * @note
+ * plane line format: 'pl', coordinate, normal vector, rgv
+ * pl 0,0,0             0,1.0,0                     255,0,225
+ */
+static void	load_plane_from_line(t_object *p, const char *line)
+{
+	t_raw_point	position;
+	t_vector	normal;
+
+	if (ft_strncmp("pl ", line, 3) == 0)
+		line += 2;
+	skip_spaces(&line);
+	load_point(&position, &line);
+	skip_spaces(&line);
+	load_vector(&normal, &line);
+	skip_spaces(&line);
+	printf("\nPlane\n  position: (%.1f, %.1f, %.1f), "
+		"normal: (%.1f, %.1f, %.1f)\n",
+		position.x, position.y, position.z, normal.x, normal.y, normal.z);
+	*p = plane((t_argb){0}, position, normal, SPEC_EXPO, REFLECT);
+	if (load_rgb(&(p->color), &line) != 0)
+		p->error = true;
+	if (p->direction.x == 0.0 && p->direction.y == 0.0 && p->direction.z == 0.0)
+	{
+		printf("  "RED_ERROR"normal vector cannot be zero.\n");
+		p->error = true;
+	}
 }
