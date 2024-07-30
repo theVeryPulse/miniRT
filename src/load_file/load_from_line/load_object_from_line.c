@@ -6,11 +6,13 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 18:08:40 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/30 17:58:37 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/30 19:55:07 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "load_vector.h"
+#include "load_rgb.h"
+#include "load_cylinder_from_line.h"
 #include "../skip/inc/skip.h"
 #include "../../object/inc/object.h"
 #include "../../../lib/libft/inc/libft.h"
@@ -30,7 +32,6 @@
 
 extern void	load_object_from_line(t_object *object, const char *line);
 
-static int	load_rgb(t_argb *rgb, const char **line);
 static void	load_sphere_from_line(t_object *sphere, const char *line);
 static void	load_plane_from_line(t_object *plane, const char *line);
 
@@ -48,34 +49,10 @@ extern void	load_object_from_line(t_object *object, const char *line)
 	else if (ft_strncmp("pl ", line, 3) == 0)
 		load_plane_from_line(object, line);
 	else if (ft_strncmp("cy ", line, 3) == 0)
-	{
-	}
+		load_cylinder_from_line(object, line);
 	else
 	{
 	}
-}
-
-static int	load_rgb(t_argb *rgb, const char **line)
-{
-	int	r;
-	int	g;
-	int	b;
-	int	error;
-
-	error = 0;
-	r = ft_atoi(*line);
-	*line = ft_strchr(*line, ',') + 1;
-	g = ft_atoi(*line);
-	*line = ft_strchr(*line, ',') + 1;
-	b = ft_atoi(*line);
-	printf("  RGB: %d,%d,%d\n", r, g, b);
-	if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
-	{
-		printf("  "RED_ERROR"RGB out of range [0, 255]: %d,%d,%d\n", r, g, b);
-		error = 1;
-	}
-	*rgb = argb(0xFF, (uint8_t)r, (uint8_t)g, (uint8_t)b);
-	return (error > 0);
 }
 
 /**

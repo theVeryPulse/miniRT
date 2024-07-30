@@ -6,11 +6,12 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 18:06:46 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 22:14:04 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/30 18:58:26 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "load_vector.h"
+#include "load_rgb.h"
 #include "../skip/inc/skip.h"
 #include "../../object/inc/object.h"
 #include "../../minirt.h"

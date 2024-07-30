@@ -6,11 +6,12 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 18:03:46 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 23:44:57 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/30 18:59:26 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "load_vector.h"
+#include "load_rgb.h"
 #include "../skip/inc/skip.h"
 #include "../../t_camera.h"
 #include "../../minirt.h"
