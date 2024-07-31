@@ -759,8 +759,12 @@ void	load_default_scene(t_scene *scene)
 	allocate_objects(scene, i);
 	// scene->objects[--i] = checkerboard_sphere(
 	// 	(t_point){10, -150, -2000}, 200.0, 10.0, 0.2);
+	// scene->objects[--i] = checkerboard_sphere(
+	// 	(t_raw_point){0, -0.02, -2}, 0.33, 10.0, 0.2);
+
 	scene->objects[--i] = checkerboard_sphere(
-		(t_raw_point){0, -0.02, -2}, 0.33, 10.0, 0.2);
+		(t_cs){(t_raw_point){0, -0.02, -2}, 0.33, 10.0, 0.2});
+		
 	scene->objects[--i] = colored_sphere(
 		RED, (t_raw_point){200.0/960.0, 200.0/960.0, -2500.0/960.0},
 		300.0/960.0, 5.0, 0.1);
