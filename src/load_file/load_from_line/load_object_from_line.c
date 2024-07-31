@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 18:08:40 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/31 21:13:19 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 21:39:14 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ static void	load_plane_from_line(t_object *p, const char *line)
 	skip_spaces(&line);
 	printf("  position: (%.1f, %.1f, %.1f), normal: (%.1f, %.1f, %.1f)\n",
 		position.x, position.y, position.z, normal.x, normal.y, normal.z);
-	*p = plane((t_argb){0}, position, normal, SPEC_EXPO, REFLECT);
+	*p = plane((t_p){(t_argb){0}, position, normal, SPEC_EXPO, REFLECT});
 	if (load_rgb(&(p->color), &line) != 0)
 		p->error = true;
 	if (p->direction.x == 0.0 && p->direction.y == 0.0 && p->direction.z == 0.0)
