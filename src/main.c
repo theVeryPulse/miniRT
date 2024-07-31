@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/31 18:07:13 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 18:18:52 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -708,6 +708,8 @@ void	precompute_values(t_scene *scene)
 			vec_normalize(&o->direction);
 		++o;
 	}
+	minirt()->eye_canvas_distance = minirt()->eye_canvas_distance = (WIDTH / 2)
+		/ tan((minirt()->fov / 2) * DEG_TO_RAD);
 }
 
 /** 
