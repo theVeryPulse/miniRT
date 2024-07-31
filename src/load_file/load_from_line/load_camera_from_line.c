@@ -6,11 +6,12 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 18:03:46 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 22:14:04 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 03:32:52 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "load_vector.h"
+#include "load_rgb.h"
 #include "../skip/inc/skip.h"
 #include "../../t_camera.h"
 #include "../../minirt.h"
@@ -19,6 +20,10 @@
 #include <stdbool.h>
 
 #define RED_ERROR "\033[91merror: \033[0m"
+
+/* camera() is defined in another file */
+
+t_camera	camera(t_raw_point position, t_vector w);
 
 /**
  * @brief 
@@ -31,29 +36,30 @@
  * C -50,0,20           0,0,1        70
  * 
  */
-extern void	load_camera_from_line(t_camera *camera, const char *line)
+extern void	load_camera_from_line(t_camera *c, const char *line)
 {
+	printf("\nCamera\n");
 	if (ft_strncmp("C ", line, 2) == 0)
 		line += 2;
 	skip_spaces(&line);
-	load_point(&camera->position, &line);
+	load_point(&c->position, &line);
 	skip_spaces(&line);
-	load_vector(&camera->w, &line);
+	load_vector(&c->w, &line);
 	skip_spaces(&line);
 	minirt()->fov = ft_atof(line);
-	printf("\nCamera\n  position: (%.1f, %.1f, %.1f), "
-		"direction: (%.1f, %.1f, %.1f), fov: %.1f\n",
-		camera->position.x, camera->position.y, camera->position.z,
-		camera->w.x, camera->w.y, camera->w.z, minirt()->fov);
+	printf("  position: (%.1f, %.1f, %.1f), direction: (%.1f, %.1f, %.1f), "
+		"fov: %.1f\n", c->position.x, c->position.y, c->position.z,
+		c->w.x, c->w.y, c->w.z, minirt()->fov);
+	*c = camera(c->position, c->w);
 	if (minirt()->fov <= 0.0 || minirt()->fov >= 180.0)
 	{
-		printf("  "RED_ERROR"field of view out of range (0, 180): %.1f\n",
+		printf("  " RED_ERROR "field of view out of range (0, 180): %.1f\n", 
 			minirt()->fov);
-		camera->error = true;
+		c->error = true;
 	}
-	if (camera->w.x == 0.0 && camera->w.y == 0.0 && camera->w.z == 0.0)
+	if (c->w.x == 0.0 && c->w.y == 0.0 && c->w.z == 0.0)
 	{
-		printf("  "RED_ERROR"direction vector cannot be zero.\n");
-		camera->error = true;
+		printf("  " RED_ERROR "direction vector cannot be zero.\n");
+		c->error = true;
 	}
 }

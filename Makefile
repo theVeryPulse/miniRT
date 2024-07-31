@@ -1,7 +1,8 @@
 NAME := miniRT
 
 CC := gcc
-CFLAGS := -Wall -Wextra -Werror
+# CFLAGS := -Wall -Wextra -Werror
+CFLAGS := -Wall -Wextra -g
 
 # ls src/**/*.c >> Makefile
 FILES := \
@@ -28,6 +29,7 @@ FILES := \
 	src/geometry/vector/vec_normalized.c \
 	src/geometry/vector/vec_squared.c \
 	src/handle_keypress_event.c \
+	src/load_file/basic_check.c \
 	src/load_file/line_check/check_ambient_light_line.c \
 	src/load_file/line_check/check_camera_line.c \
 	src/load_file/line_check/check_cylinder_line.c \
@@ -36,8 +38,10 @@ FILES := \
 	src/load_file/line_check/check_point_light_line.c \
 	src/load_file/line_check/check_sphere_line.c \
 	src/load_file/load_from_line/load_camera_from_line.c \
+	src/load_file/load_from_line/load_cylinder_from_line.c \
 	src/load_file/load_from_line/load_light_from_line.c \
 	src/load_file/load_from_line/load_object_from_line.c \
+	src/load_file/load_from_line/load_rgb.c \
 	src/load_file/load_from_line/load_vector.c \
 	src/load_file/load_scene_from_file.c \
 	src/load_file/skip/skip_coordinate.c \
@@ -104,3 +108,4 @@ debug: CFLAGS := -g -Wall -Wextra
 debug: re
 
 .PHONY: all, clean, fclean, re, debug
+

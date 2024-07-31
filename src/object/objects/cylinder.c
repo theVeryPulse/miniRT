@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 13:49:01 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/25 22:15:34 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 17:33:42 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ t_object	cylinder(
 {
 	t_object	cylinder;
 
+	cylinder = (t_object){0};
 	cylinder.category = Object;
 	cylinder.type = Cylinder;
 	cylinder.color = color;
@@ -35,5 +36,6 @@ t_object	cylinder(
 	cylinder.specular_exponent = specular_exponent;
 	cylinder.reflectivity = reflectivity;
 	cylinder.is_checkerboard = false;
+	cylinder.error = false;
 	return (cylinder);
 }

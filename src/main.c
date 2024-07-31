@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 22:13:20 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 18:18:52 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -697,20 +697,22 @@ void	render_image(t_vars *vars)
 
 void	precompute_values(t_scene *scene)
 {
-	t_object	*object;
+	t_object	*o;
 
-	object = scene->objects;
-	while (object < scene->objects + scene->object_count)
+	o = scene->objects;
+	while (o < scene->objects + scene->object_count)
 	{
-		if (object->radius > 0)
-			object->radius_squared = object->radius * object->radius;
-		if (!equals(0.0, vec_len(object->direction)))
-			vec_normalize(&object->direction);
-		++object;
+		if (o->radius > 0)
+			o->radius_squared = o->radius * o->radius;
+		if (o->direction.x != 0 || o->direction.y != 0 || o->direction.z != 0)
+			vec_normalize(&o->direction);
+		++o;
 	}
+	minirt()->eye_canvas_distance = minirt()->eye_canvas_distance = (WIDTH / 2)
+		/ tan((minirt()->fov / 2) * DEG_TO_RAD);
 }
 
-/**
+/** 
  * @brief 
  * 
  * @param position 
@@ -721,6 +723,7 @@ t_camera	camera(t_raw_point position, t_vector w)
 {
 	t_camera	camera;
 
+	camera = (t_camera){0};
 	camera.position = vec_mult(minirt()->unit_one, position);
 	if (w.x == 0 && w.z == 0)
 	{
@@ -739,14 +742,13 @@ t_camera	camera(t_raw_point position, t_vector w)
 		}
 		else /* invalid vector */
 		{
-			printf(RED_ERROR"Camera direction cannot be {0, 0, 0}\n");
-			clean_exit(1);
 		}
 	}
 	camera.w = vec_normalized(w);
 	camera.v = (t_vector){.x = 0, .y = 1, .z = 0};
 	camera.u = vec_cross(camera.v, camera.w);
 	camera.v = vec_cross(camera.w, camera.u);
+	camera.error = false;
 	return (camera);
 }
 
@@ -871,14 +873,13 @@ int	main(int argc, char const *argv[])
 	minirt_init(&vars);
 	// load_default_scene(&vars.scene);
 	// load_test_scene(&vars.scene);
-	load_scene_from_file(&vars, argv[1]);
+	load_scene_from_file(&vars.scene, argv[1]);
 
-	vars.scene.focus = &(vars.scene.objects)[0];
 	precompute_values(&vars.scene);
 
 	set_up_mlx(&vars);
 	set_up_hooks(&vars);
-	// render_image(&vars);
+	render_image(&vars);
 
 	put_image_to_window_vars(&vars);
 	mlx_loop(vars.mlx_ptr);

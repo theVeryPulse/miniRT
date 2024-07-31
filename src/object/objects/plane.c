@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:26:12 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/25 22:23:10 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 17:34:31 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ t_object	plane(
 
 	t_object	plane;
 
+	plane = (t_object){0};
 	plane.category = Object;
 	plane.type = Plane;
 	plane.color = color;
@@ -33,5 +34,6 @@ t_object	plane(
 	plane.specular_exponent = specular_exponent;
 	plane.reflectivity = reflectivity;
 	plane.radius = -1;
+	plane.error = false;
 	return (plane);
 }

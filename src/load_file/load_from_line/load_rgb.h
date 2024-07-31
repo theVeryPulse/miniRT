@@ -1,25 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   directional_light.c                                :+:      :+:    :+:   */
+/*   load_rgb.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/22 19:01:01 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/31 17:35:00 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/30 18:50:50 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/30 18:51:35 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../t_object.h"
+#ifndef LOAD_RGB_H
+# define LOAD_RGB_H
 
-t_object	directional_light(double intensity, t_vector direction)
-{
-	return ((t_object){
-		.type = DirectionalLight,
-		.category = Light,
-		.intensity = intensity,
-		.direction = direction,
-		.radius = -1,
-		.error = false
-	});
-}
+# include "../../color/t_argb.h"
+
+extern int	load_rgb(t_argb *rgb, const char **line);
+
+#endif /* LOAD_RGB_H */

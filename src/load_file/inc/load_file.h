@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 16:00:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/27 16:01:09 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 15:23:10 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,6 @@
 
 # include "../../t_vars.h"
 
-extern void	load_scene_from_file(t_vars *vars, const char* filename);
+extern void	load_scene_from_file(t_scene *scene, const char* filename);
 
 #endif /* LOAD_FILE_H */

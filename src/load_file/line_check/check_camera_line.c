@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 17:27:49 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 17:51:41 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/30 17:42:12 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,17 @@
  */
 int	check_camera_line(const char **iter)
 {
+	int	error;
+
+	error = 0;
 	if (**iter == 'C')
 		++(*iter);
 	skip_spaces(iter);
-	skip_coordinate(iter);
+	error |= skip_coordinate(iter);
 	skip_spaces(iter);
-	skip_coordinate(iter);
+	error |= skip_coordinate(iter);
 	skip_spaces(iter);
-	skip_number(iter);
+	error |= skip_number(iter);
 	skip_spaces(iter);
-	return ((**iter != '\n') && (**iter != '\0'));
+	return (error || ((**iter != '\n') && (**iter != '\0')));
 }

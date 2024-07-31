@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 17:27:11 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 17:51:41 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/30 17:40:30 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,15 @@
 
 int	check_ambient_light_line(const char **iter)
 {
+	int	error;
+
+	error = 0;
 	if (**iter == 'A')
 		++(*iter);
 	skip_spaces(iter);
-	skip_number(iter);
+	error |= skip_number(iter);
 	skip_spaces(iter);
-	skip_rgb(iter);
+	error |= skip_rgb(iter);
 	skip_spaces(iter);
-	return ((**iter != '\n') && (**iter != '\0'));
+	return (error || ((**iter != '\n') && (**iter != '\0')));
 }

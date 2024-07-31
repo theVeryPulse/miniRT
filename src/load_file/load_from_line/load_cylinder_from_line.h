@@ -1,25 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   directional_light.c                                :+:      :+:    :+:   */
+/*   load_cylinder_from_line.h                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/22 19:01:01 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/31 17:35:00 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/30 18:47:13 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/30 18:55:36 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../t_object.h"
+#ifndef LOAD_CYLINDER_FROM_LINE_H
+# define LOAD_CYLINDER_FROM_LINE_H
 
-t_object	directional_light(double intensity, t_vector direction)
-{
-	return ((t_object){
-		.type = DirectionalLight,
-		.category = Light,
-		.intensity = intensity,
-		.direction = direction,
-		.radius = -1,
-		.error = false
-	});
-}
+# include "../../object/t_object.h"
+
+extern void	load_cylinder_from_line(t_object *c, const char *line);
+
+#endif /* LOAD_CYLINDER_FROM_LINE_H */
