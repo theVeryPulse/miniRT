@@ -29,6 +29,7 @@ FILES := \
 	src/geometry/vector/vec_normalized.c \
 	src/geometry/vector/vec_squared.c \
 	src/handle_keypress_event.c \
+	src/load_file/basic_check.c \
 	src/load_file/line_check/check_ambient_light_line.c \
 	src/load_file/line_check/check_camera_line.c \
 	src/load_file/line_check/check_cylinder_line.c \
