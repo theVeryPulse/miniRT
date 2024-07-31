@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:27:16 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/31 21:08:18 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 21:23:33 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,17 @@ typedef struct s_s
 
 extern t_object	colored_sphere(t_s s);
 
-extern t_object	disk(t_argb color,
-					t_raw_point position,
-					t_vector direction,
-					double radius,
-					double specular_exponent,
-					double reflectivity);
+typedef struct s_d
+{
+	t_argb		color;
+	t_raw_point	position;
+	t_vector	direction;
+	double		radius;
+	double		specular_exponent;
+	double		reflectivity;
+}	t_d;
+
+extern t_object	disk(t_d d);
 
 extern t_object	plane(t_argb color,
 					t_raw_point position,

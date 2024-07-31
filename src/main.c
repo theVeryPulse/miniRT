@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/31 21:10:56 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 21:24:19 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -795,10 +795,10 @@ void	load_default_scene(t_scene *scene)
 		0x808080, (t_raw_point){0, 0, -3000.0/960.0},
 		(t_vector){0, 0, -1}, 10.0, 0.0);
 	// Disk mirror
-	scene->objects[--i] = disk(
+	scene->objects[--i] = disk((t_d){
 		WHITE, (t_raw_point){700.0/960.0, -150.0/960.0, -2500.0/960.0}, 
 		(t_vector){1, 0, -1}, 300.0/960.0, 1000.0,
-		0.9);
+		0.9});
 	scene->objects[--i] = cylinder(RED,
 		(t_raw_point){10.0/960.0, -540.0/960.0, -2000.0/960.0},
 		(t_vector){0, 1, 0}, 500.0/960.0, 200.0/960.0, 1.0, 0.5);
