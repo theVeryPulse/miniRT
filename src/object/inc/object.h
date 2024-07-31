@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:27:16 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/31 21:03:25 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 21:08:18 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,16 @@ typedef struct s_cs
 
 extern t_object	checkerboard_sphere(t_cs cs);
 
-extern t_object	colored_sphere(
-					t_argb color,
-					t_raw_point position,
-					double radius,
-					double specular_exponent,
-					double reflectivity);
+typedef struct s_s
+{
+	t_argb		color;
+	t_raw_point	position;
+	double		radius;
+	double		specular_exponent;
+	double		reflectivity;
+}	t_s;
+
+extern t_object	colored_sphere(t_s s);
 
 extern t_object	disk(t_argb color,
 					t_raw_point position,

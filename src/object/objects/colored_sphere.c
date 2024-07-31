@@ -6,32 +6,26 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:22:18 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/31 17:33:27 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 21:09:00 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../t_object.h"
+#include "../inc/object.h"
 #include "../../minirt.h"
 #include "../../geometry/inc/geometry.h"
 
-t_object	colored_sphere(
-	t_argb color,
-	t_raw_point position,
-	double radius,
-	double specular_exponent,
-	double reflectivity
-)
+t_object	colored_sphere(t_s s)
 {
 	t_object	sphere;
 
 	sphere = (t_object){0};
 	sphere.type = Sphere;
 	sphere.category = Object;
-	sphere.color = color;
-	sphere.position = vec_mult(minirt()->unit_one, position);
-	sphere.radius = radius * minirt()->unit_one;
-	sphere.specular_exponent = specular_exponent;
-	sphere.reflectivity = reflectivity;
+	sphere.color = s.color;
+	sphere.position = vec_mult(minirt()->unit_one, s.position);
+	sphere.radius = s.radius * minirt()->unit_one;
+	sphere.specular_exponent = s.specular_exponent;
+	sphere.reflectivity = s.reflectivity;
 	sphere.is_checkerboard = false;
 	sphere.error = false;
 	return (sphere);
