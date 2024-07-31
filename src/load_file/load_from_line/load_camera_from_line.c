@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 18:03:46 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/31 03:32:52 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 20:38:50 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ extern void	load_camera_from_line(t_camera *c, const char *line)
 	*c = camera(c->position, c->w);
 	if (minirt()->fov <= 0.0 || minirt()->fov >= 180.0)
 	{
-		printf("  " RED_ERROR "field of view out of range (0, 180): %.1f\n", 
+		printf("  " RED_ERROR "field of view out of range (0, 180): %.1f\n",
 			minirt()->fov);
 		c->error = true;
 	}

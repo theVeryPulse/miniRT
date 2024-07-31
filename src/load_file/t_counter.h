@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 17:29:42 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 17:30:10 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 20:38:36 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include <stdint.h>
 
-typedef	struct s_counter
+typedef struct s_counter
 {
 	uint32_t	ambient_light;
 	uint32_t	camera;

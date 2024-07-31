@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/31 15:40:28 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 20:38:22 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void	check_scene(t_scene *scene)
 	}
 }
 
-void	load_scene_from_file(t_scene *scene, const char* filename)
+void	load_scene_from_file(t_scene *scene, const char *filename)
 {
 	t_list		*all_lines;
 	t_counter	count;
