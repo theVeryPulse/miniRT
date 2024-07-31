@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 22:29:11 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 15:17:48 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,31 +137,8 @@ void	get_all_lines(t_list **all_lines, const char *filename)
 	close(file);
 }
 
-// CAMERA
-// [x] C(amera)
-// LIGHTS
-// [x] A(mbient)
-// [x] L(ight)
-// [x] l(ight)
-// OBJECT
-// [ ] sp(here)
-// [ ] pl(ane)
-// [ ] cy(linder)
-
-void	load_scene_from_file(t_vars *vars, const char* filename)
+void	load_scene_from_lines(t_vars *vars, t_list *all_lines)
 {
-	t_list	*all_lines;
-
-	get_all_lines(&all_lines, filename);
-
-	t_counter	count;
-
-	count = basic_check(&all_lines);
-	/* initialize objects */
-	allocate_objects(&vars->scene, count.cylinder + count.plane + count.sphere);
-	allocate_lights(&vars->scene, count.ambient_light + count.point_light
-		+ count.unique_point_light);
-
 	t_object	*object;
 	t_object	*light;
 	t_list		*node;
@@ -182,62 +159,40 @@ void	load_scene_from_file(t_vars *vars, const char* filename)
 			load_light_from_line(light++, ptr);
 		node = node->next;
 	}
-	/* initialize objects end */
+}
 
-	/* [ ] Check if any lights, object, or camera has error, if yes, free and
-	exit */
+void	check_scene(t_scene *scene)
+{
+	int	error;
+	int	i;
 
+	error = 0;
+	i = 0;
+	while (i < scene->object_count)
+		error |= scene->objects[i++].error;
+	i = 0;
+	while (i < scene->light_count)
+		error |= scene->lights[i++].error;
+	error |= scene->camera.error;
+	if (error)
+	{
+		free(scene->objects);
+		free(scene->lights);
+		exit(1);
+	}
+}
+
+void	load_scene_from_file(t_vars *vars, const char* filename)
+{
+	t_list		*all_lines;
+	t_counter	count;
+
+	get_all_lines(&all_lines, filename);
+	count = basic_check(&all_lines);
+	allocate_objects(&vars->scene, count.cylinder + count.plane + count.sphere);
+	allocate_lights(&vars->scene, count.ambient_light + count.point_light
+		+ count.unique_point_light);
+	load_scene_from_lines(vars, all_lines);
 	ft_lstclear(&all_lines, free);
+	check_scene(&vars->scene);
 }
-
-#if TEST
-
-#include "../minirt.h"
-
-void	check_argc(int argc)
-{
-	if (argc == 1)
-		exit(0);
-	else if (argc > 2)
-	{
-		printf(RED_ERROR"there should only be 1 argument.\n");
-		exit(1);
-	}
-}
-
-void	check_filename(const char *filename)
-{
-	if (ft_strlen(filename) <= 3)
-	{
-		printf(RED_ERROR"invalid filename: \"%s\"\n", filename);
-		exit(1);
-	}
-	if (!ft_strchr(filename, '.'))
-	{
-		printf(RED_ERROR"unrecognised file format.\n");
-		exit(1);
-	}
-	else if (ft_strncmp(".rt", ft_strrchr(filename, '.'), 4))
-	{
-		printf(RED_ERROR"unrecognised file format: \"%s\"\n",
-			ft_strrchr(filename, '.'));
-		exit(1);
-	}
-}
-
-int	main(int argc, const char **argv)
-{
-	t_vars	vars;
-
-	minirt_init(&vars);
-
-	/* load scene from file */
-	check_argc(argc);
-	check_filename(argv[1]);
-	load_scene_from_file(&vars, argv[1]);
-	/* load scene from file ends */
-
-	return (0);
-}
-
-#endif
