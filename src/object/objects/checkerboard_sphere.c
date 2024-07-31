@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:25:40 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/25 20:14:54 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 17:33:18 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ t_object	checkerboard_sphere(
 {
 	t_object	sphere;
 
+	sphere = (t_object){0};
 	sphere.category = Object;
 	sphere.type = Sphere;
 	sphere.position = vec_mult(minirt()->unit_one, position);
@@ -30,5 +31,6 @@ t_object	checkerboard_sphere(
 	sphere.specular_exponent = specular_exponent;
 	sphere.reflectivity = reflectivity;
 	sphere.is_checkerboard = true;
+	sphere.error = false;
 	return (sphere);
 }
