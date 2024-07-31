@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 17:30:36 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/23 22:14:28 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/28 16:39:57 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ typedef enum e_intersect
 typedef struct s_object
 {
 	/* Common properties */
-
+	bool			error;
 	t_category		category;
 	t_object_type	type;
 	t_point			position;

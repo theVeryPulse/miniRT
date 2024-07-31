@@ -1,35 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_vars.h                                           :+:      :+:    :+:   */
+/*   load_vector.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/02 02:11:29 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/27 13:44:22 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/29 18:31:41 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/29 18:58:16 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_VARS_H
-# define T_VARS_H
+#ifndef LOAD_VECTOR_H
+# define LOAD_VECTOR_H
 
-# include "scene/t_scene.h"
+# include "../../geometry/vector/vector.h"
 
-typedef struct s_img_vars
-{
-	void	*img_ptr;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_size;
-	int		endian;
-}	t_img_vars;
+extern void	load_point(t_raw_point *point, const char **line);
+extern void	load_vector(t_raw_point *point, const char **line);
 
-typedef struct s_vars
-{
-	void		*mlx_ptr;
-	void		*win_ptr;
-	t_img_vars	img_vars;
-	t_scene		scene;
-}	t_vars;
-
-#endif /* T_VARS_H */
+#endif /* LOAD_VECTOR_H */

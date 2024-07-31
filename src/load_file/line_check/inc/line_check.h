@@ -1,35 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_vars.h                                           :+:      :+:    :+:   */
+/*   line_check.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/02 02:11:29 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/27 13:44:22 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/29 17:31:34 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/29 17:42:42 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_VARS_H
-# define T_VARS_H
+#ifndef LINE_CHECK_H
+# define LINE_CHECK_H
 
-# include "scene/t_scene.h"
+# include "../../t_counter.h"
 
-typedef struct s_img_vars
-{
-	void	*img_ptr;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_size;
-	int		endian;
-}	t_img_vars;
+extern int	check_line(const char *iter, t_counter *count);
 
-typedef struct s_vars
-{
-	void		*mlx_ptr;
-	void		*win_ptr;
-	t_img_vars	img_vars;
-	t_scene		scene;
-}	t_vars;
-
-#endif /* T_VARS_H */
+#endif /* LINE_CHECK_H */

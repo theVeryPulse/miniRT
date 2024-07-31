@@ -1,35 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_vars.h                                           :+:      :+:    :+:   */
+/*   t_counter.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/02 02:11:29 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/27 13:44:22 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/29 17:29:42 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/29 17:30:10 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_VARS_H
-# define T_VARS_H
+#ifndef T_COUNTER_H
+# define T_COUNTER_H
 
-# include "scene/t_scene.h"
+# include <stdint.h>
 
-typedef struct s_img_vars
+typedef	struct s_counter
 {
-	void	*img_ptr;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_size;
-	int		endian;
-}	t_img_vars;
+	uint32_t	ambient_light;
+	uint32_t	camera;
+	uint32_t	unique_point_light;
+	uint32_t	point_light;
+	uint32_t	sphere;
+	uint32_t	plane;
+	uint32_t	cylinder;
+}	t_counter;
 
-typedef struct s_vars
-{
-	void		*mlx_ptr;
-	void		*win_ptr;
-	t_img_vars	img_vars;
-	t_scene		scene;
-}	t_vars;
-
-#endif /* T_VARS_H */
+#endif /* T_COUNTER_H */

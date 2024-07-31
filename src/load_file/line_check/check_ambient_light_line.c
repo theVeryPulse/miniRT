@@ -1,35 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_vars.h                                           :+:      :+:    :+:   */
+/*   check_ambient_light_line.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/02 02:11:29 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/27 13:44:22 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/29 17:27:11 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/30 17:40:30 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_VARS_H
-# define T_VARS_H
+#include "../skip/inc/skip.h"
 
-# include "scene/t_scene.h"
-
-typedef struct s_img_vars
+int	check_ambient_light_line(const char **iter)
 {
-	void	*img_ptr;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_size;
-	int		endian;
-}	t_img_vars;
+	int	error;
 
-typedef struct s_vars
-{
-	void		*mlx_ptr;
-	void		*win_ptr;
-	t_img_vars	img_vars;
-	t_scene		scene;
-}	t_vars;
-
-#endif /* T_VARS_H */
+	error = 0;
+	if (**iter == 'A')
+		++(*iter);
+	skip_spaces(iter);
+	error |= skip_number(iter);
+	skip_spaces(iter);
+	error |= skip_rgb(iter);
+	skip_spaces(iter);
+	return (error || ((**iter != '\n') && (**iter != '\0')));
+}

@@ -1,12 +1,12 @@
 NAME := miniRT
 
 CC := gcc
-CFLAGS := -Wall -Wextra -Werror
+# CFLAGS := -Wall -Wextra -Werror
+CFLAGS := -Wall -Wextra -g
 
 # ls src/**/*.c >> Makefile
 FILES := \
 	src/checkerboard_color_sphere.c \
-	src/equals.c \
 	src/color/alpha_component.c \
 	src/color/argb.c \
 	src/color/blue_component.c \
@@ -14,6 +14,7 @@ FILES := \
 	src/color/color_mult.c \
 	src/color/green_component.c \
 	src/color/red_component.c \
+	src/equals.c \
 	src/geometry/matrix/mx_mult.c \
 	src/geometry/matrix/mx_mult_mx.c \
 	src/geometry/matrix/mx_transpose.c \
@@ -28,6 +29,25 @@ FILES := \
 	src/geometry/vector/vec_normalized.c \
 	src/geometry/vector/vec_squared.c \
 	src/handle_keypress_event.c \
+	src/load_file/basic_check.c \
+	src/load_file/line_check/check_ambient_light_line.c \
+	src/load_file/line_check/check_camera_line.c \
+	src/load_file/line_check/check_cylinder_line.c \
+	src/load_file/line_check/check_line.c \
+	src/load_file/line_check/check_plane_line.c \
+	src/load_file/line_check/check_point_light_line.c \
+	src/load_file/line_check/check_sphere_line.c \
+	src/load_file/load_from_line/load_camera_from_line.c \
+	src/load_file/load_from_line/load_cylinder_from_line.c \
+	src/load_file/load_from_line/load_light_from_line.c \
+	src/load_file/load_from_line/load_object_from_line.c \
+	src/load_file/load_from_line/load_rgb.c \
+	src/load_file/load_from_line/load_vector.c \
+	src/load_file/load_scene_from_file.c \
+	src/load_file/skip/skip_coordinate.c \
+	src/load_file/skip/skip_number.c \
+	src/load_file/skip/skip_rgb.c \
+	src/load_file/skip/skip_spaces.c \
 	src/main.c \
 	src/minirt.c \
 	src/minirt_init.c \
@@ -38,7 +58,9 @@ FILES := \
 	src/object/objects/colored_sphere.c \
 	src/object/objects/cylinder.c \
 	src/object/objects/disk.c \
-	src/object/objects/plane.c
+	src/object/objects/plane.c \
+	src/scene/allocate_lights.c \
+	src/scene/allocate_objects.c
 
 # FILES := $(addprefix src/, $(FILES))
 OFILES := $(patsubst src/%.c, build/%.o, $(FILES))

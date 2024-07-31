@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 19:01:01 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/22 20:02:03 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 17:35:00 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ t_object	directional_light(double intensity, t_vector direction)
 		.category = Light,
 		.intensity = intensity,
 		.direction = direction,
-		.radius = -1
+		.radius = -1,
+		.error = false
 	});
 }

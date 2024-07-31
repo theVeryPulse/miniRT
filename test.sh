@@ -13,21 +13,45 @@ print_return_value() {
 
 test_case() {
     test_case=$1
-    echo -n -e $test_case ">>> "
+    echo -e "test case >>> " $test_case
     $exec $test_case
     print_return_value $?
 }
 
-echo without arguments ">>>"
-$exec
-print_return_value $?
+rm -f $exec
 
-test_case "1"
-test_case "1 2"
-test_case "."
-test_case ".."
-test_case "..."
-test_case "...."
-test_case "....."
-test_case "......"
-test_case "......."
+if gcc src/load_file/load_scene_from_file.c lib/libft/lib/libft.a
+    -o $exec \
+    -g -Wall -Wextra \
+    src/scene/*.c \
+    src/minirt.c \
+    src/minirt_init.c \
+    -lm -D TEST=1; then
+    echo -e "$exec compile complete"
+
+    echo without arguments ">>>"
+    $exec
+    print_return_value $?
+
+    test_case "1"
+    test_case "1 2"
+    test_case "."
+    test_case ".."
+    test_case "..."
+    test_case "...."
+    test_case "....."
+    test_case "......"
+    test_case "......."
+    test_case demo/camera.rt
+    test_case demo/cylinder.rt
+    test_case demo/multiple_A.rt
+    test_case demo/multiple_C.rt
+    test_case demo/multiple_l_point_light.rt
+    test_case demo/no_lights.rt
+    test_case demo/plane.rt
+    test_case demo/point_light.rt
+    test_case demo/scene1.rt
+    test_case demo/sphere.rt
+else
+    echo "$exec compile failed"
+fi

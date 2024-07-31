@@ -1,31 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_scene.h                                          :+:      :+:    :+:   */
+/*   load_from_line.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/02 17:48:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/21 20:30:37 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/29 18:14:47 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/29 19:41:06 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_SCENE_H
-# define T_SCENE_H
+#ifndef LOAD_FROM_LINE_H
+# define LOAD_FROM_LINE_H
 
-# include "object/t_object.h"
-# include "t_camera.h"
-# include <stdint.h>
+# include "../../../t_camera.h"
+# include "../../../object/inc/object.h"
 
-typedef struct s_scene
-{
-	/* Array of objects */
-	t_object	*objects;
-	uint8_t		object_count;
-	t_object	*lights;
-	uint8_t		light_count;
-	t_object	*focus;
-	t_camera	camera;
-}	t_scene;
+extern void	load_camera_from_line(t_camera *camera, const char *line);
+extern void	load_light_from_line(t_object *object, const char *line);
+extern void	load_object_from_line(t_object *object, const char *line);
 
-#endif /* T_SCENE_H */
+#endif /* LOAD_FROM_LINE_H */

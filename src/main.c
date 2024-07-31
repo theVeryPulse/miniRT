@@ -6,15 +6,17 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/25 22:30:57 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 18:18:52 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../lib/minilibx-linux/mlx.h"
 #include "t_vars.h"
+#include "load_file/inc/load_file.h"
+#include "scene/inc/scene.h"
 #include "object/inc/object.h"
 #include "window.h"
 #include "handle_keypress_event.h"
+#include "../lib/minilibx-linux/mlx.h"
 #include <X11/X.h> /* DestroyNotify, ButtonReleaseMask */
 #include <X11/keysym.h> /* XK_escape */
 
@@ -27,7 +29,6 @@
 #include <stddef.h> /* ptrdiff_t */
 
 #include "geometry/inc/geometry.h"
-#include "t_scene.h"
 
 #include <math.h>
 #include <unistd.h> /* STDERR */
@@ -35,6 +36,8 @@
 #include "../lib/libft/inc/libft.h"
 
 #include <stdbool.h>
+
+#define RED_ERROR "\033[91merror: \033[0m"
 
 bool	equals(double a, double b);
 
@@ -692,34 +695,24 @@ void	render_image(t_vars *vars)
 	
 }
 
-void	allocate_objects(t_scene *scene, unsigned int object_count)
-{
-	scene->objects = (t_object *)ft_calloc(object_count, sizeof(t_object));
-	scene->object_count = object_count;
-}
-
-void	allocate_lights(t_scene *scene, unsigned int light_count)
-{
-	scene->lights = (t_object *)ft_calloc(light_count, sizeof(t_object));
-	scene->light_count = light_count;
-}
-
 void	precompute_values(t_scene *scene)
 {
-	t_object	*object;
+	t_object	*o;
 
-	object = scene->objects;
-	while (object < scene->objects + scene->object_count)
+	o = scene->objects;
+	while (o < scene->objects + scene->object_count)
 	{
-		if (object->radius > 0)
-			object->radius_squared = object->radius * object->radius;
-		if (!equals(0.0, vec_len(object->direction)))
-			vec_normalize(&object->direction);
-		++object;
+		if (o->radius > 0)
+			o->radius_squared = o->radius * o->radius;
+		if (o->direction.x != 0 || o->direction.y != 0 || o->direction.z != 0)
+			vec_normalize(&o->direction);
+		++o;
 	}
+	minirt()->eye_canvas_distance = minirt()->eye_canvas_distance = (WIDTH / 2)
+		/ tan((minirt()->fov / 2) * DEG_TO_RAD);
 }
 
-/**
+/** 
  * @brief 
  * 
  * @param position 
@@ -730,6 +723,7 @@ t_camera	camera(t_raw_point position, t_vector w)
 {
 	t_camera	camera;
 
+	camera = (t_camera){0};
 	camera.position = vec_mult(minirt()->unit_one, position);
 	if (w.x == 0 && w.z == 0)
 	{
@@ -738,22 +732,23 @@ t_camera	camera(t_raw_point position, t_vector w)
 		{
 				camera.v = (t_vector){0, 0, -1},
 				camera.w = (t_vector){0, 1, 0};
+				return (camera);
 		}
 		else if (w.y < 0) /* Facing up from down */
 		{
 				camera.v = (t_vector){0, 0, 1},
 				camera.w = (t_vector){0, -1, 0};
+				return (camera);
 		}
 		else /* invalid vector */
 		{
-			printf("Error: Camera direction cannot be {0, 0, 0}\n");
-			clean_exit(1);
 		}
 	}
 	camera.w = vec_normalized(w);
 	camera.v = (t_vector){.x = 0, .y = 1, .z = 0};
 	camera.u = vec_cross(camera.v, camera.w);
 	camera.v = vec_cross(camera.w, camera.u);
+	camera.error = false;
 	return (camera);
 }
 
@@ -816,34 +811,70 @@ void	load_test_scene(t_scene *scene)
 	allocate_objects(scene, object_count);
 
 	// Wall in back
-	scene->objects[--object_count] = plane(WHITE, (t_point){0, -100, -2000},
+	scene->objects[--object_count] = plane(WHITE, (t_point){0.0/960.0, -100.0/960.0, -2000.0/960.0},
 		(t_vector){0, 0, 1}, 10.0, 0.0);
-	scene->objects[--object_count] = checkerboard_sphere(
-		(t_raw_point){0.01, 0.02, -2}, 0.4, 100, 0.0);
-	// scene->objects[--object_count] = cylinder(RED, (t_point){10, 10, -1500},
-	// 	(t_vector){1, 1, 0}, 200, 20, 1.0, 0.0);
-	// scene->objects[--object_count] = disk(RED, (t_point){400, 0, -1500},
-	// 	(t_vector){0, 0.1, -1}, 200, 1.0, 0.0);
+	// scene->objects[--object_count] = checkerboard_sphere(
+	// 	(t_raw_point){0.01, 0.02, -2}, 0.5, 100, 0.0);
+	scene->objects[--object_count] = cylinder(RED,
+		(t_point){10.0/960.0, 10.0/960.0, -1500.0/960.0},
+		(t_vector){0, 0, 1}, 200.0/960.0, 200.0/960.0, 1.0, 0.0);
+	// scene->objects[--object_count] = disk(RED, (t_point){400.0/960.0, 0, -1500.0/960.0},
+	// 	(t_vector){0, 0.1, -1}, 200.0/960.0, 1.0, 0.0);
 
 	unsigned int	light_count;
-	light_count = 1;
+	light_count = 2;
 	allocate_lights(scene, light_count);
 
-	scene->lights[--light_count] = point_light((t_vector){500, 1000, 0},
-		1);
-	// scene->lights[--light_count] = ambient_light(0.3);
+	scene->lights[--light_count] = point_light(
+		(t_vector){500.0/960.0, 1000.0/960.0, -1000.0/960.0}, 1);
+	scene->lights[--light_count] = ambient_light(0.3);
 }
 
-// int	main(int argc, char const *argv[])
-int	main(void)
+void	check_argc(int argc)
+{
+	if (argc == 1)
+		exit(0);
+	else if (argc > 2)
+	{
+		printf(RED_ERROR"there should only be 1 argument.\n");
+		exit(1);
+	}
+}
+
+void	check_filename(const char *filename)
+{
+	if (ft_strlen(filename) <= 3)
+	{
+		printf(RED_ERROR"invalid filename: \"%s\"\n", filename);
+		exit(1);
+	}
+	if (!ft_strchr(filename, '.'))
+	{
+		printf(RED_ERROR"unrecognised file format.\n");
+		exit(1);
+	}
+	else if (ft_strncmp(".rt", ft_strrchr(filename, '.'), 4))
+	{
+		printf(RED_ERROR"unrecognised file format: \"%s\"\n",
+			ft_strrchr(filename, '.'));
+		exit(1);
+	}
+}
+
+int	main(int argc, char const *argv[])
+// int	main(void)
 {
 	t_vars	vars;
 
-	minirt_init(&vars);
-	load_default_scene(&vars.scene);
-	// load_test_scene(&vars.scene);
+	check_argc(argc);
+	check_filename(argv[1]);
+	
 
-	vars.scene.focus = &(vars.scene.objects)[0];
+	minirt_init(&vars);
+	// load_default_scene(&vars.scene);
+	// load_test_scene(&vars.scene);
+	load_scene_from_file(&vars.scene, argv[1]);
+
 	precompute_values(&vars.scene);
 
 	set_up_mlx(&vars);
