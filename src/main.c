@@ -869,7 +869,7 @@ int	main(int argc, char const *argv[])
 	minirt_init(&vars);
 	// load_default_scene(&vars.scene);
 	// load_test_scene(&vars.scene);
-	load_scene_from_file(&vars, argv[1]);
+	load_scene_from_file(&vars.scene, argv[1]);
 
 	vars.scene.focus = &(vars.scene.objects)[0];
 	precompute_values(&vars.scene);
