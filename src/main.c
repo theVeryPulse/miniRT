@@ -739,8 +739,6 @@ t_camera	camera(t_raw_point position, t_vector w)
 		}
 		else /* invalid vector */
 		{
-			printf(RED_ERROR"Camera direction cannot be {0, 0, 0}\n");
-			clean_exit(1);
 		}
 	}
 	camera.w = vec_normalized(w);
