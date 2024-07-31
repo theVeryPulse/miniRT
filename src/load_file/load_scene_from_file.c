@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/31 15:26:40 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 15:29:28 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,24 +93,22 @@ int	check_format(t_list **all_lines, t_counter *count)
 	return (error > 0);
 }
 
-t_counter	basic_check(t_list	**all_lines)
+void	basic_check(t_list	**all_lines, t_counter *count)
 {
-	t_counter	count;
-	int			error;
+	int	error;
 
-	count = (t_counter){0};
+	*count = (t_counter){0};
 	error = 0;
-	error |= check_format(all_lines, &count);
-	error |= check_count(&count);
+	error |= check_format(all_lines, count);
+	error |= check_count(count);
 	printf("A: %u, C: %u, L: %u, sp: %u, pl: %u, cy: %u, l: %u\n",
-		count.ambient_light, count.camera, count.unique_point_light,
-		count.sphere, count.plane, count.cylinder, count.point_light);
+		count->ambient_light, count->camera, count->unique_point_light,
+		count->sphere, count->plane, count->cylinder, count->point_light);
 	if (error)
 	{
 		ft_lstclear(all_lines, free);
 		exit(1);
 	}
-	return (count);
 }
 
 void	get_all_lines(t_list **all_lines, const char *filename)
@@ -188,7 +186,7 @@ void	load_scene_from_file(t_scene *scene, const char* filename)
 	t_counter	count;
 
 	get_all_lines(&all_lines, filename);
-	count = basic_check(&all_lines);
+	basic_check(&all_lines, &count);
 	allocate_objects(scene, count.cylinder + count.plane + count.sphere);
 	allocate_lights(scene, count.ambient_light + count.point_light
 		+ count.unique_point_light);
