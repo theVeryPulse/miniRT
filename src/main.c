@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/31 17:36:50 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 18:07:13 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -697,20 +697,20 @@ void	render_image(t_vars *vars)
 
 void	precompute_values(t_scene *scene)
 {
-	t_object	*object;
+	t_object	*o;
 
-	object = scene->objects;
-	while (object < scene->objects + scene->object_count)
+	o = scene->objects;
+	while (o < scene->objects + scene->object_count)
 	{
-		if (object->radius > 0)
-			object->radius_squared = object->radius * object->radius;
-		if (!equals(0.0, vec_len(object->direction)))
-			vec_normalize(&object->direction);
-		++object;
+		if (o->radius > 0)
+			o->radius_squared = o->radius * o->radius;
+		if (o->direction.x != 0 || o->direction.y != 0 || o->direction.z != 0)
+			vec_normalize(&o->direction);
+		++o;
 	}
 }
 
-/**
+/** 
  * @brief 
  * 
  * @param position 
