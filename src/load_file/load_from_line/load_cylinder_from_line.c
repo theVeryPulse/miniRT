@@ -6,13 +6,14 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 18:45:06 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/30 19:54:51 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 03:22:45 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "load_vector.h"
 #include "load_rgb.h"
 #include "../skip/inc/skip.h"
+#include "../../minirt.h"
 #include "../../object/inc/object.h"
 #include "../../../lib/libft/inc/libft.h"
 #include <stdio.h>
@@ -28,6 +29,18 @@
 #endif
 
 #define RED_ERROR "\033[91merror: \033[0m"
+
+/* External function */
+
+extern void			load_cylinder_from_line(t_object *c, const char *line);
+
+/* Helper functions */
+
+static t_raw_point	bottom_center(t_raw_point center, t_vector axis,
+						double height);
+static void			print_cylinder_overview(t_object *c, t_raw_point center,
+						double radius, double height);
+static void			check_cylinder(t_object *c, double radius, double height);
 
 /**
  * @brief 
@@ -46,6 +59,7 @@ extern void	load_cylinder_from_line(t_object *c, const char *line)
 	double		radius;
 	double		height;
 
+	printf("\nCylinder\n");
 	if (ft_strncmp("cy ", line, 3) == 0)
 		line += 2;
 	skip_spaces(&line);
@@ -60,26 +74,42 @@ extern void	load_cylinder_from_line(t_object *c, const char *line)
 	height = ft_atof(line);
 	skip_number(&line);
 	skip_spaces(&line);
-	
-	printf("\nCylinder\n  bottom center: (%.1f, %.1f, %.1f), axis: (%.1f, %.1f, %.1f),"
-		" radius: %.1f, height: %.1f\n",
-		center.x, center.y, center.z, axis.x, axis.y, axis.z, radius, height);
-	
-	t_raw_point	bottom_center;
-	center = vec_minus(center, vec_mult(height / 2, axis));
-
-	*c = cylinder((t_argb){0}, bottom_center, axis, radius, height,
-		SPEC_EXPO, REFLECT);
+	*c = cylinder((t_argb){0}, bottom_center(center, axis, height), axis,
+			radius, height, SPEC_EXPO, REFLECT);
+	print_cylinder_overview(c, center, radius, height);
 	load_rgb(&(c->color), &line);
+	check_cylinder(c, radius, height);
+}
 
-	if (radius <= 0 && printf("  "RED_ERROR"invalid radius: %.1f\n", radius))
+static t_raw_point	bottom_center(t_raw_point center, t_vector axis,
+						double height)
+{
+	return (vec_minus(center, vec_mult(height / 2, axis)));
+}
+
+static void	print_cylinder_overview(t_object *c, t_raw_point center,
+		double radius, double height)
+{
+	printf("  center: (%.1f, %.1f, %.1f), axis: (%.1f, %.1f, %.1f), "
+		"radius: %.1f, height: %.1f\n", center.x, center.y, center.z,
+		c->direction.x, c->direction.y, c->direction.z, radius, height);
+}
+
+static void	check_cylinder(t_object *c, double radius, double height)
+{
+	if (radius <= 0)
+	{
+		printf("  "RED_ERROR"invalid radius: %.1f\n", radius);
 		c->error = true;
-	if (height <= 0 && printf("  "RED_ERROR"invalid height: %.1f\n", height))
+	}
+	if (height <= 0)
+	{
+		printf("  "RED_ERROR"invalid height: %.1f\n", c->height);
 		c->error = true;
+	}
 	if (c->direction.x == 0.0 && c->direction.y == 0.0 && c->direction.z == 0.0)
 	{
 		printf("  "RED_ERROR"axis vector cannot be zero.\n");
 		c->error = true;
 	}
-
 }
