@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 18:08:40 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/30 19:55:07 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 03:44:15 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ static void	load_sphere_from_line(t_object *sphere, const char *line)
 	t_raw_point	position;
 	double		radius;
 
+	printf("\nSphere\n");
 	if (ft_strncmp("sp ", line, 3) == 0)
 		line += 2;
 	skip_spaces(&line);
@@ -78,7 +79,7 @@ static void	load_sphere_from_line(t_object *sphere, const char *line)
 	radius = ft_atof(line);
 	skip_number(&line);
 	skip_spaces(&line);
-	printf("\nSphere\n  position: (%.1f,%.1f,%.1f), radius: %.1f\n",
+	printf("  position: (%.1f,%.1f,%.1f), radius: %.1f\n",
 		position.x, position.y, position.z, radius);
 	*sphere = colored_sphere((t_argb){0}, position, radius, SPEC_EXPO, REFLECT);
 	if (load_rgb(&(sphere->color), &line) != 0)
@@ -101,6 +102,7 @@ static void	load_plane_from_line(t_object *p, const char *line)
 	t_raw_point	position;
 	t_vector	normal;
 
+	printf("\nPlane\n");
 	if (ft_strncmp("pl ", line, 3) == 0)
 		line += 2;
 	skip_spaces(&line);
@@ -108,8 +110,7 @@ static void	load_plane_from_line(t_object *p, const char *line)
 	skip_spaces(&line);
 	load_vector(&normal, &line);
 	skip_spaces(&line);
-	printf("\nPlane\n  position: (%.1f, %.1f, %.1f), "
-		"normal: (%.1f, %.1f, %.1f)\n",
+	printf("  position: (%.1f, %.1f, %.1f), normal: (%.1f, %.1f, %.1f)\n",
 		position.x, position.y, position.z, normal.x, normal.y, normal.z);
 	*p = plane((t_argb){0}, position, normal, SPEC_EXPO, REFLECT);
 	if (load_rgb(&(p->color), &line) != 0)

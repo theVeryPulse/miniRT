@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 18:06:46 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/30 18:58:26 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 03:44:31 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,13 @@ static void	load_ambient_light_from_line(t_object *a, const char *line)
 {
 	const char	*iter;
 
+	printf("\nAmbient Light\n");
 	iter = line;
 	if (ft_strncmp("A ", line, 2) == 0)
 		iter += 2;
 	skip_spaces(&iter);
 	*a = ambient_light(ft_atof(iter));
-	printf("\nAmbient Light\n  intensity: %.1f\n", a->intensity);
+	printf("  intensity: %.1f\n", a->intensity);
 	if (a->intensity < 0.0 || a->intensity > 1.0)
 	{
 		printf("  "RED_ERROR"intensity out of range [0, 1]: %.1f\n",
@@ -92,8 +93,8 @@ static void	load_point_light_from_line(t_object *l, const char *line)
 	const char	*ptr;
 	t_raw_point	position;
 	double		intensity;
-	double		unit_one;
 
+	printf("\nPoint Light\n");
 	ptr = line;
 	if (ft_strncmp("L ", line, 2) == 0 || ft_strncmp("l ", line, 2) == 0)
 		ptr += 2;
@@ -101,11 +102,9 @@ static void	load_point_light_from_line(t_object *l, const char *line)
 	load_point(&position, &ptr);
 	skip_spaces(&ptr);
 	intensity = ft_atof(ptr);
+	printf("  position: (%.1f, %.1f, %.1f), intensity: %.1f\n",
+		position.x, position.y, position.z, intensity);
 	*l = point_light(position, intensity);
-	unit_one = minirt()->unit_one;
-	printf("\nPoint Light\n  position: (%.1f, %.1f, %.1f), intensity: %.1f\n",
-			l->position.x / unit_one, l->position.y / unit_one,
-			l->position.z / unit_one, l->intensity);
 	if (l->intensity < 0.0 || l->intensity > 1.0)
 	{
 		printf("  "RED_ERROR"point light intensity out of range [0, 1]: %.1f\n",
