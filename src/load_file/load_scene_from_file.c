@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/31 15:23:37 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 15:26:40 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,4 +195,5 @@ void	load_scene_from_file(t_scene *scene, const char* filename)
 	load_scene_from_lines(scene, all_lines);
 	ft_lstclear(&all_lines, free);
 	check_scene(scene);
+	scene->focus = scene->objects;
 }
