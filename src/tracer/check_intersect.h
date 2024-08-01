@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:15:28 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 17:18:36 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 17:23:16 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,8 @@ extern void	ray_plane_intersect(
 				double *closest_t);
 
 extern void	ray_disk_intersect(
-				double *t,
-				t_point ray_origin,
-				t_vector ray_direction,
+				t_ray *ray,
 				t_object *disk,
-				double t_min,
-				double t_max,
 				t_object **closest_object,
 				double *closest_t);
 
