@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "t_triplet.h"
 #include "../ray/t_ray.h"
 #include "../geometry/inc/geometry.h"
 #include "../object/inc/object.h"
@@ -64,17 +65,16 @@ void	ray_sphere_intersect(
 			t_object **closest_object,
 			double *closest_t)
 {
-	double		b;
-	double		c;
+	t_triplet	d3;
 	t_vector	o_minus_c;
 	double		discriminant;
 	double		q;
 	double		t[2];
 
 	o_minus_c = vec_minus(ray->origin, sphere->position);
-	b = 2 * vec_dot(o_minus_c, ray->direction);
-	c = vec_dot(o_minus_c, o_minus_c) - sphere->radius_squared;
-	discriminant = b * b - 4 * ray->direction_squared * c;
+	d3.b = 2 * vec_dot(o_minus_c, ray->direction);
+	d3.c = vec_dot(o_minus_c, o_minus_c) - sphere->radius_squared;
+	discriminant = d3.b * d3.b - 4 * ray->direction_squared * d3.c;
 	if (discriminant < 0)
 	{
 		t[0] = INFINITY;
@@ -82,9 +82,9 @@ void	ray_sphere_intersect(
 	}
 	else
 	{
-		q = -0.5 * (b + sign(b) * sqrt(discriminant));
+		q = -0.5 * (d3.b + sign(d3.b) * sqrt(discriminant));
 		t[0] = q / ray->direction_squared;
-		t[1] = c / q;
+		t[1] = d3.c / q;
 	}
 	update_solution(t, ray, sphere, closest_object, closest_t);
 }
