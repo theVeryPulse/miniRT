@@ -6,10 +6,12 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:45:59 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 18:55:07 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 20:18:57 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "check_intersect.h"
+#include "../minirt.h"
 #include "../ray/t_ray.h"
 #include "../geometry/inc/geometry.h"
 #include "../object/inc/object.h"
@@ -114,63 +116,30 @@ void	ray_cylinder_intersect(
 {
 	double		t[2];
 	t_triplet	d3;
+	t_object	bottom_face;
+	t_object	top_face;
 
 	calculate_abc(&d3, ray, cylinder);
 	calculate_t1t2_on_curved_surface(t, &d3);
 	update_solution_if_t_in_cylinder_height(ray, cylinder, closest_object,
 		closest_t, t);
-
-	/* Caps */
-	double		denominator;
-	t_vector	intersect;
-	t_vector	center_to_intersect;
-	double		distance_squared;
-	
-	/* Bottom cap */
-	denominator = vec_dot(cylinder->direction, ray->direction);
-	if (!equals(denominator, 0.0))
+	bottom_face = disk((t_d){cylinder->color,
+		vec_div(cylinder->position, minirt()->unit_one), cylinder->direction,
+		cylinder->radius / minirt()->unit_one, cylinder->specular_exponent,
+		cylinder->reflectivity});
+	top_face = disk((t_d){cylinder->color,
+		vec_div(vec_add(cylinder->position,
+			vec_mult(cylinder->height, cylinder->direction)), minirt()->unit_one),
+		cylinder->direction, cylinder->radius / minirt()->unit_one,
+		cylinder->specular_exponent, cylinder->reflectivity});
+	if (ray_disk_intersect(ray, &bottom_face, closest_object, closest_t))
 	{
-		t_point	disk_center = cylinder->position;
-		*t = vec_dot(vec_minus(disk_center, ray->origin),
-			cylinder->direction) / denominator;
-		intersect = vec_add(ray->origin, vec_mult(*t, ray->direction));
-		center_to_intersect = vec_minus(intersect, disk_center);
-		distance_squared = vec_squared(center_to_intersect);
-		if (distance_squared <= cylinder->radius_squared
-			&& *t >= ray->t_min && *t <= ray->t_max && *t < *closest_t)
-		{
-			*closest_t = *t;
-			*closest_object = cylinder;
-			if (denominator < 0)
-				(*closest_object)->backside = true;
-			else
-				(*closest_object)->backside = false;
-			cylinder->ray_intersects = BottomFace;
-		}
+		cylinder->ray_intersects = BottomFace;
+		*closest_object = cylinder;
 	}
-
-	/* Top cap */
-	denominator = vec_dot(cylinder->direction, ray->direction);
-	if (!equals(denominator, 0.0))
+	if (ray_disk_intersect(ray, &top_face, closest_object, closest_t))
 	{
-		t_point	disk_center;
-		disk_center = vec_add(cylinder->position,
-			vec_mult(cylinder->height, cylinder->direction));
-		*t = vec_dot(vec_minus(disk_center, ray->origin), cylinder->direction)
-			/ denominator;
-		intersect = vec_add(ray->origin, vec_mult(*t, ray->direction));
-		center_to_intersect = vec_minus(intersect, disk_center);
-		distance_squared = vec_squared(center_to_intersect);
-		if (distance_squared <= cylinder->radius_squared
-			&& *t >= ray->t_min && *t <= ray->t_max && *t < *closest_t)
-		{
-			*closest_t = *t;
-			*closest_object = cylinder;
-			if (denominator < 0)
-				(*closest_object)->backside = true;
-			else
-				(*closest_object)->backside = false;
-			cylinder->ray_intersects = TopFace;
-		}
+		cylinder->ray_intersects = TopFace;
+		*closest_object = cylinder;
 	}
 }

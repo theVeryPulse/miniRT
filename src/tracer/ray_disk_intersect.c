@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:34:07 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 17:22:07 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 19:22:40 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "../object/inc/object.h"
 #include "../maths/inc/maths.h"
 
-void	ray_disk_intersect(
+bool	ray_disk_intersect(
 			t_ray *ray,
 			t_object *disk,
 			t_object **closest_object,
@@ -44,6 +44,8 @@ void	ray_disk_intersect(
 				(*closest_object)->backside = true;
 			else
 				(*closest_object)->backside = false;
+			return (true);
 		}
 	}
+	return (false);
 }
