@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 23:13:44 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 23:44:21 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,47 +224,40 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 
 extern t_argb	get_checkerboard_sphere_color(t_point pt, t_argb color1, t_argb color2);
 
-t_argb	cast_ray(t_scene *scene, t_ray *ray, uint8_t recursion_depth)
+t_argb	cast_ray(t_scene *scene, t_ray *ray, uint8_t recursion_depth);
+
+t_argb	shade(t_scene *scene, t_ray *ray, t_closest *closest,
+			uint8_t recursion_depth)
 {
-	t_closest	closest;
-
-	closest.object = NULL;
-	closest.t = INFINITY;
-
-	if (!trace(scene, ray, &closest))
-		return (minirt()->background_color);
-
-	/* shade(): determining the color of the intersect point */
-
 	t_point		intersection;
 	t_vector	unit_normal;
 	double		intensity;
 	t_argb		local_color;
 
-	intersection = vec_add(ray->origin, vec_mult(closest.t, ray->direction));
-	if (closest.object->type == Sphere)
+	intersection = vec_add(ray->origin, vec_mult(closest->t, ray->direction));
+	if (closest->object->type == Sphere)
 		unit_normal = vec_normalized(
-			vec_minus(intersection, closest.object->position));
-	else if (closest.object->type == Plane || closest.object->type == Disk)
+			vec_minus(intersection, closest->object->position));
+	else if (closest->object->type == Plane || closest->object->type == Disk)
 	{
-		unit_normal = closest.object->direction;
-		if (closest.object->backside)
+		unit_normal = closest->object->direction;
+		if (closest->object->backside)
 			unit_normal = vec_mult(-1.0, unit_normal);
 	}
-	else if (closest.object->type == Cylinder)
+	else if (closest->object->type == Cylinder)
 	{
-		if (closest.object->ray_intersects == CurvedSurface)
+		if (closest->object->ray_intersects == CurvedSurface)
 		{
-			t_vector q = vec_minus(intersection, closest.object->position);
-			t_vector q_on_v = vec_mult(vec_dot(q, closest.object->direction),
-				closest.object->direction);
+			t_vector q = vec_minus(intersection, closest->object->position);
+			t_vector q_on_v = vec_mult(vec_dot(q, closest->object->direction),
+				closest->object->direction);
 			unit_normal = vec_normalized(vec_minus(q, q_on_v));
 		}
-		else if (closest.object->ray_intersects == BottomFace
-			|| closest.object->ray_intersects == TopFace)
+		else if (closest->object->ray_intersects == BottomFace
+			|| closest->object->ray_intersects == TopFace)
 		{
-			unit_normal = closest.object->direction;
-			if (closest.object->backside)
+			unit_normal = closest->object->direction;
+			if (closest->object->backside)
 				unit_normal = vec_mult(-1, unit_normal);
 		}
 	}
@@ -272,24 +265,23 @@ t_argb	cast_ray(t_scene *scene, t_ray *ray, uint8_t recursion_depth)
 	{
 	}
 	intensity = compute_lighting(scene, intersection, unit_normal,
-		vec_mult(-1, ray->direction), closest.object->specular_exponent);
-	if (closest.object->is_checkerboard)
+		vec_mult(-1, ray->direction), closest->object->specular_exponent);
+	if (closest->object->is_checkerboard)
 		local_color = color_mult(
 			get_checkerboard_sphere_color(
-				vec_minus(intersection, closest.object->position),
+				vec_minus(intersection, closest->object->position),
 				WHITE,
 				BLACK
 			),
 			intensity
 		);
 	else
-		local_color = color_mult(closest.object->color, intensity);
-
+		local_color = color_mult(closest->object->color, intensity);
 
 	// return (local_color); /* Return color here to skip reflection */
 
 	/* When recursion limit is hit or the other object does not reflect */
-	if (recursion_depth <= 0 || closest.object->reflectivity <= 0)
+	if (recursion_depth <= 0 || closest->object->reflectivity <= 0)
 		return (local_color);
 	/* Else computes reflected color */
 	t_ray	reflection_ray;
@@ -303,9 +295,20 @@ t_argb	cast_ray(t_scene *scene, t_ray *ray, uint8_t recursion_depth)
 	reflected_color = cast_ray(scene, &reflection_ray, recursion_depth - 1);
 	/* The more smooth the object is, the more light it reflects */
 	return (color_add(
-		color_mult(local_color, 1 - closest.object->reflectivity),
-		color_mult(reflected_color, closest.object->reflectivity)));
-	/* shade() end */
+		color_mult(local_color, 1 - closest->object->reflectivity),
+		color_mult(reflected_color, closest->object->reflectivity)));
+}
+
+t_argb	cast_ray(t_scene *scene, t_ray *ray, uint8_t recursion_depth)
+{
+	t_closest	closest;
+
+	closest.object = NULL;
+	closest.t = INFINITY;
+	if (!trace(scene, ray, &closest))
+		return (minirt()->background_color);
+	else
+		return (shade(scene, ray, &closest, recursion_depth));
 }
 
 /**
