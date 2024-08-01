@@ -6,10 +6,11 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:26:36 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 17:18:02 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 23:29:17 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../t_closest.h"
 #include "../ray/t_ray.h"
 #include "../geometry/inc/geometry.h"
 #include "../object/inc/object.h"
@@ -18,8 +19,7 @@
 extern void	ray_plane_intersect(
 	t_ray *ray,
 	t_object *plane,
-	t_object **closest_object,
-	double *closest_t)
+	t_closest *closest)
 {
 	double	denominator;
 	double	t;
@@ -29,14 +29,11 @@ extern void	ray_plane_intersect(
 	{
 		t = vec_dot(vec_minus(plane->position, ray->origin), plane->direction)
 			/ denominator;
-		if (t >= ray->t_min && t <= ray->t_max && t < *closest_t)
+		if (t >= ray->t_min && t <= ray->t_max && t < closest->t)
 		{
-			*closest_t = t;
-			*closest_object = plane;
-			if (denominator < 0)
-				(*closest_object)->backside = true;
-			else
-				(*closest_object)->backside = false;
+			closest->t = t;
+			closest->object = plane;
+			closest->object->backside = denominator < 0;
 		}
 	}
 }
