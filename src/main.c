@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 17:51:01 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 19:04:05 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -370,8 +370,6 @@ void	precompute_values(t_scene *scene)
 	o = scene->objects;
 	while (o < scene->objects + scene->object_count)
 	{
-		if (o->radius > 0)
-			o->radius_squared = o->radius * o->radius;
 		if (o->direction.x != 0 || o->direction.y != 0 || o->direction.z != 0)
 			vec_normalize(&o->direction);
 		++o;

@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 13:49:01 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 13:50:10 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 19:02:26 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ t_object	cylinder(t_c c)
 	cylinder.position = vec_mult(minirt()->unit_one, c.position);
 	cylinder.direction = c.direction;
 	cylinder.radius = c.radius * minirt()->unit_one;
+	cylinder.radius_squared = cylinder.radius * cylinder.radius;
 	cylinder.height = c.height * minirt()->unit_one;
 	cylinder.specular_exponent = c.specular_exponent;
 	cylinder.reflectivity = c.reflectivity;
