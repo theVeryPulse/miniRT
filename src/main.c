@@ -394,16 +394,16 @@ t_camera	camera(t_raw_point position, t_vector w)
 	if (w.x == 0 && w.z == 0 && w.y > 0)
 	{
 		camera.u = (t_vector){1, 0, 0};
-				camera.v = (t_vector){0, 0, -1},
-				camera.w = (t_vector){0, 1, 0};
-				return (camera);
-		}
+		camera.v = (t_vector){0, 0, -1},
+		camera.w = (t_vector){0, 1, 0};
+		return (camera);
+	}
 	else if (w.x == 0 && w.z == 0 && w.y < 0)
-		{
+	{
 		camera.u = (t_vector){1, 0, 0};
-				camera.v = (t_vector){0, 0, 1},
-				camera.w = (t_vector){0, -1, 0};
-				return (camera);
+		camera.v = (t_vector){0, 0, 1},
+		camera.w = (t_vector){0, -1, 0};
+		return (camera);
 	}
 	camera.w = vec_normalized(w);
 	camera.v = (t_vector){0, 1, 0};
