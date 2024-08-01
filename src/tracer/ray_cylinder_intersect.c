@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:45:59 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 17:27:35 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 18:43:58 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,45 @@
 #include "../geometry/inc/geometry.h"
 #include "../object/inc/object.h"
 #include "../maths/inc/maths.h"
+#include "t_triplet.h"
 #include <math.h>
+
+static void	calculate_abc(t_triplet *d3, t_ray *ray, t_object *cylinder)
+{
+	t_vector	d_prime;
+	t_vector	w_prime;
+	t_vector	o_minus_c;
+
+	o_minus_c = vec_minus(ray->origin, cylinder->position);
+	d_prime = vec_minus(ray->direction,
+		vec_mult(vec_dot(ray->direction, cylinder->direction),
+		cylinder->direction));
+	w_prime = vec_minus(o_minus_c,
+		vec_mult(vec_dot(o_minus_c, cylinder->direction),
+		cylinder->direction));
+
+	d3->a = vec_dot(d_prime, d_prime);
+	d3->b = 2 * vec_dot(w_prime, d_prime);
+	d3->c = vec_dot(w_prime, w_prime) - cylinder->radius_squared;
+}
+
+static void	calculate_t1t2_on_curved_surface(double t[2], t_triplet *d3)
+{
+	double	discriminant;
+
+	discriminant = d3->b * d3->b - 4 * d3->a * d3->c;
+	if (discriminant < 0)
+	{
+		t[0] = INFINITY;
+		t[1] = INFINITY;
+	}
+	else
+	{
+		double q = -0.5 * (d3->b + sign(d3->b) * sqrt(discriminant));
+		t[0] = q / d3->a;
+		t[1] = d3->c / q;
+	}
+}
 
 /**
  * @brief 
@@ -29,39 +67,11 @@ void	ray_cylinder_intersect(
 		t_object **closest_object,
 		double *closest_t)
 {
-	t_vector	d_prime;
-	t_vector	w_prime;
-	t_vector	o_minus_c;
 	double		t[2];
+	t_triplet	d3;
 
-	o_minus_c = vec_minus(ray->origin, cylinder->position);
-	d_prime = vec_minus(ray->direction,
-		vec_mult(vec_dot(ray->direction, cylinder->direction),
-		cylinder->direction));
-	w_prime = vec_minus(o_minus_c,
-		vec_mult(vec_dot(o_minus_c, cylinder->direction),
-		cylinder->direction));
-
-	double	a;
-	double	b;
-	double	c;
-
-	a = vec_dot(d_prime, d_prime);
-	b = 2 * vec_dot(w_prime, d_prime);
-	c = vec_dot(w_prime, w_prime) - cylinder->radius_squared;
-	
-	double	discriminant = b * b - 4 * a * c;
-	if (discriminant < 0)
-	{
-		t[0] = INFINITY;
-		t[1] = INFINITY;
-	}
-	else
-	{
-		double q = -0.5 * (b + sign(b) * sqrt(discriminant));
-		t[0] = q / a;
-		t[1] = c / q;
-	}
+	calculate_abc(&d3, ray, cylinder);
+	calculate_t1t2_on_curved_surface(t, &d3);
 
 	/* p0​⋅v ≤ (O+td)⋅v ≤ (p0​+hv)⋅v */
 	double	proj_min;
