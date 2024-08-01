@@ -6,11 +6,12 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:45:59 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 22:24:54 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 23:35:08 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "check_intersect.h"
+#include "../t_closest.h"
 #include "../minirt.h"
 #include "../ray/t_ray.h"
 #include "../geometry/inc/geometry.h"
@@ -22,16 +23,14 @@
 extern void	ray_cylinder_intersect(
 				t_ray *ray,
 				t_object *c,
-				t_object **closest_object,
-				double *closest_t);
+				t_closest *closest);
 
 static void	calculate_abc(t_triplet *d3, t_ray *ray, t_object *c);
 static void	ray_curved_surface_intersect(double t[2], t_triplet *d3);
 static void	update_solution_if_t_in_cylinder_height(
 				t_ray *ray,
 				t_object *c,
-				t_object **closest_object,
-				double *closest_t,
+				t_closest *closest,
 				double t[2]);
 
 /**
@@ -44,8 +43,7 @@ static void	update_solution_if_t_in_cylinder_height(
 extern void	ray_cylinder_intersect(
 		t_ray *ray,
 		t_object *c,
-		t_object **closest_object,
-		double *closest_t)
+		t_closest *closest)
 {
 	double		t[2];
 	t_triplet	d3;
@@ -53,21 +51,20 @@ extern void	ray_cylinder_intersect(
 
 	calculate_abc(&d3, ray, c);
 	ray_curved_surface_intersect(t, &d3);
-	update_solution_if_t_in_cylinder_height(ray, c, closest_object,
-		closest_t, t);
+	update_solution_if_t_in_cylinder_height(ray, c, closest, t);
 	top_face = disk((t_d){c->color, vec_div(vec_add(c->position,
 					vec_mult(c->height, c->direction)), minirt()->unit_one),
 			c->direction, c->radius / minirt()->unit_one,
 			c->specular_exponent, c->reflectivity});
-	if (ray_disk_intersect(ray, c, closest_object, closest_t))
+	if (ray_disk_intersect(ray, c, closest))
 	{
 		c->ray_intersects = BottomFace;
-		*closest_object = c;
+		closest->object = c;
 	}
-	if (ray_disk_intersect(ray, &top_face, closest_object, closest_t))
+	if (ray_disk_intersect(ray, &top_face, closest))
 	{
 		c->ray_intersects = TopFace;
-		*closest_object = c;
+		closest->object = c;
 	}
 }
 
@@ -120,8 +117,7 @@ static void	ray_curved_surface_intersect(double t[2], t_triplet *d3)
 static void	update_solution_if_t_in_cylinder_height(
 			t_ray *ray,
 			t_object *c,
-			t_object **closest_object,
-			double *closest_t,
+			t_closest *closest,
 			double t[2])
 {
 	double	proj_min;
@@ -133,20 +129,20 @@ static void	update_solution_if_t_in_cylinder_height(
 				vec_mult(c->height, c->direction)), c->direction);
 	proj = vec_dot(vec_add(ray->origin, vec_mult(t[0], ray->direction)),
 			c->direction);
-	if (t[0] >= ray->t_min && t[0] <= ray->t_max && t[0] < *closest_t
+	if (t[0] >= ray->t_min && t[0] <= ray->t_max && t[0] < closest->t
 		&& proj >= proj_min && proj <= proj_max)
 	{
-		*closest_t = t[0];
-		*closest_object = c;
+		closest->t = t[0];
+		closest->object = c;
 		c->ray_intersects = CurvedSurface;
 	}
 	proj = vec_dot(vec_add(ray->origin, vec_mult(t[1], ray->direction)),
 			c->direction);
-	if (t[1] >= ray->t_min && t[1] <= ray->t_max && t[1] < *closest_t
+	if (t[1] >= ray->t_min && t[1] <= ray->t_max && t[1] < closest->t
 		&& proj >= proj_min && proj <= proj_max)
 	{
-		*closest_t = t[1];
-		*closest_object = c;
+		closest->t = t[1];
+		closest->object = c;
 		c->ray_intersects = CurvedSurface;
 	}
 }

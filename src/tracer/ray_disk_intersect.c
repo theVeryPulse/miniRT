@@ -6,10 +6,11 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:34:07 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 22:16:12 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 23:31:39 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../t_closest.h"
 #include "../ray/t_ray.h"
 #include "../geometry/inc/geometry.h"
 #include "../object/inc/object.h"
@@ -18,8 +19,7 @@
 bool	ray_disk_intersect(
 			t_ray *ray,
 			t_object *disk,
-			t_object **closest_object,
-			double *closest_t)
+			t_closest *closest)
 {
 	double		denominator;
 	t_vector	intersect;
@@ -36,11 +36,11 @@ bool	ray_disk_intersect(
 		center_to_intersect = vec_minus(intersect, disk->position);
 		distance_squared = vec_squared(center_to_intersect);
 		if (distance_squared <= disk->radius_squared
-			&& t >= ray->t_min && t <= ray->t_max && t < *closest_t)
+			&& t >= ray->t_min && t <= ray->t_max && t < closest->t)
 		{
-			*closest_t = t;
-			*closest_object = disk;
-			(*closest_object)->backside = denominator < 0;
+			closest->t = t;
+			closest->object = disk;
+			closest->object->backside = denominator < 0;
 			return (true);
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:16:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 23:29:38 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 23:32:48 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ bool	trace(t_scene *scene, t_ray *ray, t_closest *closest)
 		else if (object->type == Plane)
 			ray_plane_intersect(ray, object, closest);
 		else if (object->type == Disk)
-			ray_disk_intersect(ray, object, &closest->object, &closest->t);
+			ray_disk_intersect(ray, object, closest);
 		else if (object->type == Cylinder)
-			ray_cylinder_intersect(ray, object, &closest->object, &closest->t);
+			ray_cylinder_intersect(ray, object, closest);
 		++object;
 	}
 	return (closest->object != NULL);

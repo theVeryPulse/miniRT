@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:15:28 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 23:27:24 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 23:35:26 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,11 @@ extern void	ray_plane_intersect(
 extern bool	ray_disk_intersect(
 				t_ray *ray,
 				t_object *disk,
-				t_object **closest_object,
-				double *closest_t);
+				t_closest *closest);
 
 extern void	ray_cylinder_intersect(
 				t_ray *ray,
 				t_object *cylinder,
-				t_object **closest_object,
-				double *closest_t);
+				t_closest *closest);
 
 #endif /* CHECK_INTERSECT_H */
