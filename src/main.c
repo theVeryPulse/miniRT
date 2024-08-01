@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 19:04:05 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 22:53:18 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -391,30 +391,24 @@ t_camera	camera(t_raw_point position, t_vector w)
 
 	camera = (t_camera){0};
 	camera.position = vec_mult(minirt()->unit_one, position);
-	if (w.x == 0 && w.z == 0)
+	if (w.x == 0 && w.z == 0 && w.y > 0)
 	{
 		camera.u = (t_vector){1, 0, 0};
-		if (w.y > 0) /* Facing down from up */
-		{
 				camera.v = (t_vector){0, 0, -1},
 				camera.w = (t_vector){0, 1, 0};
 				return (camera);
 		}
-		else if (w.y < 0) /* Facing up from down */
+	else if (w.x == 0 && w.z == 0 && w.y < 0)
 		{
+		camera.u = (t_vector){1, 0, 0};
 				camera.v = (t_vector){0, 0, 1},
 				camera.w = (t_vector){0, -1, 0};
 				return (camera);
-		}
-		else /* invalid vector */
-		{
-		}
 	}
 	camera.w = vec_normalized(w);
-	camera.v = (t_vector){.x = 0, .y = 1, .z = 0};
+	camera.v = (t_vector){0, 1, 0};
 	camera.u = vec_cross(camera.v, camera.w);
 	camera.v = vec_cross(camera.w, camera.u);
-	camera.error = false;
 	return (camera);
 }
 
