@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/31 21:39:04 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 13:48:32 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -799,9 +799,9 @@ void	load_default_scene(t_scene *scene)
 		WHITE, (t_raw_point){700.0/960.0, -150.0/960.0, -2500.0/960.0}, 
 		(t_vector){1, 0, -1}, 300.0/960.0, 1000.0,
 		0.9});
-	scene->objects[--i] = cylinder(RED,
+	scene->objects[--i] = cylinder((t_c){RED,
 		(t_raw_point){10.0/960.0, -540.0/960.0, -2000.0/960.0},
-		(t_vector){0, 1, 0}, 500.0/960.0, 200.0/960.0, 1.0, 0.5);
+		(t_vector){0, 1, 0}, 500.0/960.0, 200.0/960.0, 1.0, 0.5});
 
 	allocate_lights(scene, 3);
 	scene->lights[0] = point_light(
@@ -824,9 +824,9 @@ void	load_test_scene(t_scene *scene)
 		(t_vector){0, 0, 1}, 10.0, 0.0});
 	// scene->objects[--object_count] = checkerboard_sphere(
 	// 	(t_raw_point){0.01, 0.02, -2}, 0.5, 100, 0.0);
-	scene->objects[--object_count] = cylinder(RED,
+	scene->objects[--object_count] = cylinder((t_c){RED,
 		(t_point){10.0/960.0, 10.0/960.0, -1500.0/960.0},
-		(t_vector){0, 0, 1}, 200.0/960.0, 200.0/960.0, 1.0, 0.0);
+		(t_vector){0, 0, 1}, 200.0/960.0, 200.0/960.0, 1.0, 0.0});
 	// scene->objects[--object_count] = disk(RED, (t_point){400.0/960.0, 0, -1500.0/960.0},
 	// 	(t_vector){0, 0.1, -1}, 200.0/960.0, 1.0, 0.0);
 

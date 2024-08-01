@@ -6,35 +6,28 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 13:49:01 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/31 17:33:42 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 13:50:10 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../t_object.h"
+#include "../inc/object.h"
 #include "../../minirt.h"
 #include "../../geometry/inc/geometry.h"
 
-t_object	cylinder(
-	t_argb color,
-	t_raw_point position,
-	t_vector direction,
-	double radius,
-	double height,
-	double specular_exponent,
-	double reflectivity)
+t_object	cylinder(t_c c)
 {
 	t_object	cylinder;
 
 	cylinder = (t_object){0};
 	cylinder.category = Object;
 	cylinder.type = Cylinder;
-	cylinder.color = color;
-	cylinder.position = vec_mult(minirt()->unit_one, position);
-	cylinder.direction = direction;
-	cylinder.radius = radius * minirt()->unit_one;
-	cylinder.height = height * minirt()->unit_one;
-	cylinder.specular_exponent = specular_exponent;
-	cylinder.reflectivity = reflectivity;
+	cylinder.color = c.color;
+	cylinder.position = vec_mult(minirt()->unit_one, c.position);
+	cylinder.direction = c.direction;
+	cylinder.radius = c.radius * minirt()->unit_one;
+	cylinder.height = c.height * minirt()->unit_one;
+	cylinder.specular_exponent = c.specular_exponent;
+	cylinder.reflectivity = c.reflectivity;
 	cylinder.is_checkerboard = false;
 	cylinder.error = false;
 	return (cylinder);

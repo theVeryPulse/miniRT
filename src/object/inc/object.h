@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:27:16 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/31 21:36:47 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/31 21:41:56 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,18 @@ typedef struct s_p
 
 extern t_object	plane(t_p p);
 
-extern t_object	cylinder(
-					t_argb color,
-					t_raw_point position,
-					t_vector direction,
-					double radius,
-					double height,
-					double specular_exponent,
-					double reflectivity);
+typedef struct s_c
+{
+	t_argb		color;
+	t_raw_point	position;
+	t_vector	direction;
+	double		radius;
+	double		height;
+	double		specular_exponent;
+	double		reflectivity;
+}	t_c;
+
+extern t_object	cylinder(t_c c);
 
 extern t_object	point_light(t_raw_point position, double intensity);
 
