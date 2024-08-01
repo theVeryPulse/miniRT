@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 16:46:17 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 17:51:01 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "scene/inc/scene.h"
 #include "object/inc/object.h"
 #include "tracer/inc/trace.h"
+#include "ray/t_ray.h"
 #include "window.h"
 #include "key_press/inc/key_press.h"
 #include "maths/inc/maths.h"
@@ -176,11 +177,18 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 
 			/* Shadow check */
 			// if (light_is_blocked(scene, point, light, 0.0001, t_max))
+			t_ray		shadow_ray;
 			t_object	*closest_object;
 			double		closest_t;
+
+			
 			closest_object = NULL;
 			closest_t = INFINITY;
-			if (trace(scene, point, light, 1e-4, t_max, &closest_object,
+			shadow_ray.origin = point;
+			shadow_ray.direction = light;
+			shadow_ray.t_min = 1e-4;
+			shadow_ray.t_max = t_max;
+			if (trace(scene, &shadow_ray, &closest_object,
 				&closest_t))
 			{
 				++i;
@@ -219,8 +227,7 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 
 extern t_argb	get_checkerboard_sphere_color(t_point pt, t_argb color1, t_argb color2);
 
-t_argb	cast_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
-		double t_min, double t_max, uint8_t recursion_depth)
+t_argb	cast_ray(t_scene *scene, t_ray *ray, uint8_t recursion_depth)
 {
 	double		closest_t;
 	t_object	*closest_object;
@@ -228,8 +235,7 @@ t_argb	cast_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 	closest_object = NULL;
 	closest_t = INFINITY;
 
-	if (!trace(scene, ray_origin, ray_direction, t_min, t_max,
-		&closest_object, &closest_t))
+	if (!trace(scene, ray, &closest_object, &closest_t))
 		return (minirt()->background_color);
 
 	/* shade(): determining the color of the intersect point */
@@ -239,7 +245,7 @@ t_argb	cast_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 	double		intensity;
 	t_argb		local_color;
 
-	intersection = vec_add(ray_origin, vec_mult(closest_t, ray_direction));
+	intersection = vec_add(ray->origin, vec_mult(closest_t, ray->direction));
 	if (closest_object->type == Sphere)
 		unit_normal = vec_normalized(
 			vec_minus(intersection, closest_object->position));
@@ -270,7 +276,7 @@ t_argb	cast_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 	{
 	}
 	intensity = compute_lighting(scene, intersection, unit_normal,
-		vec_mult(-1, ray_direction), closest_object->specular_exponent);
+		vec_mult(-1, ray->direction), closest_object->specular_exponent);
 	if (closest_object->is_checkerboard)
 		local_color = color_mult(
 			get_checkerboard_sphere_color(
@@ -290,15 +296,18 @@ t_argb	cast_ray(t_scene *scene, t_point ray_origin, t_vector ray_direction,
 	if (recursion_depth <= 0 || closest_object->reflectivity <= 0)
 		return (local_color);
 	/* Else computes reflected color */
-	t_vector	reflection_ray;
-	t_argb		reflected_color;
+	t_ray	reflection_ray;
+	t_argb	reflected_color;
 
-	reflection_ray = reflect_ray(vec_mult(-1, ray_direction), unit_normal);
-	reflected_color = cast_ray(scene, intersection, reflection_ray,
-		0.001, INFINITY, recursion_depth - 1);
+	reflection_ray.origin = intersection;
+	reflection_ray.direction = reflect_ray(
+		vec_mult(-1, ray->direction), unit_normal);
+	reflection_ray.t_min = 0.001;
+	reflection_ray.t_max = INFINITY;
+	reflected_color = cast_ray(scene, &reflection_ray, recursion_depth - 1);
 	/* The more smooth the object is, the more light it reflects */
 	return (color_add(
-		color_mult(local_color, 1- closest_object->reflectivity),
+		color_mult(local_color, 1 - closest_object->reflectivity),
 		color_mult(reflected_color, closest_object->reflectivity)));
 	/* shade() end */
 }
@@ -328,9 +337,8 @@ t_vector	calculate_ray_direction(t_camera *cam, t_point pt)
  */
 void	render_image(t_vars *vars)
 {
-	t_vector	ray_direction;
+	t_ray		ray;
 	t_pixel		pixel;
-	double		t_min;
 
 	pixel.y = HEIGHT / 2;
 	while (pixel.y > - HEIGHT / 2)
@@ -338,12 +346,13 @@ void	render_image(t_vars *vars)
 		pixel.x = - WIDTH / 2;
 		while (pixel.x < WIDTH / 2)
 		{
-			ray_direction = calculate_ray_direction(&(vars->scene.camera),
+			ray.origin = vars->scene.camera.position;
+			ray.direction = calculate_ray_direction(&(vars->scene.camera),
 				(t_point){pixel.x, pixel.y, -(minirt()->eye_canvas_distance)});
-			t_min = vec_len(ray_direction);
-			vec_normalize(&ray_direction);
-			pixel.color = cast_ray(&vars->scene, vars->scene.camera.position,
-				ray_direction, t_min, INFINITY, 3);
+			ray.t_min = vec_len(ray.direction);
+			ray.t_max = INFINITY;
+			vec_normalize(&ray.direction);
+			pixel.color = cast_ray(&vars->scene, &ray, 3);
 			draw_pixel_in_screen_space(&vars->img_vars, pixel);
 			++pixel.x;
 		}
