@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:34:07 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 19:22:40 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 22:16:12 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,7 @@ bool	ray_disk_intersect(
 		{
 			*closest_t = t;
 			*closest_object = disk;
-			if (denominator < 0)
-				(*closest_object)->backside = true;
-			else
-				(*closest_object)->backside = false;
+			(*closest_object)->backside = denominator < 0;
 			return (true);
 		}
 	}
