@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 15:57:33 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 17:05:28 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 17:39:57 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ static void	update_solution(
 void	ray_sphere_intersect(
 			t_ray *ray,
 			t_object *sphere,
-			double a,
 			t_object **closest_object,
 			double *closest_t)
 {
@@ -75,7 +74,7 @@ void	ray_sphere_intersect(
 	o_minus_c = vec_minus(ray->origin, sphere->position);
 	b = 2 * vec_dot(o_minus_c, ray->direction);
 	c = vec_dot(o_minus_c, o_minus_c) - sphere->radius_squared;
-	discriminant = b * b - 4 * a * c;
+	discriminant = b * b - 4 * ray->direction_squared * c;
 	if (discriminant < 0)
 	{
 		t[0] = INFINITY;
@@ -84,7 +83,7 @@ void	ray_sphere_intersect(
 	else
 	{
 		q = -0.5 * (b + sign(b) * sqrt(discriminant));
-		t[0] = q / a;
+		t[0] = q / ray->direction_squared;
 		t[1] = c / q;
 	}
 	update_solution(t, ray, sphere, closest_object, closest_t);

@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:16:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 17:28:33 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 17:40:37 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,16 @@ bool	trace(t_scene *scene,
 	double *closest_t)
 {
 	t_object	*object;
-	double		a;
 	t_ray		ray;
 
-	ray = (t_ray){ray_origin, ray_direction, t_min, t_max};
+	ray = (t_ray){ray_origin, ray_direction, t_min, t_max, 0};
 	*closest_object = NULL;
 	object = scene->objects;
-	a = vec_dot(ray_direction, ray_direction);
+	ray.direction_squared = vec_dot(ray_direction, ray_direction);
 	while (object < scene->object_count + scene->objects)
 	{
 		if (object->type == Sphere)
-			ray_sphere_intersect(&ray, object, a, closest_object, closest_t);
+			ray_sphere_intersect(&ray, object, closest_object, closest_t);
 		else if (object->type == Plane)
 			ray_plane_intersect(&ray, object, closest_object, closest_t);
 		else if (object->type == Disk)

@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:15:28 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 17:28:19 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 17:38:41 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 extern void	ray_sphere_intersect(
 				t_ray *ray,
 				t_object *sphere,
-				double a,
 				t_object **closest_object,
 				double *closest_t);
 
