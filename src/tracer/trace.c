@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:16:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 17:05:39 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 17:19:01 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,7 @@ bool	trace(t_scene *scene,
 		if (object->type == Sphere)
 			ray_sphere_intersect(&ray, object, a, closest_object, closest_t);
 		else if (object->type == Plane)
-			ray_plane_intersect(t, ray_origin, ray_direction, object, t_min,
-				t_max, closest_object, closest_t);
+			ray_plane_intersect(&ray, object, closest_object, closest_t);
 		else if (object->type == Disk)
 			ray_disk_intersect(t, ray_origin, ray_direction, object, t_min,
 				t_max, closest_object, closest_t);
