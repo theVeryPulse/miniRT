@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_checkerboard_sphere_color.c                               :+:      :+:    :+:   */
+/*   checkerboard_color_sphere.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 23:11:32 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/18 23:19:19 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 15:02:02 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,19 @@
 
 #define CHECKERBOARD_CELL_COUNT 8
 
-extern t_argb	get_checkerboard_sphere_color(t_point pt, t_argb color1, t_argb color2);
-static void	convert_to_uv_texture_coordinates(t_point pt, double *u, double *v);
-static bool	is_color1(double u, double v, uint8_t square_count);
+extern t_argb	get_checkerboard_sphere_color(t_point pt, t_argb color1,
+					t_argb color2);
 
-extern t_argb	get_checkerboard_sphere_color(t_point pt, t_argb color1, t_argb color2)
+static void		convert_to_uv_texture_coordinates(t_point pt, double *u,
+					double *v);
+static bool		is_color1(double u, double v, uint8_t square_count);
+
+extern t_argb	get_checkerboard_sphere_color(t_point pt, t_argb color1,
+				t_argb color2)
 {
 	double	u;
 	double	v;
+
 	convert_to_uv_texture_coordinates(pt, &u, &v);
 	if (is_color1(u, v, CHECKERBOARD_CELL_COUNT))
 		return (color1);
