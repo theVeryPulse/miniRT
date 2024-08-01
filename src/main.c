@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 22:53:18 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 23:13:44 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "object/inc/object.h"
 #include "tracer/inc/trace.h"
 #include "ray/t_ray.h"
+#include "t_closest.h"
 #include "window.h"
 #include "key_press/inc/key_press.h"
 #include "maths/inc/maths.h"
@@ -176,20 +177,16 @@ double	compute_lighting(t_scene *scene, t_point point, t_vector normal,
 				t_max = INFINITY;
 
 			/* Shadow check */
-			// if (light_is_blocked(scene, point, light, 0.0001, t_max))
 			t_ray		shadow_ray;
-			t_object	*closest_object;
-			double		closest_t;
-
+			t_closest	closest;
 			
-			closest_object = NULL;
-			closest_t = INFINITY;
+			closest.object = NULL;
+			closest.t = INFINITY;
 			shadow_ray.origin = point;
 			shadow_ray.direction = light;
 			shadow_ray.t_min = 1e-4;
 			shadow_ray.t_max = t_max;
-			if (trace(scene, &shadow_ray, &closest_object,
-				&closest_t))
+			if (trace(scene, &shadow_ray, &closest))
 			{
 				++i;
 				continue;
@@ -234,7 +231,7 @@ t_argb	cast_ray(t_scene *scene, t_ray *ray, uint8_t recursion_depth)
 	closest.object = NULL;
 	closest.t = INFINITY;
 
-	if (!trace(scene, ray, &closest.object, &closest.t))
+	if (!trace(scene, ray, &closest))
 		return (minirt()->background_color);
 
 	/* shade(): determining the color of the intersect point */

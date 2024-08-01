@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 15:57:12 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 17:45:43 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 23:12:32 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,9 @@
 # define TRACE_H
 
 # include "../../ray/t_ray.h"
+# include "../../t_closest.h"
 # include <stdbool.h>
 
-extern bool	trace(t_scene *scene,
-				t_ray *ray,
-				t_object **closest_object,
-				double *closest_t);
+extern bool	trace(t_scene *scene, t_ray *ray, t_closest *closest);
 
 #endif /* TRACE_H */

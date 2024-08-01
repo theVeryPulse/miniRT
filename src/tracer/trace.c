@@ -6,12 +6,13 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:16:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 17:51:26 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 23:11:47 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "check_intersect.h"
 #include "../scene/t_scene.h"
+#include "../t_closest.h"
 #include <stdbool.h>
 #include <stddef.h>
 
@@ -28,27 +29,24 @@
  * @param closest_t 
  * @return bool
  */
-bool	trace(t_scene *scene,
-	t_ray *ray,
-	t_object **closest_object,
-	double *closest_t)
+bool	trace(t_scene *scene, t_ray *ray, t_closest *closest)
 {
 	t_object	*object;
 
-	*closest_object = NULL;
+	closest->object = NULL;
 	object = scene->objects;
 	ray->direction_squared = vec_dot(ray->direction, ray->direction);
 	while (object < scene->object_count + scene->objects)
 	{
 		if (object->type == Sphere)
-			ray_sphere_intersect(ray, object, closest_object, closest_t);
+			ray_sphere_intersect(ray, object, &closest->object, &closest->t);
 		else if (object->type == Plane)
-			ray_plane_intersect(ray, object, closest_object, closest_t);
+			ray_plane_intersect(ray, object, &closest->object, &closest->t);
 		else if (object->type == Disk)
-			ray_disk_intersect(ray, object, closest_object, closest_t);
+			ray_disk_intersect(ray, object, &closest->object, &closest->t);
 		else if (object->type == Cylinder)
-			ray_cylinder_intersect(ray, object, closest_object, closest_t);
+			ray_cylinder_intersect(ray, object, &closest->object, &closest->t);
 		++object;
 	}
-	return (*closest_object != NULL);
+	return (closest->object != NULL);
 }
