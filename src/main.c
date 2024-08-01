@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 15:20:21 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 15:50:39 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "object/inc/object.h"
 #include "window.h"
 #include "key_press/inc/key_press.h"
+#include "maths/inc/maths.h"
 #include "../lib/minilibx-linux/mlx.h"
 #include <X11/X.h> /* DestroyNotify, ButtonReleaseMask */
 #include <X11/keysym.h> /* XK_escape */
@@ -38,8 +39,6 @@
 #include <stdbool.h>
 
 #define RED_ERROR "\033[91merror: \033[0m"
-
-bool	equals(double a, double b);
 
 int	clean_exit(int exit_status)
 {
@@ -129,14 +128,6 @@ void	test_draw_on_image(t_img_vars *img_vars)
 	pixel.x = 0;
 	for	(pixel.y = -HEIGHT / 2; pixel.y <= HEIGHT / 2; ++pixel.y)
 		draw_pixel_in_screen_space(img_vars, pixel);	
-}
-
-double	sign(double n)
-{
-	if (n >= 0)
-		return (1.0);
-	else
-		return (-1.0);
 }
 
 /**

@@ -14,7 +14,6 @@ FILES := \
 	src/color/color_mult.c \
 	src/color/green_component.c \
 	src/color/red_component.c \
-	src/equals.c \
 	src/geometry/matrix/mx_mult.c \
 	src/geometry/matrix/mx_mult_mx.c \
 	src/geometry/matrix/mx_transpose.c \
@@ -50,6 +49,8 @@ FILES := \
 	src/load_file/skip/skip_rgb.c \
 	src/load_file/skip/skip_spaces.c \
 	src/main.c \
+	src/maths/equals.c \
+	src/maths/sign.c \
 	src/minirt.c \
 	src/minirt_init.c \
 	src/object/light/ambient_light.c \
@@ -109,5 +110,4 @@ debug: CFLAGS := -g -Wall -Wextra
 debug: re
 
 .PHONY: all, clean, fclean, re, debug
-
 
