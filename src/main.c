@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 13:48:32 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 15:20:21 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "scene/inc/scene.h"
 #include "object/inc/object.h"
 #include "window.h"
-#include "handle_keypress_event.h"
+#include "key_press/inc/key_press.h"
 #include "../lib/minilibx-linux/mlx.h"
 #include <X11/X.h> /* DestroyNotify, ButtonReleaseMask */
 #include <X11/keysym.h> /* XK_escape */
@@ -809,6 +809,8 @@ void	load_default_scene(t_scene *scene)
 	scene->lights[1] = point_light(
 		(t_raw_point){400.0/960.0, -300.0/960.0, -1000.0/960.0}, 0.5);
 	scene->lights[2] = ambient_light(0.3);
+
+	scene->focus = scene->objects;
 }
 
 void	load_test_scene(t_scene *scene)

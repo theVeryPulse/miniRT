@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handle_keypress_event.h                            :+:      :+:    :+:   */
+/*   key_press_helpers.h                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/04 14:25:15 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/04 14:26:00 by Philip           ###   ########.fr       */
+/*   Created: 2024/08/01 15:12:42 by Philip            #+#    #+#             */
+/*   Updated: 2024/08/01 15:24:29 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef HANDLE_KEYPRESS_EVENT_H
-# define HANDLE_KEYPRESS_EVENT_H
+#ifndef KEY_PRESS_HELPERS_H
+# define KEY_PRESS_HELPERS_H
 
-# include "t_vars.h"
+# include "../t_vars.h"
 
-extern int	handle_keypress_event(int key, t_vars *vars);
+extern void	switch_focus(t_vars *vars);
 
-#endif /* HANDLE_KEYPRESS_EVENT_H */
+#endif /* KEY_PRESS_HELPERS_H */

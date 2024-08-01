@@ -6,14 +6,15 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:21:20 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/25 19:43:48 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 15:16:10 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "t_vars.h"
-#include "../lib/minilibx-linux/mlx.h"
-#include "minirt.h"
-#include "../lib/libft/inc/libft.h"
+#include "key_press_helpers.h"
+#include "../t_vars.h"
+#include "../minirt.h"
+#include "../../lib/libft/inc/libft.h"
+#include "../../lib/minilibx-linux/mlx.h"
 #include <X11/keysym.h> /* XK_escape */
 #include <stdio.h>
 #include <stdlib.h> /* free */
@@ -21,38 +22,6 @@
 void	put_image_to_window_vars(t_vars *vars);
 int		clean_exit(int exit_status);
 void	render_image(t_vars *vars);
-
-static void	switch_focus(t_vars *vars)
-{
-	char	*message;
-
-	if (vars->scene.focus->category == Object && vars->scene.focus
-		- vars->scene.objects >= vars->scene.object_count - 1)
-		vars->scene.focus = vars->scene.lights;
-	else if (vars->scene.focus->category == Light && vars->scene.focus
-		- vars->scene.lights >= vars->scene.light_count - 1)
-		vars->scene.focus = vars->scene.objects;
-	else
-		++(vars->scene.focus);
-	if (vars->scene.focus->type == PointLight)
-		message = "Focus: Point Light";
-	else if (vars->scene.focus->type == DirectionalLight)
-		message = "Focus: Directional Light";
-	else if (vars->scene.focus->type == AmbientLight)
-		message = "Focus: Ambience Light ";
-	else if (vars->scene.focus->type == Sphere)
-		message = "Focus: Sphere";
-	else if (vars->scene.focus->type == Plane)
-		message = "Focus: Plane";
-	else if (vars->scene.focus->type == Disk)
-		message = "Focus: Disk";
-	else if (vars->scene.focus->type == Cylinder)
-		message = "Focus: Cylinder";
-	else
-		message = "What?";
-	put_image_to_window_vars(vars);
-	mlx_string_put(vars->mlx_ptr, vars->win_ptr, 10, 10, GREEN, message);
-}
 
 static void	adjust_directional_light(t_object *focus, int key)
 {
