@@ -6,11 +6,12 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 15:57:33 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 17:39:57 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 23:19:05 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "t_triplet.h"
+#include "../t_closest.h"
 #include "../ray/t_ray.h"
 #include "../geometry/inc/geometry.h"
 #include "../object/inc/object.h"
@@ -21,8 +22,7 @@ static void	update_solution(
 				double t[2],
 				t_ray *ray,
 				t_object *sphere,
-				t_object **closest_object,
-				double *closest_t);
+				t_closest *closest);
 
 /**
  * @brief 
@@ -59,11 +59,7 @@ static void	update_solution(
  * https://www.scratchapixel.com/lessons/3d-basic-rendering/
  * minimal-ray-tracer-rendering-simple-shapes/ray-sphere-intersection.html
  */
-void	ray_sphere_intersect(
-			t_ray *ray,
-			t_object *sphere,
-			t_object **closest_object,
-			double *closest_t)
+void	ray_sphere_intersect(t_ray *ray, t_object *sphere, t_closest *closest)
 {
 	t_triplet	d3;
 	t_vector	o_minus_c;
@@ -86,24 +82,23 @@ void	ray_sphere_intersect(
 		t[0] = q / ray->direction_squared;
 		t[1] = d3.c / q;
 	}
-	update_solution(t, ray, sphere, closest_object, closest_t);
+	update_solution(t, ray, sphere, closest);
 }
 
 static void	update_solution(
 			double t[2],
 			t_ray *ray,
 			t_object *sphere,
-			t_object **closest_object,
-			double *closest_t)
+			t_closest *closest)
 {
-	if (t[0] >= ray->t_min && t[0] <= ray->t_max && t[0] < *closest_t)
+	if (t[0] >= ray->t_min && t[0] <= ray->t_max && t[0] < closest->t)
 	{
-		*closest_t = t[0];
-		*closest_object = sphere;
+		closest->t = t[0];
+		closest->object = sphere;
 	}
-	if (t[1] >= ray->t_min && t[1] <= ray->t_max && t[1] < *closest_t)
+	if (t[1] >= ray->t_min && t[1] <= ray->t_max && t[1] < closest->t)
 	{
-		*closest_t = t[1];
-		*closest_object = sphere;
+		closest->t = t[1];
+		closest->object = sphere;
 	}
 }
