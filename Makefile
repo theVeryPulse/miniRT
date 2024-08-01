@@ -62,7 +62,12 @@ FILES := \
 	src/object/objects/disk.c \
 	src/object/objects/plane.c \
 	src/scene/allocate_lights.c \
-	src/scene/allocate_objects.c
+	src/scene/allocate_objects.c \
+	src/tracer/ray_cylinder_intersect.c \
+	src/tracer/ray_disk_intersect.c \
+	src/tracer/ray_plane_intersect.c \
+	src/tracer/ray_sphere_intersect.c \
+	src/tracer/trace.c
 
 # FILES := $(addprefix src/, $(FILES))
 OFILES := $(patsubst src/%.c, build/%.o, $(FILES))
@@ -110,4 +115,5 @@ debug: CFLAGS := -g -Wall -Wextra
 debug: re
 
 .PHONY: all, clean, fclean, re, debug
+
 
