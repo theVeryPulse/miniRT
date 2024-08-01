@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:45:59 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 18:43:58 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 18:55:07 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ static void	calculate_abc(t_triplet *d3, t_ray *ray, t_object *cylinder)
 	w_prime = vec_minus(o_minus_c,
 		vec_mult(vec_dot(o_minus_c, cylinder->direction),
 		cylinder->direction));
-
 	d3->a = vec_dot(d_prime, d_prime);
 	d3->b = 2 * vec_dot(w_prime, d_prime);
 	d3->c = vec_dot(w_prime, w_prime) - cylinder->radius_squared;
@@ -39,6 +38,7 @@ static void	calculate_abc(t_triplet *d3, t_ray *ray, t_object *cylinder)
 static void	calculate_t1t2_on_curved_surface(double t[2], t_triplet *d3)
 {
 	double	discriminant;
+	double	q;
 
 	discriminant = d3->b * d3->b - 4 * d3->a * d3->c;
 	if (discriminant < 0)
@@ -48,7 +48,7 @@ static void	calculate_t1t2_on_curved_surface(double t[2], t_triplet *d3)
 	}
 	else
 	{
-		double q = -0.5 * (d3->b + sign(d3->b) * sqrt(discriminant));
+		q = -0.5 * (d3->b + sign(d3->b) * sqrt(discriminant));
 		t[0] = q / d3->a;
 		t[1] = d3->c / q;
 	}
@@ -57,23 +57,21 @@ static void	calculate_t1t2_on_curved_surface(double t[2], t_triplet *d3)
 /**
  * @brief 
  * 
- * @ref
- * https://hugi.scene.org/online/hugi24/coding%20graphics%20chris%20dragan%20
- * raytracing%20shapes.htm
+ * @param ray 
+ * @param cylinder 
+ * @param closest_object 
+ * @param closest_t 
+ * @param t 
+ * @note
+ * p0​⋅v ≤ (O+td)⋅v ≤ (p0​+hv)⋅v
  */
-void	ray_cylinder_intersect(
-		t_ray *ray,
-		t_object *cylinder,
-		t_object **closest_object,
-		double *closest_t)
+static void	update_solution_if_t_in_cylinder_height(
+			t_ray *ray,
+			t_object *cylinder,
+			t_object **closest_object,
+			double *closest_t,
+			double t[2])
 {
-	double		t[2];
-	t_triplet	d3;
-
-	calculate_abc(&d3, ray, cylinder);
-	calculate_t1t2_on_curved_surface(t, &d3);
-
-	/* p0​⋅v ≤ (O+td)⋅v ≤ (p0​+hv)⋅v */
 	double	proj_min;
 	double	proj_max;
 	double	proj;
@@ -99,6 +97,28 @@ void	ray_cylinder_intersect(
 		*closest_object = cylinder;
 		cylinder->ray_intersects = CurvedSurface;
 	}
+}
+
+/**
+ * @brief 
+ * 
+ * @ref
+ * https://hugi.scene.org/online/hugi24/coding%20graphics%20chris%20dragan%20
+ * raytracing%20shapes.htm
+ */
+void	ray_cylinder_intersect(
+		t_ray *ray,
+		t_object *cylinder,
+		t_object **closest_object,
+		double *closest_t)
+{
+	double		t[2];
+	t_triplet	d3;
+
+	calculate_abc(&d3, ray, cylinder);
+	calculate_t1t2_on_curved_surface(t, &d3);
+	update_solution_if_t_in_cylinder_height(ray, cylinder, closest_object,
+		closest_t, t);
 
 	/* Caps */
 	double		denominator;
