@@ -229,13 +229,12 @@ extern t_argb	get_checkerboard_sphere_color(t_point pt, t_argb color1, t_argb co
 
 t_argb	cast_ray(t_scene *scene, t_ray *ray, uint8_t recursion_depth)
 {
-	double		closest_t;
-	t_object	*closest_object;
+	t_closest	closest;
 
-	closest_object = NULL;
-	closest_t = INFINITY;
+	closest.object = NULL;
+	closest.t = INFINITY;
 
-	if (!trace(scene, ray, &closest_object, &closest_t))
+	if (!trace(scene, ray, &closest.object, &closest.t))
 		return (minirt()->background_color);
 
 	/* shade(): determining the color of the intersect point */
@@ -245,30 +244,30 @@ t_argb	cast_ray(t_scene *scene, t_ray *ray, uint8_t recursion_depth)
 	double		intensity;
 	t_argb		local_color;
 
-	intersection = vec_add(ray->origin, vec_mult(closest_t, ray->direction));
-	if (closest_object->type == Sphere)
+	intersection = vec_add(ray->origin, vec_mult(closest.t, ray->direction));
+	if (closest.object->type == Sphere)
 		unit_normal = vec_normalized(
-			vec_minus(intersection, closest_object->position));
-	else if (closest_object->type == Plane || closest_object->type == Disk)
+			vec_minus(intersection, closest.object->position));
+	else if (closest.object->type == Plane || closest.object->type == Disk)
 	{
-		unit_normal = closest_object->direction;
-		if (closest_object->backside)
+		unit_normal = closest.object->direction;
+		if (closest.object->backside)
 			unit_normal = vec_mult(-1.0, unit_normal);
 	}
-	else if (closest_object->type == Cylinder)
+	else if (closest.object->type == Cylinder)
 	{
-		if (closest_object->ray_intersects == CurvedSurface)
+		if (closest.object->ray_intersects == CurvedSurface)
 		{
-			t_vector q = vec_minus(intersection, closest_object->position);
-			t_vector q_on_v = vec_mult(vec_dot(q, closest_object->direction),
-				closest_object->direction);
+			t_vector q = vec_minus(intersection, closest.object->position);
+			t_vector q_on_v = vec_mult(vec_dot(q, closest.object->direction),
+				closest.object->direction);
 			unit_normal = vec_normalized(vec_minus(q, q_on_v));
 		}
-		else if (closest_object->ray_intersects == BottomFace
-			|| closest_object->ray_intersects == TopFace)
+		else if (closest.object->ray_intersects == BottomFace
+			|| closest.object->ray_intersects == TopFace)
 		{
-			unit_normal = closest_object->direction;
-			if (closest_object->backside)
+			unit_normal = closest.object->direction;
+			if (closest.object->backside)
 				unit_normal = vec_mult(-1, unit_normal);
 		}
 	}
@@ -276,24 +275,24 @@ t_argb	cast_ray(t_scene *scene, t_ray *ray, uint8_t recursion_depth)
 	{
 	}
 	intensity = compute_lighting(scene, intersection, unit_normal,
-		vec_mult(-1, ray->direction), closest_object->specular_exponent);
-	if (closest_object->is_checkerboard)
+		vec_mult(-1, ray->direction), closest.object->specular_exponent);
+	if (closest.object->is_checkerboard)
 		local_color = color_mult(
 			get_checkerboard_sphere_color(
-				vec_minus(intersection, closest_object->position),
+				vec_minus(intersection, closest.object->position),
 				WHITE,
 				BLACK
 			),
 			intensity
 		);
 	else
-		local_color = color_mult(closest_object->color, intensity);
+		local_color = color_mult(closest.object->color, intensity);
 
 
 	// return (local_color); /* Return color here to skip reflection */
 
 	/* When recursion limit is hit or the other object does not reflect */
-	if (recursion_depth <= 0 || closest_object->reflectivity <= 0)
+	if (recursion_depth <= 0 || closest.object->reflectivity <= 0)
 		return (local_color);
 	/* Else computes reflected color */
 	t_ray	reflection_ray;
@@ -307,8 +306,8 @@ t_argb	cast_ray(t_scene *scene, t_ray *ray, uint8_t recursion_depth)
 	reflected_color = cast_ray(scene, &reflection_ray, recursion_depth - 1);
 	/* The more smooth the object is, the more light it reflects */
 	return (color_add(
-		color_mult(local_color, 1 - closest_object->reflectivity),
-		color_mult(reflected_color, closest_object->reflectivity)));
+		color_mult(local_color, 1 - closest.object->reflectivity),
+		color_mult(reflected_color, closest.object->reflectivity)));
 	/* shade() end */
 }
 
