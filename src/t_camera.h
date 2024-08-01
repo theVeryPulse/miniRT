@@ -6,15 +6,15 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 19:48:08 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 18:18:53 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 15:43:22 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef T_CAMERA_H
 # define T_CAMERA_H
 
-#include "geometry/vector/t_point.h"
-#include <stdbool.h>
+# include "geometry/vector/t_point.h"
+# include <stdbool.h>
 
 typedef struct s_camera
 {
