@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:16:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 16:22:45 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 16:59:16 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,16 @@ bool	trace(t_scene *scene,
 	double		t[2];
 	t_object	*object;
 	double		a;
+	t_ray		ray;
 
+	ray = (t_ray){ray_origin, ray_direction, t_min, t_max};
 	*closest_object = NULL;
 	object = scene->objects;
 	a = vec_dot(ray_direction, ray_direction);
 	while (object < scene->object_count + scene->objects)
 	{
 		if (object->type == Sphere)
-			ray_sphere_intersect(t, ray_origin, ray_direction,
-				object, a, t_min, t_max, closest_object, closest_t);
+			ray_sphere_intersect(t, &ray, object, a, closest_object, closest_t);
 		else if (object->type == Plane)
 			ray_plane_intersect(t, ray_origin, ray_direction, object, t_min,
 				t_max, closest_object, closest_t);
