@@ -6,10 +6,11 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:45:59 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 16:46:29 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 17:27:35 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../ray/t_ray.h"
 #include "../geometry/inc/geometry.h"
 #include "../object/inc/object.h"
 #include "../maths/inc/maths.h"
@@ -23,22 +24,19 @@
  * raytracing%20shapes.htm
  */
 void	ray_cylinder_intersect(
-		double t[2],
-		t_point ray_origin,
-		t_vector ray_direction,
+		t_ray *ray,
 		t_object *cylinder,
-		double t_min,
-		double t_max,
 		t_object **closest_object,
 		double *closest_t)
 {
 	t_vector	d_prime;
 	t_vector	w_prime;
 	t_vector	o_minus_c;
+	double		t[2];
 
-	o_minus_c = vec_minus(ray_origin, cylinder->position);
-	d_prime = vec_minus(ray_direction,
-		vec_mult(vec_dot(ray_direction, cylinder->direction),
+	o_minus_c = vec_minus(ray->origin, cylinder->position);
+	d_prime = vec_minus(ray->direction,
+		vec_mult(vec_dot(ray->direction, cylinder->direction),
 		cylinder->direction));
 	w_prime = vec_minus(o_minus_c,
 		vec_mult(vec_dot(o_minus_c, cylinder->direction),
@@ -73,18 +71,18 @@ void	ray_cylinder_intersect(
 	proj_min = vec_dot(cylinder->position, cylinder->direction);
 	proj_max = vec_dot(vec_add(cylinder->position,
 		vec_mult(cylinder->height, cylinder->direction)), cylinder->direction);
-	proj = vec_dot(vec_add(ray_origin, vec_mult(t[0], ray_direction)),
+	proj = vec_dot(vec_add(ray->origin, vec_mult(t[0], ray->direction)),
 					cylinder->direction);
-	if (t[0] >= t_min && t[0] <= t_max && t[0] < *closest_t
+	if (t[0] >= ray->t_min && t[0] <= ray->t_max && t[0] < *closest_t
 		&& proj >= proj_min && proj <= proj_max)
 	{
 		*closest_t = t[0];
 		*closest_object = cylinder;
 		cylinder->ray_intersects = CurvedSurface;
 	}
-	proj = vec_dot(vec_add(ray_origin, vec_mult(t[1], ray_direction)),
+	proj = vec_dot(vec_add(ray->origin, vec_mult(t[1], ray->direction)),
 					cylinder->direction);
-	if (t[1] >= t_min && t[1] <= t_max && t[1] < *closest_t
+	if (t[1] >= ray->t_min && t[1] <= ray->t_max && t[1] < *closest_t
 		&& proj >= proj_min && proj <= proj_max)
 	{
 		*closest_t = t[1];
@@ -99,17 +97,17 @@ void	ray_cylinder_intersect(
 	double		distance_squared;
 	
 	/* Bottom cap */
-	denominator = vec_dot(cylinder->direction, ray_direction);
+	denominator = vec_dot(cylinder->direction, ray->direction);
 	if (!equals(denominator, 0.0))
 	{
 		t_point	disk_center = cylinder->position;
-		*t = vec_dot(vec_minus(disk_center, ray_origin),
+		*t = vec_dot(vec_minus(disk_center, ray->origin),
 			cylinder->direction) / denominator;
-		intersect = vec_add(ray_origin, vec_mult(*t, ray_direction));
+		intersect = vec_add(ray->origin, vec_mult(*t, ray->direction));
 		center_to_intersect = vec_minus(intersect, disk_center);
 		distance_squared = vec_squared(center_to_intersect);
 		if (distance_squared <= cylinder->radius_squared
-			&& *t >= t_min && *t <= t_max && *t < *closest_t)
+			&& *t >= ray->t_min && *t <= ray->t_max && *t < *closest_t)
 		{
 			*closest_t = *t;
 			*closest_object = cylinder;
@@ -122,19 +120,19 @@ void	ray_cylinder_intersect(
 	}
 
 	/* Top cap */
-	denominator = vec_dot(cylinder->direction, ray_direction);
+	denominator = vec_dot(cylinder->direction, ray->direction);
 	if (!equals(denominator, 0.0))
 	{
 		t_point	disk_center;
 		disk_center = vec_add(cylinder->position,
 			vec_mult(cylinder->height, cylinder->direction));
-		*t = vec_dot(vec_minus(disk_center, ray_origin), cylinder->direction)
+		*t = vec_dot(vec_minus(disk_center, ray->origin), cylinder->direction)
 			/ denominator;
-		intersect = vec_add(ray_origin, vec_mult(*t, ray_direction));
+		intersect = vec_add(ray->origin, vec_mult(*t, ray->direction));
 		center_to_intersect = vec_minus(intersect, disk_center);
 		distance_squared = vec_squared(center_to_intersect);
 		if (distance_squared <= cylinder->radius_squared
-			&& *t >= t_min && *t <= t_max && *t < *closest_t)
+			&& *t >= ray->t_min && *t <= ray->t_max && *t < *closest_t)
 		{
 			*closest_t = *t;
 			*closest_object = cylinder;
