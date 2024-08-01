@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 15:57:33 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 16:56:33 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 17:05:28 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ static void	update_solution(
  * minimal-ray-tracer-rendering-simple-shapes/ray-sphere-intersection.html
  */
 void	ray_sphere_intersect(
-			double t[2],
 			t_ray *ray,
 			t_object *sphere,
 			double a,
@@ -71,6 +70,7 @@ void	ray_sphere_intersect(
 	t_vector	o_minus_c;
 	double		discriminant;
 	double		q;
+	double		t[2];
 
 	o_minus_c = vec_minus(ray->origin, sphere->position);
 	b = 2 * vec_dot(o_minus_c, ray->direction);

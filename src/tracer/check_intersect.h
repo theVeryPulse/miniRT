@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:15:28 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 16:55:47 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 17:05:51 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # include "../object/inc/object.h"
 
 extern void	ray_sphere_intersect(
-				double t[2],
 				t_ray *ray,
 				t_object *sphere,
 				double a,
