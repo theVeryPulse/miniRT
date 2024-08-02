@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 16:06:08 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 16:46:40 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 17:05:30 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,32 @@ static bool	light_is_blocked(t_scene *scene, t_ray shadow_ray)
 		return (false);
 }
 
+static double	reflection_intensity(t_object *light, t_ray shadow_ray, t_vector normal,
+			t_vector view, double specular_exponent)
+{
+	double	normal_dot_light;
+	double	intensity;
+	t_vector	reflection;
+	double		reflection_dot_view;
+
+	intensity = 0.0;
+	normal_dot_light = vec_dot(normal, shadow_ray.direction);
+	if (normal_dot_light > 0)
+		intensity += light->intensity * normal_dot_light
+			/ (vec_len(normal) * vec_len(shadow_ray.direction));
+	if (specular_exponent > 0.0)
+	{
+		reflection = reflect_ray(shadow_ray.direction, normal);
+		reflection_dot_view = vec_dot(reflection, view);
+		if (reflection_dot_view > 0)
+		{
+			intensity += light->intensity * pow(reflection_dot_view
+				/ (vec_len(reflection) * vec_len(view)), specular_exponent);
+		}
+	}
+	return (intensity);
+}
+
 /**
  * @brief Computes the intensity of reflection at given point, including diffuse
  *        reflection, specular reflection, shade,
@@ -51,7 +77,6 @@ double	calculate_light_intensity(t_scene *scene, t_point point, t_vector normal,
 {
 	t_object	*light;
 	double		intensity;
-	double		normal_dot_light;
 	t_ray		shadow_ray;
 
 	intensity = 0.0;
@@ -74,35 +99,9 @@ double	calculate_light_intensity(t_scene *scene, t_point point, t_vector normal,
 				shadow_ray.direction = light->direction;
 				shadow_ray.t_max = INFINITY;
 			}
-
-			if (light_is_blocked(scene, shadow_ray))
-			{
-				++light;
-				continue;
-			}
-
-			/* Diffuse reflection */
-			normal_dot_light = vec_dot(normal, shadow_ray.direction);
-			if (normal_dot_light > 0)
-				intensity += light->intensity * normal_dot_light
-					/ (vec_len(normal) * vec_len(shadow_ray.direction));
-			
-			/* Specular reflection */
-			if (specular_exponent > 0.0)
-			{
-				t_vector	reflection;
-				double		reflection_dot_view;
-
-				reflection = reflect_ray(shadow_ray.direction, normal);
-				reflection_dot_view = vec_dot(reflection, view);
-				if (reflection_dot_view > 0)
-				{
-					intensity += light->intensity
-						* pow(reflection_dot_view
-						/ (vec_len(reflection) * vec_len(view)),
-						specular_exponent);
-				}
-			}
+			if (!light_is_blocked(scene, shadow_ray))
+				intensity += reflection_intensity(light, shadow_ray, normal,
+							view, specular_exponent);
 		}
 		++light;
 	}
