@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 16:06:08 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 17:13:29 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 18:51:44 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,15 @@ static bool	light_is_blocked(t_scene *scene, t_ray shadow_ray)
 		return (false);
 }
 
-static double	reflection_intensity(t_object *light, t_ray shadow_ray, t_vector normal,
-			t_vector view, double specular_exponent)
+static double	reflection_intensity(
+			t_object *light,
+			t_ray shadow_ray,
+			t_vector normal,
+			t_vector view,
+			double specular_exponent)
 {
-	double	normal_dot_light;
-	double	intensity;
+	double		normal_dot_light;
+	double		intensity;
 	t_vector	reflection;
 	double		reflection_dot_view;
 
@@ -52,13 +56,13 @@ static double	reflection_intensity(t_object *light, t_ray shadow_ray, t_vector n
 		if (reflection_dot_view > 0)
 		{
 			intensity += light->intensity * pow(reflection_dot_view
-				/ (vec_len(reflection) * vec_len(view)), specular_exponent);
+					/ (vec_len(reflection) * vec_len(view)), specular_exponent);
 		}
 	}
 	return (intensity);
 }
 
-t_ray	build_shadow_ray(t_object *light, t_point point)
+static t_ray	build_shadow_ray(t_object *light, t_point point)
 {
 	t_ray	shadow_ray;
 
@@ -91,8 +95,8 @@ t_ray	build_shadow_ray(t_object *light, t_point point)
  * For point light, t_max is 1, this means object on the other side of the light
  * will not cast shadow on current object.
  */
-double	calculate_light_intensity(t_scene *scene, t_point point, t_vector normal,
-		t_vector view, double specular_exponent)
+double	calculate_light_intensity(t_scene *scene, t_object *tangent_plane,
+		t_vector view)
 {
 	t_object	*light;
 	double		intensity;
@@ -106,10 +110,11 @@ double	calculate_light_intensity(t_scene *scene, t_point point, t_vector normal,
 			intensity += light->intensity;
 		else
 		{
-			shadow_ray = build_shadow_ray(light, point);
+			shadow_ray = build_shadow_ray(light, tangent_plane->position);
 			if (!light_is_blocked(scene, shadow_ray))
-				intensity += reflection_intensity(light, shadow_ray, normal,
-							view, specular_exponent);
+				intensity += reflection_intensity(light, shadow_ray,
+						tangent_plane->direction,
+						view, tangent_plane->specular_exponent);
 		}
 		++light;
 	}
