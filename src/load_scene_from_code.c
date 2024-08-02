@@ -6,10 +6,11 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 23:08:32 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 23:09:16 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 23:24:56 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+/* 
 #include "scene/inc/scene.h"
 #include "geometry/inc/geometry.h"
 #include "camera/inc/camera.h"
@@ -96,3 +97,4 @@ void	load_test_scene(t_scene *scene)
 	scene->lights[--light_count] = ambient_light(0.3);
 	scene->focus = scene->objects;
 }
+// */
