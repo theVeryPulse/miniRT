@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 02:41:38 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 18:53:19 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 19:11:15 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,43 +21,23 @@
 #include <stddef.h>
 #include <math.h>
 
-extern t_argb	get_checkerboard_sphere_color(t_point pt, t_argb color1,
-					t_argb color2);
+extern t_argb	get_checkerboard_sphere_color(
+					t_point pt, t_argb color1, t_argb color2);
 
-static t_argb	get_local_color(t_object *object, t_point intersection,
-			double intensity)
-{
-	t_argb	local_color;
+static t_object	build_tangent_plane(t_ray *ray, t_closest *closest);
 
-	if (object->is_checkerboard && object->type == Sphere)
-		local_color = get_checkerboard_sphere_color(
-				vec_minus(intersection, object->position), WHITE, BLACK);
-	else
-		local_color = object->color;
-	local_color = color_mult(local_color, intensity);
-	return (local_color);
-}
+static t_argb	get_local_color(
+					t_object *object, t_point intersection, double intensity);
 
-t_object	build_tangent_plane(t_ray *ray, t_closest *closest)
-{
-	t_object	plane;
-	t_point		intersection;
-	t_vector	unit_normal;
-
-	intersection = vec_add(ray->origin, vec_mult(closest->t, ray->direction));
-	unit_normal = normal_on_surface(closest->object, intersection);
-	plane = (t_object){0};
-	plane.category = Object;
-	plane.type = Plane;
-	plane.position = intersection;
-	plane.direction = unit_normal;
-	plane.specular_exponent = closest->object->specular_exponent;
-	plane.reflectivity = closest->object->reflectivity;
-	plane.radius = -1;
-	plane.error = false;
-	return (plane);
-}
-
+/**
+ * @brief 
+ * 
+ * @param scene 
+ * @param ray 
+ * @param closest 
+ * @param recursion_depth 
+ * @return t_argb 
+ */
 t_argb	shade(t_scene *scene, t_ray *ray, t_closest *closest,
 			uint8_t recursion_depth)
 {
@@ -82,4 +62,38 @@ t_argb	shade(t_scene *scene, t_ray *ray, t_closest *closest,
 	return (color_add(
 			color_mult(local_color, 1 - closest->object->reflectivity),
 			color_mult(reflected_color, closest->object->reflectivity)));
+}
+
+static t_object	build_tangent_plane(t_ray *ray, t_closest *closest)
+{
+	t_object	plane;
+	t_point		intersection;
+	t_vector	unit_normal;
+
+	intersection = vec_add(ray->origin, vec_mult(closest->t, ray->direction));
+	unit_normal = normal_on_surface(closest->object, intersection);
+	plane = (t_object){0};
+	plane.category = Object;
+	plane.type = Plane;
+	plane.position = intersection;
+	plane.direction = unit_normal;
+	plane.specular_exponent = closest->object->specular_exponent;
+	plane.reflectivity = closest->object->reflectivity;
+	plane.radius = -1;
+	plane.error = false;
+	return (plane);
+}
+
+static t_argb	get_local_color(
+			t_object *object, t_point intersection, double intensity)
+{
+	t_argb	local_color;
+
+	if (object->is_checkerboard && object->type == Sphere)
+		local_color = get_checkerboard_sphere_color(
+				vec_minus(intersection, object->position), WHITE, BLACK);
+	else
+		local_color = object->color;
+	local_color = color_mult(local_color, intensity);
+	return (local_color);
 }
