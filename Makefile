@@ -64,6 +64,8 @@ FILES := \
 	src/object/objects/plane.c \
 	src/scene/allocate_lights.c \
 	src/scene/allocate_objects.c \
+	src/shader/calculate_light_intensity.c \
+	src/shader/reflect_ray.c \
 	src/shader/shade.c \
 	src/shader/normal_on_surface.c \
 	src/tracer/ray_cylinder_intersect.c \
