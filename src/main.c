@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 22:47:46 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 22:58:15 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,38 +44,6 @@
 #include <stdbool.h>
 
 #define RED_ERROR "\033[91merror: \033[0m"
-
-/**
- * @brief Draws a pixel with the specified color at the given raster space
- *        coordinates on the mlx image.
- *
- * @param img_vars Pointer to the image variables structure.
- * @param pixel The struct with coordinates and color of the pixel to draw.
- */
-void	draw_pixel_in_raster_space(t_img_vars *img_vars, t_pixel pixel)
-{
-	char		*dst;
-	ptrdiff_t	offset;
-
-	if (pixel.x >= WIDTH || pixel.x < 0 || pixel.y >= HEIGHT || pixel.y < 0)
-	{
-		printf("(%d, %d) outside window\n", pixel.x, pixel.y);
-		return ;
-	}
-	offset = pixel.y * img_vars->line_size
-		+ pixel.x * (img_vars->bits_per_pixel / 8);
-	dst = img_vars->addr + offset;
-	*(unsigned int *)dst = pixel.color;
-}
-
-void	draw_pixel_in_screen_space(t_img_vars *img_vars, t_pixel pixel)
-{
-	t_pixel	converted;
-
-	converted = (t_pixel){.x = WIDTH / 2 + pixel.x,
-		.y = HEIGHT / 2 - pixel.y, pixel.color};
-	draw_pixel_in_raster_space(img_vars, converted);
-}
 
 /**
  * @brief 
