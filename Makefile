@@ -7,7 +7,6 @@ CFLAGS := -Wall -Wextra -g
 # ls src/**/*.c >> Makefile
 FILES := \
 	src/cast_ray/cast_ray.c \
-	src/checkerboard_color_sphere.c \
 	src/color/alpha_component.c \
 	src/color/argb.c \
 	src/color/blue_component.c \
@@ -65,9 +64,10 @@ FILES := \
 	src/scene/allocate_lights.c \
 	src/scene/allocate_objects.c \
 	src/shader/calculate_light_intensity.c \
+	src/shader/checkerboard_sphere_color.c \
+	src/shader/normal_on_surface.c \
 	src/shader/reflect_ray.c \
 	src/shader/shade.c \
-	src/shader/normal_on_surface.c \
 	src/tracer/ray_cylinder_intersect.c \
 	src/tracer/ray_disk_intersect.c \
 	src/tracer/ray_plane_intersect.c \
@@ -120,5 +120,4 @@ debug: CFLAGS := -g -Wall -Wextra
 debug: re
 
 .PHONY: all, clean, fclean, re, debug
-
 

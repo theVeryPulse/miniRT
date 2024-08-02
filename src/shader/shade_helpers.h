@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 15:39:37 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 19:06:16 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 19:18:26 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,8 @@ extern double	calculate_light_intensity(
 					t_scene *scene,
 					t_object *tangent_plane,
 					t_vector view);
+
+extern t_argb	get_checkerboard_sphere_color(
+					t_point pt, t_argb color1, t_argb color2);
 
 #endif /* SHADE_HELPERS_H */

@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 02:41:38 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 19:11:15 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 19:18:38 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,6 @@
 #include "../scene/inc/scene.h"
 #include <stddef.h>
 #include <math.h>
-
-extern t_argb	get_checkerboard_sphere_color(
-					t_point pt, t_argb color1, t_argb color2);
 
 static t_object	build_tangent_plane(t_ray *ray, t_closest *closest);
 
