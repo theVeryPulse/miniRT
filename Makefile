@@ -6,6 +6,7 @@ CFLAGS := -Wall -Wextra -g
 
 # ls src/**/*.c >> Makefile
 FILES := \
+	src/camera/camera.c \
 	src/cast_ray/cast_ray.c \
 	src/color/alpha_component.c \
 	src/color/argb.c \

@@ -6,24 +6,20 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 18:03:46 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/31 20:38:50 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 20:48:44 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "load_vector.h"
 #include "load_rgb.h"
 #include "../skip/inc/skip.h"
-#include "../../t_camera.h"
+#include "../../camera/inc/camera.h"
 #include "../../minirt.h"
 #include "../../../lib/libft/inc/libft.h"
 #include <stdio.h>
 #include <stdbool.h>
 
 #define RED_ERROR "\033[91merror: \033[0m"
-
-/* camera() is defined in another file */
-
-t_camera	camera(t_raw_point position, t_vector w);
 
 /**
  * @brief 

@@ -1,31 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_camera.h                                         :+:      :+:    :+:   */
+/*   camera.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/15 19:48:08 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 15:43:22 by Philip           ###   ########.fr       */
+/*   Created: 2024/08/02 20:41:45 by Philip            #+#    #+#             */
+/*   Updated: 2024/08/02 20:44:07 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_CAMERA_H
-# define T_CAMERA_H
+#ifndef CAMERA_H
+# define CAMERA_H
 
-# include "geometry/vector/t_point.h"
-# include <stdbool.h>
+# include "../t_camera.h"
 
-typedef struct s_camera
-{
-	t_point		position;
-	/* Unit direction vector of x-axis */
-	t_vector	u;
-	/* Unit direction vector of y-axis */
-	t_vector	v;
-	/* Unit direction vector of z-axis */
-	t_vector	w;
-	bool		error;
-}	t_camera;
+t_camera	camera(t_raw_point position, t_vector w);
 
-#endif /* T_CAMERA_H */
+#endif /* CAMERA_H */

@@ -6,11 +6,12 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 23:44:21 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 20:44:43 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "t_vars.h"
+#include "camera/inc/camera.h"
 #include "load_file/inc/load_file.h"
 #include "scene/inc/scene.h"
 #include "object/inc/object.h"
@@ -182,42 +183,8 @@ void	precompute_values(t_scene *scene)
 			vec_normalize(&o->direction);
 		++o;
 	}
-	minirt()->eye_canvas_distance = minirt()->eye_canvas_distance = (WIDTH / 2)
+	minirt()->eye_canvas_distance = (WIDTH / 2)
 		/ tan((minirt()->fov / 2) * DEG_TO_RAD);
-}
-
-/** 
- * @brief 
- * 
- * @param position 
- * @param w z-axis (pointing towards viewer) of the camera
- * @return t_camera 
- */
-t_camera	camera(t_raw_point position, t_vector w)
-{
-	t_camera	camera;
-
-	camera = (t_camera){0};
-	camera.position = vec_mult(minirt()->unit_one, position);
-	if (w.x == 0 && w.z == 0 && w.y > 0)
-	{
-		camera.u = (t_vector){1, 0, 0};
-		camera.v = (t_vector){0, 0, -1},
-		camera.w = (t_vector){0, 1, 0};
-		return (camera);
-	}
-	else if (w.x == 0 && w.z == 0 && w.y < 0)
-	{
-		camera.u = (t_vector){1, 0, 0};
-		camera.v = (t_vector){0, 0, 1},
-		camera.w = (t_vector){0, -1, 0};
-		return (camera);
-	}
-	camera.w = vec_normalized(w);
-	camera.v = (t_vector){0, 1, 0};
-	camera.u = vec_cross(camera.v, camera.w);
-	camera.v = vec_cross(camera.w, camera.u);
-	return (camera);
 }
 
 void	load_default_scene(t_scene *scene)
