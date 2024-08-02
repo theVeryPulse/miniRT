@@ -28,7 +28,9 @@ FILES := \
 	src/geometry/vector/vec_normalize.c \
 	src/geometry/vector/vec_normalized.c \
 	src/geometry/vector/vec_squared.c \
+	src/key_press/clean_exit.c \
 	src/key_press/handle_keypress_event.c \
+	src/key_press/set_up_hooks.c \
 	src/key_press/switch_focus.c \
 	src/load_file/basic_check.c \
 	src/load_file/line_check/check_ambient_light_line.c \
