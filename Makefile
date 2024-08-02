@@ -6,6 +6,7 @@ CFLAGS := -Wall -Wextra -g
 
 # ls src/**/*.c >> Makefile
 FILES := \
+	src/cast_ray/cast_ray.c \
 	src/checkerboard_color_sphere.c \
 	src/color/alpha_component.c \
 	src/color/argb.c \
@@ -63,6 +64,7 @@ FILES := \
 	src/object/objects/plane.c \
 	src/scene/allocate_lights.c \
 	src/scene/allocate_objects.c \
+	src/shader/shade.c \
 	src/tracer/ray_cylinder_intersect.c \
 	src/tracer/ray_disk_intersect.c \
 	src/tracer/ray_plane_intersect.c \
