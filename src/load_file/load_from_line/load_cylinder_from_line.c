@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 18:45:06 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 13:48:55 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 23:35:58 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,6 @@
 #endif
 
 #define RED_ERROR "\033[91merror: \033[0m"
-
-/* External function */
-
-extern void			load_cylinder_from_line(t_object *c, const char *line);
-
-/* Helper functions */
 
 static t_raw_point	bottom_center(t_raw_point center, t_vector axis,
 						double height);

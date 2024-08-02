@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 18:35:19 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 19:00:39 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 23:36:18 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 #include "../../geometry/vector/vector.h"
 #include "../../../lib/libft/inc/libft.h"
 #include <stdio.h>
-
-extern void	load_point(t_raw_point *point, const char **line);
-extern void	load_vector(t_raw_point *point, const char **line);
 
 static void	check_is_number(const char *ptr);
 

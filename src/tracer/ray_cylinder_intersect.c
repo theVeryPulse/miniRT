@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:45:59 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 22:20:08 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 23:33:45 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,6 @@
 #include "../maths/inc/maths.h"
 #include "t_triplet.h"
 #include <math.h>
-
-extern void	ray_cylinder_intersect(
-				t_ray *ray,
-				t_object *c,
-				t_closest *closest);
 
 static void	calculate_abc(t_triplet *d3, t_ray *ray, t_object *c);
 static void	ray_curved_surface_intersect(double t[2], t_triplet *d3);

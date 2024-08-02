@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:21:20 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 22:35:16 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 23:36:54 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ extern void	render_image(t_vars *vars);
 
 /* Functions defined in this file */
 
-extern int	handle_keypress_event(int key, t_vars *vars);
 static void	adjust_directional_light(t_object *focus, int key);
 static void	move_position(t_object *focus, int key);
 static void	adjust_light_intensity(t_object *light, int key);

@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 18:08:40 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/31 21:39:14 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 23:36:05 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@
 #endif
 
 #define RED_ERROR "\033[91merror: \033[0m"
-
-extern void	load_object_from_line(t_object *object, const char *line);
 
 static void	load_sphere_from_line(t_object *sphere, const char *line);
 static void	load_plane_from_line(t_object *plane, const char *line);
