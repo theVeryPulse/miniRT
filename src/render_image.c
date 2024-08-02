@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 23:02:33 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 23:05:40 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 23:28:25 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,14 @@ void	render_image(t_vars *vars)
 	t_pixel		pixel;
 
 	pixel.y = HEIGHT / 2;
-	while (pixel.y > - HEIGHT / 2)
+	while (pixel.y > -HEIGHT / 2)
 	{
-		pixel.x = - WIDTH / 2;
+		pixel.x = -WIDTH / 2;
 		while (pixel.x < WIDTH / 2)
 		{
 			ray.origin = vars->scene.camera.position;
-			ray.direction = transform_ray(&(vars->scene.camera),
-				(t_point){pixel.x, pixel.y, -(minirt()->eye_canvas_distance)});
+			ray.direction = transform_ray(&(vars->scene.camera), (t_point)
+				{pixel.x, pixel.y, -(minirt()->eye_canvas_distance)});
 			ray.t_min = vec_len(ray.direction);
 			ray.t_max = INFINITY;
 			vec_normalize(&ray.direction);

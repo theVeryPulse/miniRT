@@ -28,13 +28,19 @@
 /*  Defined in render_image.c */
 extern void	render_image(t_vars *vars);
 
-/* Defined in load_scene_from_code.c */
-/* Use this function to load a pre-set scene. */
-extern void	load_default_scene(t_scene *scene);
+/* Defined in load_scene_from_code.c
+ * Use this function to load a pre-set scene.
+ * To use this function: use this line in main
+ *     load_test_scene(&vars.scene);
+ */
+// extern void	load_default_scene(t_scene *scene);
 
-/* Defined in load_scene_from_code.c */
-/* Use this function to load a simple test scene. */
-extern void	load_test_scene(t_scene *scene);
+/* Defined in load_scene_from_code.c
+ * Use this function to load a simple test scene.
+ * To use this function: use this line in main
+ *    load_test_scene(&vars.scene);
+ */
+// extern void	load_test_scene(t_scene *scene);
 
 static void	precompute_values(t_scene *scene);
 static void	check_argc(int argc);
@@ -47,10 +53,7 @@ int	main(int argc, char const *argv[])
 	check_argc(argc);
 	check_filename(argv[1]);
 	minirt_init(&vars);
-	load_default_scene(&vars.scene);
-	// load_test_scene(&vars.scene);
-	// load_scene_from_file(&vars.scene, argv[1]);
-
+	load_scene_from_file(&vars.scene, argv[1]);
 	precompute_values(&vars.scene);
 	set_up_mlx(&vars);
 	set_up_hooks(&vars);
@@ -102,6 +105,6 @@ static void	precompute_values(t_scene *scene)
 			vec_normalize(&o->direction);
 		++o;
 	}
-	minirt()->eye_canvas_distance = (WIDTH / 2)
-		/ tan((minirt()->fov / 2) * DEG_TO_RAD);
+	minirt()->eye_canvas_distance = (WIDTH / 2) / tan(
+		(minirt()->fov / 2) * DEG_TO_RAD);
 }
