@@ -6,10 +6,11 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 02:41:38 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 03:05:10 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 15:55:28 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "shade_helpers.h"
 #include "../color/inc/argb.h"
 #include "../geometry/inc/geometry.h"
 #include "../t_closest.h"
@@ -134,35 +135,7 @@ t_argb	shade(t_scene *scene, t_ray *ray, t_closest *closest,
 	t_argb		local_color;
 
 	intersection = vec_add(ray->origin, vec_mult(closest->t, ray->direction));
-	if (closest->object->type == Sphere)
-		unit_normal = vec_normalized(
-			vec_minus(intersection, closest->object->position));
-	else if (closest->object->type == Plane || closest->object->type == Disk)
-	{
-		unit_normal = closest->object->direction;
-		if (closest->object->backside)
-			unit_normal = vec_mult(-1.0, unit_normal);
-	}
-	else if (closest->object->type == Cylinder)
-	{
-		if (closest->object->ray_intersects == CurvedSurface)
-		{
-			t_vector q = vec_minus(intersection, closest->object->position);
-			t_vector q_on_v = vec_mult(vec_dot(q, closest->object->direction),
-				closest->object->direction);
-			unit_normal = vec_normalized(vec_minus(q, q_on_v));
-		}
-		else if (closest->object->ray_intersects == BottomFace
-			|| closest->object->ray_intersects == TopFace)
-		{
-			unit_normal = closest->object->direction;
-			if (closest->object->backside)
-				unit_normal = vec_mult(-1, unit_normal);
-		}
-	}
-	else
-	{
-	}
+	unit_normal = normal_on_surface(closest->object, intersection);
 	intensity = compute_lighting(scene, intersection, unit_normal,
 		vec_mult(-1, ray->direction), closest->object->specular_exponent);
 	if (closest->object->is_checkerboard)
