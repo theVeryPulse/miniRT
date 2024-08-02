@@ -1,23 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   load_from_line.h                                   :+:      :+:    :+:   */
+/*   cast_ray.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/29 18:14:47 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 20:46:03 by Philip           ###   ########.fr       */
+/*   Created: 2024/08/02 02:54:11 by Philip            #+#    #+#             */
+/*   Updated: 2024/08/02 02:58:39 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LOAD_FROM_LINE_H
-# define LOAD_FROM_LINE_H
+#ifndef CAST_RAY_H
+# define CAST_RAY_H
 
-# include "../../../camera/t_camera.h"
-# include "../../../object/inc/object.h"
+# include "../../color/t_argb.h"
+# include "../../ray/t_ray.h"
+# include "../../scene/t_scene.h"
+# include <stddef.h>
+# include <math.h>
 
-extern void	load_camera_from_line(t_camera *camera, const char *line);
-extern void	load_light_from_line(t_object *object, const char *line);
-extern void	load_object_from_line(t_object *object, const char *line);
+t_argb	cast_ray(t_scene *scene, t_ray *ray, uint8_t recursion_depth);
 
-#endif /* LOAD_FROM_LINE_H */
+#endif /* CAST_RAY_H */

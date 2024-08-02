@@ -1,23 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   load_from_line.h                                   :+:      :+:    :+:   */
+/*   put_image_to_window_vars.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/29 18:14:47 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 20:46:03 by Philip           ###   ########.fr       */
+/*   Created: 2024/08/02 22:47:42 by Philip            #+#    #+#             */
+/*   Updated: 2024/08/02 22:47:57 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LOAD_FROM_LINE_H
-# define LOAD_FROM_LINE_H
+#include "../t_vars.h"
+#include "../../lib/minilibx-linux/mlx.h"
 
-# include "../../../camera/t_camera.h"
-# include "../../../object/inc/object.h"
-
-extern void	load_camera_from_line(t_camera *camera, const char *line);
-extern void	load_light_from_line(t_object *object, const char *line);
-extern void	load_object_from_line(t_object *object, const char *line);
-
-#endif /* LOAD_FROM_LINE_H */
+/**
+ * @brief Puts the image to the window.
+ *
+ * @param vars Pointer to the variables structure.
+ */
+void	put_image_to_window_vars(t_vars *vars)
+{
+	mlx_put_image_to_window(vars->mlx_ptr, vars->win_ptr,
+		vars->img_vars.img_ptr, 0, 0);
+}

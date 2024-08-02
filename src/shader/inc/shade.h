@@ -1,33 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_ray.h                                            :+:      :+:    :+:   */
+/*   shade.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/13 19:17:37 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/13 19:45:51 by Philip           ###   ########.fr       */
+/*   Created: 2024/08/02 02:41:17 by Philip            #+#    #+#             */
+/*   Updated: 2024/08/02 19:13:56 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_RAY_H
-# define T_RAY_H
+#ifndef SHADE_H
+# define SHADE_H
 
-# include "geometry/vector/t_point.h"
+# include "../../t_closest.h"
+# include "../../ray/t_ray.h"
+# include "../../scene/inc/scene.h"
 
-typedef enum e_ray_type
-{
-	UndefinedRayType,
-	PrimaryRay,
-	ReflectionRay,
-	ShadowRay,
-}	t_ray_type;
+t_argb	shade(t_scene *scene,
+			t_ray *ray,
+			t_closest *closest,
+			uint8_t recursion_depth);
 
-typedef struct s_ray
-{
-	t_point		origin;
-	/* Normalized direction vector */
-	t_vector	direction;
-}	t_ray;
-
-#endif /* T_RAY_H */
+#endif /* SHADE_H */

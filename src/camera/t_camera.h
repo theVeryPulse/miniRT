@@ -1,23 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   load_from_line.h                                   :+:      :+:    :+:   */
+/*   t_camera.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/29 18:14:47 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 20:46:03 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/15 19:48:08 by Philip            #+#    #+#             */
+/*   Updated: 2024/08/02 20:45:18 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LOAD_FROM_LINE_H
-# define LOAD_FROM_LINE_H
+#ifndef T_CAMERA_H
+# define T_CAMERA_H
 
-# include "../../../camera/t_camera.h"
-# include "../../../object/inc/object.h"
+# include "../geometry/vector/t_point.h"
+# include <stdbool.h>
 
-extern void	load_camera_from_line(t_camera *camera, const char *line);
-extern void	load_light_from_line(t_object *object, const char *line);
-extern void	load_object_from_line(t_object *object, const char *line);
+typedef struct s_camera
+{
+	t_point		position;
+	/* Unit direction vector of x-axis */
+	t_vector	u;
+	/* Unit direction vector of y-axis */
+	t_vector	v;
+	/* Unit direction vector of z-axis */
+	t_vector	w;
+	bool		error;
+}	t_camera;
 
-#endif /* LOAD_FROM_LINE_H */
+#endif /* T_CAMERA_H */

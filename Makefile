@@ -6,7 +6,8 @@ CFLAGS := -Wall -Wextra -g
 
 # ls src/**/*.c >> Makefile
 FILES := \
-	src/checkerboard_color_sphere.c \
+	src/camera/camera.c \
+	src/cast_ray/cast_ray.c \
 	src/color/alpha_component.c \
 	src/color/argb.c \
 	src/color/blue_component.c \
@@ -14,7 +15,6 @@ FILES := \
 	src/color/color_mult.c \
 	src/color/green_component.c \
 	src/color/red_component.c \
-	src/equals.c \
 	src/geometry/matrix/mx_mult.c \
 	src/geometry/matrix/mx_mult_mx.c \
 	src/geometry/matrix/mx_transpose.c \
@@ -28,7 +28,10 @@ FILES := \
 	src/geometry/vector/vec_normalize.c \
 	src/geometry/vector/vec_normalized.c \
 	src/geometry/vector/vec_squared.c \
-	src/handle_keypress_event.c \
+	src/key_press/clean_exit.c \
+	src/key_press/handle_keypress_event.c \
+	src/key_press/set_up_hooks.c \
+	src/key_press/switch_focus.c \
 	src/load_file/basic_check.c \
 	src/load_file/line_check/check_ambient_light_line.c \
 	src/load_file/line_check/check_camera_line.c \
@@ -48,9 +51,16 @@ FILES := \
 	src/load_file/skip/skip_number.c \
 	src/load_file/skip/skip_rgb.c \
 	src/load_file/skip/skip_spaces.c \
+	src/load_scene_from_code.c \
 	src/main.c \
+	src/maths/equals.c \
+	src/maths/sign.c \
 	src/minirt.c \
 	src/minirt_init.c \
+	src/mlx_window/draw_pixel_in_raster_space.c \
+	src/mlx_window/draw_pixel_in_screen_space.c \
+	src/mlx_window/put_image_to_window_vars.c \
+	src/mlx_window/set_up_mlx.c \
 	src/object/light/ambient_light.c \
 	src/object/light/directional_light.c \
 	src/object/light/point_light.c \
@@ -59,8 +69,19 @@ FILES := \
 	src/object/objects/cylinder.c \
 	src/object/objects/disk.c \
 	src/object/objects/plane.c \
+	src/render_image.c \
 	src/scene/allocate_lights.c \
-	src/scene/allocate_objects.c
+	src/scene/allocate_objects.c \
+	src/shader/calculate_light_intensity.c \
+	src/shader/checkerboard_sphere_color.c \
+	src/shader/normal_on_surface.c \
+	src/shader/reflect_ray.c \
+	src/shader/shade.c \
+	src/tracer/ray_cylinder_intersect.c \
+	src/tracer/ray_disk_intersect.c \
+	src/tracer/ray_plane_intersect.c \
+	src/tracer/ray_sphere_intersect.c \
+	src/tracer/trace.c
 
 # FILES := $(addprefix src/, $(FILES))
 OFILES := $(patsubst src/%.c, build/%.o, $(FILES))

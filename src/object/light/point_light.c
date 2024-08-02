@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 18:56:01 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/31 17:35:22 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 23:34:47 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,7 @@
 #include "../../minirt.h"
 #include "../../geometry/inc/geometry.h"
 
-t_object	point_light(
-	t_raw_point position,
-	double intensity
-)
+t_object	point_light(t_raw_point position, double intensity)
 {
 	t_object	point_light;
 

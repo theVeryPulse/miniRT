@@ -1,31 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_camera.h                                         :+:      :+:    :+:   */
+/*   t_ray.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/15 19:48:08 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/29 18:18:53 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/13 19:17:37 by Philip            #+#    #+#             */
+/*   Updated: 2024/08/01 17:38:12 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_CAMERA_H
-# define T_CAMERA_H
+#ifndef T_RAY_H
+# define T_RAY_H
 
-#include "geometry/vector/t_point.h"
-#include <stdbool.h>
+# include "../geometry/vector/t_point.h"
 
-typedef struct s_camera
+typedef enum e_ray_type
 {
-	t_point		position;
-	/* Unit direction vector of x-axis */
-	t_vector	u;
-	/* Unit direction vector of y-axis */
-	t_vector	v;
-	/* Unit direction vector of z-axis */
-	t_vector	w;
-	bool		error;
-}	t_camera;
+	UndefinedRayType,
+	PrimaryRay,
+	ReflectionRay,
+	ShadowRay,
+}	t_ray_type;
 
-#endif /* T_CAMERA_H */
+typedef struct s_ray
+{
+	t_point		origin;
+	/* Normalized direction vector */
+	t_vector	direction;
+	double		t_min;
+	double		t_max;
+	double		direction_squared;
+}	t_ray;
+
+#endif /* T_RAY_H */

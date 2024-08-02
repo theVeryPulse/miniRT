@@ -1,23 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   load_from_line.h                                   :+:      :+:    :+:   */
+/*   reflect_ray.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/29 18:14:47 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 20:46:03 by Philip           ###   ########.fr       */
+/*   Created: 2024/08/02 16:06:35 by Philip            #+#    #+#             */
+/*   Updated: 2024/08/02 16:07:03 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LOAD_FROM_LINE_H
-# define LOAD_FROM_LINE_H
+#include "../geometry/inc/geometry.h"
 
-# include "../../../camera/t_camera.h"
-# include "../../../object/inc/object.h"
-
-extern void	load_camera_from_line(t_camera *camera, const char *line);
-extern void	load_light_from_line(t_object *object, const char *line);
-extern void	load_object_from_line(t_object *object, const char *line);
-
-#endif /* LOAD_FROM_LINE_H */
+/**
+ * @brief 
+ * 
+ * @param normal 
+ * @param ray 
+ * @return t_vector 
+ * @note Equation: R = 2 * dot(N, L) * N - L
+ */
+extern t_vector	reflect_ray(t_vector ray, t_vector normal)
+{
+	return (vec_minus(vec_mult(2 * vec_dot(normal, ray), normal), ray));
+}

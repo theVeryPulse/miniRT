@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 17:48:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/27 13:47:35 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 20:45:31 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define T_SCENE_H
 
 # include "../object/t_object.h"
-# include "../t_camera.h"
+# include "../camera/t_camera.h"
 # include <stdint.h>
 
 typedef struct s_scene
