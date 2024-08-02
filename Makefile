@@ -51,14 +51,15 @@ FILES := \
 	src/load_file/skip/skip_number.c \
 	src/load_file/skip/skip_rgb.c \
 	src/load_file/skip/skip_spaces.c \
+	src/load_scene_from_code.c \
 	src/main.c \
 	src/maths/equals.c \
 	src/maths/sign.c \
 	src/minirt.c \
 	src/minirt_init.c \
-	src/mlx_window/put_image_to_window_vars.c \
 	src/mlx_window/draw_pixel_in_raster_space.c \
 	src/mlx_window/draw_pixel_in_screen_space.c \
+	src/mlx_window/put_image_to_window_vars.c \
 	src/mlx_window/set_up_mlx.c \
 	src/object/light/ambient_light.c \
 	src/object/light/directional_light.c \
@@ -68,6 +69,7 @@ FILES := \
 	src/object/objects/cylinder.c \
 	src/object/objects/disk.c \
 	src/object/objects/plane.c \
+	src/render_image.c \
 	src/scene/allocate_lights.c \
 	src/scene/allocate_objects.c \
 	src/shader/calculate_light_intensity.c \
