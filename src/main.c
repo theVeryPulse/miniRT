@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 22:44:25 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 22:47:46 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,19 +44,6 @@
 #include <stdbool.h>
 
 #define RED_ERROR "\033[91merror: \033[0m"
-
-
-
-/**
- * @brief Puts the image to the window.
- *
- * @param vars Pointer to the variables structure.
- */
-void	put_image_to_window_vars(t_vars *vars)
-{
-	mlx_put_image_to_window(vars->mlx_ptr, vars->win_ptr,
-		vars->img_vars.img_ptr, 0, 0);
-}
 
 /**
  * @brief Draws a pixel with the specified color at the given raster space

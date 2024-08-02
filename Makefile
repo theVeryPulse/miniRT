@@ -56,6 +56,7 @@ FILES := \
 	src/maths/sign.c \
 	src/minirt.c \
 	src/minirt_init.c \
+	src/mlx_window/put_image_to_window_vars.c \
 	src/mlx_window/set_up_mlx.c \
 	src/object/light/ambient_light.c \
 	src/object/light/directional_light.c \
