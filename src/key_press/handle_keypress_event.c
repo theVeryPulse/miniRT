@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:21:20 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 15:34:32 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 22:35:16 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 /* Functions defined in other files */
 
 extern void	put_image_to_window_vars(t_vars *vars);
-extern int	clean_exit(int exit_status);
 extern void	render_image(t_vars *vars);
 
 /* Functions defined in this file */

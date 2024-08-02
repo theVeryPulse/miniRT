@@ -6,18 +6,20 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 15:09:41 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 15:27:04 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 22:36:15 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../t_vars.h"
 #include "../../lib/minilibx-linux/mlx.h"
 
-static char	*focus_message(t_object *focus);
-
 /* Functions defined in other files */
 
 extern void	put_image_to_window_vars(t_vars *vars);
+
+/* Functions in this file */
+
+static char	*focus_message(t_object *focus);
 
 /**
  * @brief 
