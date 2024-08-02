@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 16:06:08 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 17:05:30 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 17:13:29 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,25 @@ static double	reflection_intensity(t_object *light, t_ray shadow_ray, t_vector n
 	return (intensity);
 }
 
+t_ray	build_shadow_ray(t_object *light, t_point point)
+{
+	t_ray	shadow_ray;
+
+	shadow_ray = (t_ray){.origin = point, .t_min = 1e-4, .t_max = INFINITY};
+	if (light->type == PointLight)
+	{
+		shadow_ray.direction = vec_minus(light->position, point);
+		shadow_ray.t_max = vec_len(shadow_ray.direction);
+		vec_normalize(&shadow_ray.direction);
+	}
+	else if (light->type == DirectionalLight)
+	{
+		shadow_ray.direction = light->direction;
+		shadow_ray.t_max = INFINITY;
+	}
+	return (shadow_ray);
+}
+
 /**
  * @brief Computes the intensity of reflection at given point, including diffuse
  *        reflection, specular reflection, shade,
@@ -81,24 +100,13 @@ double	calculate_light_intensity(t_scene *scene, t_point point, t_vector normal,
 
 	intensity = 0.0;
 	light = scene->lights;
-	shadow_ray = (t_ray){.origin = point, .t_min = 1e-4, .t_max = INFINITY};
 	while (light < scene->light_count + scene->lights)
 	{
 		if (light->type == AmbientLight)
 			intensity += light->intensity;
 		else
 		{
-			if (light->type == PointLight)
-			{
-				shadow_ray.direction = vec_minus(light->position, point);
-				shadow_ray.t_max = vec_len(shadow_ray.direction);
-				vec_normalize(&shadow_ray.direction);
-			}
-			else if (light->type == DirectionalLight)
-			{
-				shadow_ray.direction = light->direction;
-				shadow_ray.t_max = INFINITY;
-			}
+			shadow_ray = build_shadow_ray(light, point);
 			if (!light_is_blocked(scene, shadow_ray))
 				intensity += reflection_intensity(light, shadow_ray, normal,
 							view, specular_exponent);
