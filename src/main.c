@@ -6,42 +6,22 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 23:14:18 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 23:27:18 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "t_vars.h"
-#include "mlx_window/inc/mlx_manage.h"
-#include "camera/inc/camera.h"
-#include "load_file/inc/load_file.h"
-#include "scene/inc/scene.h"
-#include "object/inc/object.h"
-#include "cast_ray/inc/cast_ray.h"
-#include "ray/t_ray.h"
-#include "t_closest.h"
-#include "window.h"
-#include "key_press/inc/key_press.h"
-#include "maths/inc/maths.h"
-#include "../lib/minilibx-linux/mlx.h"
-#include <X11/X.h> /* DestroyNotify, ButtonReleaseMask */
-#include <X11/keysym.h> /* XK_escape */
-
-#include <stdio.h> /* printf */
-#include <stdlib.h> /* free */
-
 #include "minirt.h"
-
-#include "t_pixel.h"
-#include <stddef.h> /* ptrdiff_t */
-
+#include "window.h"
+#include "mlx_window/inc/mlx_manage.h"
+#include "key_press/inc/key_press.h"
 #include "geometry/inc/geometry.h"
-
-#include <math.h>
-#include <unistd.h> /* STDERR */
-
+#include "load_file/inc/load_file.h"
 #include "../lib/libft/inc/libft.h"
-
-#include <stdbool.h>
+#include "../lib/minilibx-linux/mlx.h"
+#include <stdio.h> /* printf */
+#include <stdlib.h> /* exit */
+#include <math.h> /* tan */
 
 #define RED_ERROR "\033[91merror: \033[0m"
 
