@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 16:06:08 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 16:23:42 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 16:31:46 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,25 @@
 #include <math.h>
 #include <stddef.h>
 
+
+static bool	light_is_blocked(t_scene *scene, t_point point, t_vector light_vec,
+				double t_max)
+{
+	t_ray		shadow_ray;
+	t_closest	closest;
+
+	closest.object = NULL;
+	closest.t = INFINITY;
+	shadow_ray.origin = point;
+	shadow_ray.direction = light_vec;
+	shadow_ray.t_min = 1e-4;
+	shadow_ray.t_max = t_max;
+	if (trace(scene, &shadow_ray, &closest))
+		return (true);
+	else
+		return (false);
+}
+
 /**
  * @brief Computes the intensity of reflection at given point, including diffuse
  *        reflection, specular reflection, shade,
@@ -26,6 +45,8 @@
  * @param scene Scene struct, which contains all light sources.
  * @param point Point on object to calculate.
  * @param normal Normal vector at the point on surface.
+ * @param view 
+ * @param specular_exponent 
  * @return double Intensity of the diffuse light at given point, range [0, 1]
  * @note
  * For point light, t_max is 1, this means object on the other side of the light
@@ -35,8 +56,8 @@ double	calculate_light_intensity(t_scene *scene, t_point point, t_vector normal,
 		t_vector view, double specular_exponent)
 {
 	t_object	*light;
-	double		intensity;
 	t_vector	light_vec;
+	double		intensity;
 	double		normal_dot_light;
 	double		t_max;
 
@@ -61,17 +82,7 @@ double	calculate_light_intensity(t_scene *scene, t_point point, t_vector normal,
 				t_max = INFINITY;
 			}
 
-			/* Shadow check */
-			t_ray		shadow_ray;
-			t_closest	closest;
-			
-			closest.object = NULL;
-			closest.t = INFINITY;
-			shadow_ray.origin = point;
-			shadow_ray.direction = light_vec;
-			shadow_ray.t_min = 1e-4;
-			shadow_ray.t_max = t_max;
-			if (trace(scene, &shadow_ray, &closest))
+			if (light_is_blocked(scene, point, light_vec, t_max))
 			{
 				++light;
 				continue;
