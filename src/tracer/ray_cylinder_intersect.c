@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:45:59 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 23:35:08 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 22:20:08 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ extern void	ray_cylinder_intersect(
 	{
 		c->ray_intersects = TopFace;
 		closest->object = c;
+		c->backside = top_face.backside;
 	}
 }
 
