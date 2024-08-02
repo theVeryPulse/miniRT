@@ -6,11 +6,12 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 20:44:43 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 22:44:25 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "t_vars.h"
+#include "mlx_window/inc/mlx_manage.h"
 #include "camera/inc/camera.h"
 #include "load_file/inc/load_file.h"
 #include "scene/inc/scene.h"
@@ -44,39 +45,7 @@
 
 #define RED_ERROR "\033[91merror: \033[0m"
 
-int	clean_exit(int exit_status)
-{
-	t_vars	*vars;
 
-	vars = minirt()->vars;
-	printf("exiting...\n");
-	mlx_destroy_image(vars->mlx_ptr, vars->img_vars.img_ptr);
-	mlx_destroy_window(vars->mlx_ptr, vars->win_ptr);
-	mlx_destroy_display(vars->mlx_ptr);
-	free(vars->mlx_ptr);
-	if (vars->scene.objects)
-		free(vars->scene.objects);
-	if (vars->scene.lights)
-		free(vars->scene.lights);
-	exit (exit_status);
-}
-
-void	set_up_hooks(t_vars *vars)
-{
-	mlx_key_hook(vars->win_ptr, handle_keypress_event, vars);
-	mlx_hook(vars->win_ptr, DestroyNotify, ButtonReleaseMask, clean_exit,
-		vars);
-}
-
-void	set_up_mlx(t_vars *vars)
-{
-	vars->mlx_ptr = mlx_init();
-	vars->win_ptr = mlx_new_window(vars->mlx_ptr, WIDTH, HEIGHT, "miniRT");
-	vars->img_vars.img_ptr = mlx_new_image(vars->mlx_ptr, WIDTH, HEIGHT);
-	vars->img_vars.addr = mlx_get_data_addr(vars->img_vars.img_ptr,
-			&(vars->img_vars.bits_per_pixel), &(vars->img_vars.line_size),
-			&(vars->img_vars.endian));
-}
 
 /**
  * @brief Puts the image to the window.
