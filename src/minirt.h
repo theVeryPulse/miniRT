@@ -6,13 +6,14 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 16:11:08 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/15 17:04:14 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 15:39:02 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINIRT_H
 # define MINIRT_H
 
+# include "t_vars.h"
 # include "color/inc/argb.h"
 # include <stdint.h>
 
@@ -20,16 +21,17 @@
 
 typedef struct s_minirt
 {
-	int			eye_canvas_distance;
-	double		fov;
-	t_argb		background_color;
-	double		image_aspect_ratio;
-	double		scale;
-	uint32_t	unit_one;
+	int		eye_canvas_distance;
+	double	fov;
+	t_argb	background_color;
+	double	image_aspect_ratio;
+	double	scale;
+	double	unit_one;
+	t_vars	*vars;
 }	t_minirt;
 
 extern t_minirt	*minirt(void);
 extern void		update_fov(double new_fov);
-extern void		minirt_init(void);
+extern void		minirt_init(t_vars *vars);
 
 #endif /* MINIRT_H */

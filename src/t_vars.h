@@ -6,14 +6,14 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:11:29 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 17:33:43 by Philip           ###   ########.fr       */
+/*   Updated: 2024/07/27 13:44:22 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef T_VARS_H
 # define T_VARS_H
 
-# include "t_scene.h"
+# include "scene/t_scene.h"
 
 typedef struct s_img_vars
 {

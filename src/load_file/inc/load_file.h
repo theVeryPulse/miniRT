@@ -1,31 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_scene.h                                          :+:      :+:    :+:   */
+/*   load_file.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/02 17:48:23 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/21 20:30:37 by Philip           ###   ########.fr       */
+/*   Created: 2024/07/27 16:00:24 by Philip            #+#    #+#             */
+/*   Updated: 2024/07/31 20:38:42 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef T_SCENE_H
-# define T_SCENE_H
+#ifndef LOAD_FILE_H
+# define LOAD_FILE_H
 
-# include "object/t_object.h"
-# include "t_camera.h"
-# include <stdint.h>
+# include "../../t_vars.h"
 
-typedef struct s_scene
-{
-	/* Array of objects */
-	t_object	*objects;
-	uint8_t		object_count;
-	t_object	*lights;
-	uint8_t		light_count;
-	t_object	*focus;
-	t_camera	camera;
-}	t_scene;
+extern void	load_scene_from_file(t_scene *scene, const char *filename);
 
-#endif /* T_SCENE_H */
+#endif /* LOAD_FILE_H */

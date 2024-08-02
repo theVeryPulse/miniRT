@@ -6,28 +6,28 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:22:18 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/22 20:12:39 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/01 19:02:00 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../t_object.h"
+#include "../inc/object.h"
+#include "../../minirt.h"
+#include "../../geometry/inc/geometry.h"
 
-t_object	colored_sphere(
-	t_argb color,
-	t_point position,
-	double radius,
-	double specular_exponent,
-	double reflectivity
-)
+t_object	colored_sphere(t_s s)
 {
-	return ((t_object){
-		.type = Sphere,
-		.category = Object,
-		.color = color,
-		.position = position,
-		.radius = radius,
-		.specular_exponent = specular_exponent,
-		.reflectivity = reflectivity,
-		.is_checkerboard = false
-	});
+	t_object	sphere;
+
+	sphere = (t_object){0};
+	sphere.type = Sphere;
+	sphere.category = Object;
+	sphere.color = s.color;
+	sphere.position = vec_mult(minirt()->unit_one, s.position);
+	sphere.radius = s.radius * minirt()->unit_one;
+	sphere.radius_squared = sphere.radius * sphere.radius;
+	sphere.specular_exponent = s.specular_exponent;
+	sphere.reflectivity = s.reflectivity;
+	sphere.is_checkerboard = false;
+	sphere.error = false;
+	return (sphere);
 }
