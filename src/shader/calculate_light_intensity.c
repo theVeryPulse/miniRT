@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 16:06:08 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 18:51:44 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 19:03:16 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,8 @@ static bool	light_is_blocked(t_scene *scene, t_ray shadow_ray)
 static double	reflection_intensity(
 			t_object *light,
 			t_ray shadow_ray,
-			t_vector normal,
-			t_vector view,
-			double specular_exponent)
+			const t_object *tangent_plane,
+			t_vector view)
 {
 	double		normal_dot_light;
 	double		intensity;
@@ -45,18 +44,21 @@ static double	reflection_intensity(
 	double		reflection_dot_view;
 
 	intensity = 0.0;
-	normal_dot_light = vec_dot(normal, shadow_ray.direction);
+	normal_dot_light = vec_dot(tangent_plane->direction, shadow_ray.direction);
 	if (normal_dot_light > 0)
 		intensity += light->intensity * normal_dot_light
-			/ (vec_len(normal) * vec_len(shadow_ray.direction));
-	if (specular_exponent > 0.0)
+			/ (vec_len(tangent_plane->direction)
+				* vec_len(shadow_ray.direction));
+	if (tangent_plane->specular_exponent > 0.0)
 	{
-		reflection = reflect_ray(shadow_ray.direction, normal);
+		reflection = reflect_ray(
+				shadow_ray.direction, tangent_plane->direction);
 		reflection_dot_view = vec_dot(reflection, view);
 		if (reflection_dot_view > 0)
 		{
-			intensity += light->intensity * pow(reflection_dot_view
-					/ (vec_len(reflection) * vec_len(view)), specular_exponent);
+			intensity += light->intensity * pow(
+					reflection_dot_view / (vec_len(reflection) * vec_len(view)),
+					tangent_plane->specular_exponent);
 		}
 	}
 	return (intensity);
@@ -113,8 +115,7 @@ double	calculate_light_intensity(t_scene *scene, t_object *tangent_plane,
 			shadow_ray = build_shadow_ray(light, tangent_plane->position);
 			if (!light_is_blocked(scene, shadow_ray))
 				intensity += reflection_intensity(light, shadow_ray,
-						tangent_plane->direction,
-						view, tangent_plane->specular_exponent);
+						tangent_plane, view);
 		}
 		++light;
 	}
