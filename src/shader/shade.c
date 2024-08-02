@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 02:41:38 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 18:14:44 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/02 18:33:17 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,27 +45,20 @@ t_argb	shade(t_scene *scene, t_ray *ray, t_closest *closest,
 	t_vector	unit_normal;
 	double		intensity;
 	t_argb		local_color;
+	t_ray	reflection_ray;
+	t_argb	reflected_color;
 
 	intersection = vec_add(ray->origin, vec_mult(closest->t, ray->direction));
 	unit_normal = normal_on_surface(closest->object, intersection);
 	intensity = calculate_light_intensity(scene, intersection, unit_normal,
 			vec_mult(-1, ray->direction), closest->object->specular_exponent);
 	local_color = get_local_color(closest->object, intersection, intensity);
-	// return (local_color); /* Return color here to skip reflection */
-	/* When recursion limit is hit or the other object does not reflect */
 	if (recursion_depth <= 0 || closest->object->reflectivity <= 0)
 		return (local_color);
-	/* Else computes reflected color */
-	t_ray	reflection_ray;
-	t_argb	reflected_color;
-
-	reflection_ray.origin = intersection;
-	reflection_ray.direction = reflect_ray(
-		vec_mult(-1, ray->direction), unit_normal);
-	reflection_ray.t_min = 0.001;
-	reflection_ray.t_max = INFINITY;
+	reflection_ray = (t_ray){.origin = intersection,
+		.direction = reflect_ray(vec_mult(-1, ray->direction), unit_normal),
+		.t_min = 0.001, .t_max = INFINITY};
 	reflected_color = cast_ray(scene, &reflection_ray, recursion_depth - 1);
-	/* The more smooth the object is, the more light it reflects */
 	return (color_add(
 		color_mult(local_color, 1 - closest->object->reflectivity),
 		color_mult(reflected_color, closest->object->reflectivity)));
