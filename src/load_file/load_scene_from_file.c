@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/05 14:52:15 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/05 15:24:29 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ extern void	basic_check(t_list	**all_lines, t_counter *count);
 /* Defined in this file */
 
 static void	get_all_lines(t_list **all_lines, const char *filename);
-static void	load_scene_from_lines(t_scene *scene, t_list *all_lines);
-static void	check_scene(t_scene *scene);
+static void	load_scene_from_lines(t_scene *scene, const t_list *all_lines);
+static int	check_scene(t_scene *scene);
 
 /**
  * @brief 
@@ -63,7 +63,12 @@ void	load_scene_from_file(t_scene *scene, const char *filename)
 		+ count.unique_point_light);
 	load_scene_from_lines(scene, all_lines);
 	ft_lstclear(&all_lines, free);
-	check_scene(scene);
+	if (check_scene(scene) != 0)
+	{
+		free(scene->objects);
+		free(scene->lights);
+		exit(1);
+	}
 	scene->focus = scene->objects;
 }
 
@@ -91,12 +96,12 @@ static void	get_all_lines(t_list **all_lines, const char *filename)
 	close(file);
 }
 
-static void	load_scene_from_lines(t_scene *scene, t_list *all_lines)
+static void	load_scene_from_lines(t_scene *scene, const t_list *all_lines)
 {
-	t_object	*object;
-	t_object	*light;
-	t_list		*node;
-	const char	*ptr;
+	t_object		*object;
+	t_object		*light;
+	const t_list	*node;
+	const char		*ptr;
 
 	object = scene->objects;
 	light = scene->lights;
@@ -115,7 +120,7 @@ static void	load_scene_from_lines(t_scene *scene, t_list *all_lines)
 	}
 }
 
-static void	check_scene(t_scene *scene)
+static int	check_scene(t_scene *scene)
 {
 	int	error;
 	int	i;
@@ -128,10 +133,5 @@ static void	check_scene(t_scene *scene)
 	while (i < scene->light_count)
 		error |= scene->lights[i++].error;
 	error |= scene->camera.error;
-	if (error)
-	{
-		free(scene->objects);
-		free(scene->lights);
-		exit(1);
-	}
+	return (error);
 }
