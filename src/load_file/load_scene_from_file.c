@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/31 20:38:22 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/05 14:52:15 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,34 @@
 
 extern void	basic_check(t_list	**all_lines, t_counter *count);
 
+/* Defined in this file */
+
+static void	get_all_lines(t_list **all_lines, const char *filename);
+static void	load_scene_from_lines(t_scene *scene, t_list *all_lines);
+static void	check_scene(t_scene *scene);
+
+/**
+ * @brief 
+ * 
+ * @param scene 
+ * @param filename 
+ */
+void	load_scene_from_file(t_scene *scene, const char *filename)
+{
+	t_list		*all_lines;
+	t_counter	count;
+
+	get_all_lines(&all_lines, filename);
+	basic_check(&all_lines, &count);
+	allocate_objects(scene, count.cylinder + count.plane + count.sphere);
+	allocate_lights(scene, count.ambient_light + count.point_light
+		+ count.unique_point_light);
+	load_scene_from_lines(scene, all_lines);
+	ft_lstclear(&all_lines, free);
+	check_scene(scene);
+	scene->focus = scene->objects;
+}
+
 static void	get_all_lines(t_list **all_lines, const char *filename)
 {
 	int					file;
@@ -63,7 +91,7 @@ static void	get_all_lines(t_list **all_lines, const char *filename)
 	close(file);
 }
 
-void	load_scene_from_lines(t_scene *scene, t_list *all_lines)
+static void	load_scene_from_lines(t_scene *scene, t_list *all_lines)
 {
 	t_object	*object;
 	t_object	*light;
@@ -87,7 +115,7 @@ void	load_scene_from_lines(t_scene *scene, t_list *all_lines)
 	}
 }
 
-void	check_scene(t_scene *scene)
+static void	check_scene(t_scene *scene)
 {
 	int	error;
 	int	i;
@@ -106,20 +134,4 @@ void	check_scene(t_scene *scene)
 		free(scene->lights);
 		exit(1);
 	}
-}
-
-void	load_scene_from_file(t_scene *scene, const char *filename)
-{
-	t_list		*all_lines;
-	t_counter	count;
-
-	get_all_lines(&all_lines, filename);
-	basic_check(&all_lines, &count);
-	allocate_objects(scene, count.cylinder + count.plane + count.sphere);
-	allocate_lights(scene, count.ambient_light + count.point_light
-		+ count.unique_point_light);
-	load_scene_from_lines(scene, all_lines);
-	ft_lstclear(&all_lines, free);
-	check_scene(scene);
-	scene->focus = scene->objects;
 }
