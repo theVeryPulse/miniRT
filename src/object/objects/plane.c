@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:26:12 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/31 21:39:31 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:42:09 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,25 @@
 #include "../../minirt.h"
 #include "../../geometry/inc/geometry.h"
 
-t_object	plane(t_p p)
-{
-	t_object	plane;
+// clang-format off
 
-	plane = (t_object){0};
-	plane.category = Object;
-	plane.type = Plane;
-	plane.color = p.color;
-	plane.position = vec_mult(minirt()->unit_one, p.position);
-	plane.direction = p.direction;
-	plane.specular_exponent = p.specular_exponent;
-	plane.reflectivity = p.reflectivity;
-	plane.radius = -1;
-	plane.error = false;
-	return (plane);
+t_object plane(t_argb      color,
+               t_raw_point position,
+               t_vector    direction,
+               double      specular_exponent,
+               double      reflectivity)
+{
+    t_object plane;
+
+    plane = (t_object){0};
+    plane.category = Object;
+    plane.type = Plane;
+    plane.color = color;
+    plane.position = vec_mult(minirt()->unit_one, position);
+    plane.direction = direction;
+    plane.specular_exponent = specular_exponent;
+    plane.reflectivity = reflectivity;
+    plane.radius = -1;
+    plane.error = false;
+    return (plane);
 }

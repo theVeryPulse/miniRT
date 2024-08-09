@@ -1,0 +1,7 @@
+BasedOnStyle: Microsoft
+AlignConsecutiveDeclarations: true
+BreakBeforeBinaryOperators: NonAssignment
+ColumnLimit: 80
+PenaltyBreakAssignment: 1000
+PointerAlignment: Left
+SortIncludes: false

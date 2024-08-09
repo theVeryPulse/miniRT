@@ -6,14 +6,14 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 22:51:08 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 22:57:44 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 17:01:04 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../t_vars.h"
 #include "../t_pixel.h"
 #include "../window.h"
-#include <stdio.h> /* printf */
+#include <stdio.h>  /* printf */
 #include <stddef.h> /* ptrdiff_t */
 
 /**
@@ -24,18 +24,18 @@
  * @param img_vars Pointer to the image variables structure.
  * @param pixel The struct with coordinates and color of the pixel to draw.
  */
-void	draw_pixel_in_raster_space(t_img_vars *img_vars, t_pixel pixel)
+void draw_pixel_in_raster_space(t_img_vars* img_vars, t_pixel pixel)
 {
-	char		*dst;
-	ptrdiff_t	offset;
+    char*     dst;
+    ptrdiff_t offset;
 
-	if (pixel.x >= WIDTH || pixel.x < 0 || pixel.y >= HEIGHT || pixel.y < 0)
-	{
-		printf("(%d, %d) outside window\n", pixel.x, pixel.y);
-		return ;
-	}
-	offset = pixel.y * img_vars->line_size
-		+ pixel.x * (img_vars->bits_per_pixel / 8);
-	dst = img_vars->addr + offset;
-	*(unsigned int *)dst = pixel.color;
+    if (pixel.x >= WIDTH || pixel.x < 0 || pixel.y >= HEIGHT || pixel.y < 0)
+    {
+        printf("(%d, %d) outside window\n", pixel.x, pixel.y);
+        return;
+    }
+    offset = pixel.y * img_vars->line_size
+             + pixel.x * (img_vars->bits_per_pixel / 8);
+    dst = img_vars->addr + offset;
+    *(unsigned int*)dst = pixel.color;
 }

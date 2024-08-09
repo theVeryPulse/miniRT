@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 23:22:03 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 23:24:12 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 16:39:07 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
  * @param argb The 32-bit ARGB color value.
  * @return The green component of the color.
  */
-extern uint8_t	green_component(t_argb argb)
+extern uint8_t green_component(t_argb argb)
 {
-	return (((uint8_t *)&argb)[1]);
+    return (((uint8_t*)&argb)[1]);
 }

@@ -6,14 +6,14 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:04:44 by Philip            #+#    #+#             */
-/*   Updated: 2024/06/02 02:05:22 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 17:48:03 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef WINDOW_H
-# define WINDOW_H
+#define WINDOW_H
 
-# define WIDTH 1920
-# define HEIGHT 1080
+#define WIDTH 1920
+#define HEIGHT 1080
 
 #endif /* WINDOW_H */

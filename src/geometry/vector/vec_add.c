@@ -6,13 +6,13 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 22:37:57 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/10 22:55:31 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 16:41:53 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "t_point.h"
 
-extern t_vector	vec_add(t_vector a, t_vector b)
+extern t_vector vec_add(t_vector a, t_vector b)
 {
-	return ((t_vector){.x = a.x + b.x, .y = a.y + b.y, .z = a.z + b.z});
+    return ((t_vector){.x = a.x + b.x, .y = a.y + b.y, .z = a.z + b.z});
 }

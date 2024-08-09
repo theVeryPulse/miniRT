@@ -6,13 +6,13 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 17:39:32 by Philip            #+#    #+#             */
-/*   Updated: 2024/07/15 17:40:23 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 16:43:31 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vector.h"
 
-void	vec_normalize(t_vector *vec)
+void vec_normalize(t_vector* vec)
 {
-	*vec = vec_normalized(*vec);
+    *vec = vec_normalized(*vec);
 }
