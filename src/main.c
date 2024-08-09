@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 23:27:18 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 16:02:14 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ extern void	render_image(t_vars *vars);
  * To use this function: use this line in main
  *     load_test_scene(&vars.scene);
  */
-// extern void	load_default_scene(t_scene *scene);
+extern void	load_default_scene(t_scene *scene);
 
 /* Defined in load_scene_from_code.c
  * Use this function to load a simple test scene.
@@ -53,7 +53,8 @@ int	main(int argc, char const *argv[])
 	check_argc(argc);
 	check_filename(argv[1]);
 	minirt_init(&vars);
-	load_scene_from_file(&vars.scene, argv[1]);
+	// load_scene_from_file(&vars.scene, argv[1]);
+	load_default_scene(&vars.scene);
 	precompute_values(&vars.scene);
 	set_up_mlx(&vars);
 	set_up_hooks(&vars);

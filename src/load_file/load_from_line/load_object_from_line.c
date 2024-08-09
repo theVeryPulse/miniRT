@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 18:08:40 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 23:36:05 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 16:14:45 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ static void	load_sphere_from_line(t_object *sphere, const char *line)
 	printf("  position: (%.1f,%.1f,%.1f), radius: %.1f\n",
 		position.x, position.y, position.z, radius);
 	*sphere = colored_sphere(
-			(t_s){(t_argb){0}, position, radius, SPEC_EXPO, REFLECT});
+			(t_argb){0}, position, radius, SPEC_EXPO, REFLECT);
 	if (load_rgb(&(sphere->color), &line) != 0)
 		sphere->error = true;
 	if (radius <= 0 && printf("  "RED_ERROR"invalid radius: %.1f\n", radius))
@@ -111,7 +111,7 @@ static void	load_plane_from_line(t_object *p, const char *line)
 	skip_spaces(&line);
 	printf("  position: (%.1f, %.1f, %.1f), normal: (%.1f, %.1f, %.1f)\n",
 		position.x, position.y, position.z, normal.x, normal.y, normal.z);
-	*p = plane((t_p){(t_argb){0}, position, normal, SPEC_EXPO, REFLECT});
+	*p = plane((t_argb){0}, position, normal, SPEC_EXPO, REFLECT);
 	if (load_rgb(&(p->color), &line) != 0)
 		p->error = true;
 	if (p->direction.x == 0.0 && p->direction.y == 0.0 && p->direction.z == 0.0)

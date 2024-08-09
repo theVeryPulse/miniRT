@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:45:59 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 23:33:45 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 16:14:28 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,10 @@ extern void	ray_cylinder_intersect(
 	calculate_abc(&d3, ray, c);
 	ray_curved_surface_intersect(t, &d3);
 	update_solution_if_t_in_cylinder_height(ray, c, closest, t);
-	top_face = disk((t_d){c->color, vec_div(vec_add(c->position,
+	top_face = disk(c->color, vec_div(vec_add(c->position,
 					vec_mult(c->height, c->direction)), minirt()->unit_one),
 			c->direction, c->radius / minirt()->unit_one,
-			c->specular_exponent, c->reflectivity});
+			c->specular_exponent, c->reflectivity);
 	if (ray_disk_intersect(ray, c, closest))
 	{
 		c->ray_intersects = BottomFace;

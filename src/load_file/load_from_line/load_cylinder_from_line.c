@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 18:45:06 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 23:35:58 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 16:15:05 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ extern void	load_cylinder_from_line(t_object *c, const char *line)
 	height = ft_atof(line);
 	skip_number(&line);
 	skip_spaces(&line);
-	*c = cylinder((t_c){(t_argb){0}, bottom_center(center, axis, height), axis,
-			radius, height, SPEC_EXPO, REFLECT});
+	*c = cylinder((t_argb){0}, bottom_center(center, axis, height), axis,
+			radius, height, SPEC_EXPO, REFLECT);
 	print_cylinder_overview(c, center, radius, height);
 	load_rgb(&(c->color), &line);
 	check_cylinder(c, radius, height);
