@@ -11,12 +11,15 @@
 - [Usage](#usage)
 - [Scene Description File](#scene-description-file)
 - [Define Scene with Codes](#define-scene-with-codes)
+- [Controls](#controls)
+- [Useful Links](#useful-links)
 
 
 ## Features
 
 ![Spheres](pic/spheres.png)
 
+- **Interactive**: Supports moving objects and lights on the fly.
 - **Basic Primitives**: Supports spheres, planes, and cylinders.
 - **Lighting**: Includes ambient, directional, and point lights.
 - **Shadows**.
@@ -102,3 +105,21 @@ cy 5.0,0.0,-20.6    1,0,0    10.2    2.42    10,0,255
 More options on reflectivity, specular exponent, checkerboard colored sphere are supported only by editing the code directly. Check `load_scene_from_code.c` for example.
 
 ![A Room](pic/room.png)
+
+## Controls
+
+miniRT supports some interaction functions. After a scene is rendered, you can use `tab` to switch between objects and lights and change their position.
+| Key(s)    | Action                                    |
+|-----------|-------------------------------------------|
+| `←` `→`   | Move object along x-axis (left/right)     |
+| `↑` `↓`   | Move object along y-axis (up/down)        |
+| `i` `o`   | Move object along z-axis (for/back -ward) |
+| `[` `]`   | Increase/decrease fov                     |
+| `tab`     | Switch between objects and lights         |
+| `Esc`     | Exit the program                          |
+
+## Useful Links
+[Computer Graphics from Scratch - 
+Gabriel Gambetta](https://gabrielgambetta.com/computer-graphics-from-scratch/) -  a straightforward and quick guidance to start rendering shapes 
+
+[Scratchpixel](https://www.scratchapixel.com/) - A more comprehensive guidance where many conventions are discussed. 
