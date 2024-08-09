@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 02:08:55 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 17:46:41 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 19:12:03 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ int main(int argc, char const* argv[])
     check_argc(argc);
     check_filename(argv[1]);
     minirt_init(&vars);
-    // load_scene_from_file(&vars.scene, argv[1]);
-    load_default_scene(&vars.scene);
+    load_scene_from_file(&vars.scene, argv[1]);
+    // load_default_scene(&vars.scene);
     precompute_values(&vars.scene);
     set_up_mlx(&vars);
     set_up_hooks(&vars);
