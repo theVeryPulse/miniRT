@@ -6,14 +6,14 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 15:50:41 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/01 15:50:44 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 16:56:28 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-double	sign(double n)
+double sign(double n)
 {
-	if (n >= 0)
-		return (1.0);
-	else
-		return (-1.0);
+    if (n >= 0)
+        return (1.0);
+    else
+        return (-1.0);
 }

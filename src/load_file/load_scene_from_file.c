@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/05 15:24:29 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 16:54:12 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 #include <stdint.h>
 
 #ifndef TEST
-# define TEST 0
+#define TEST 0
 #endif
 
 #define RED_ERROR "\033[91merror: \033[0m"
@@ -37,101 +37,101 @@
 
 /* Defined in basic_check.c */
 
-extern void	basic_check(t_list	**all_lines, t_counter *count);
+extern void basic_check(t_list** all_lines, t_counter* count);
 
 /* Defined in this file */
 
-static void	get_all_lines(t_list **all_lines, const char *filename);
-static void	load_scene_from_lines(t_scene *scene, const t_list *all_lines);
-static int	check_scene(t_scene *scene);
+static void get_all_lines(t_list** all_lines, const char* filename);
+static void load_scene_from_lines(t_scene* scene, const t_list* all_lines);
+static int  check_scene(t_scene* scene);
 
 /**
- * @brief 
- * 
- * @param scene 
- * @param filename 
+ * @brief
+ *
+ * @param scene
+ * @param filename
  */
-void	load_scene_from_file(t_scene *scene, const char *filename)
+void load_scene_from_file(t_scene* scene, const char* filename)
 {
-	t_list		*all_lines;
-	t_counter	count;
+    t_list*   all_lines;
+    t_counter count;
 
-	get_all_lines(&all_lines, filename);
-	basic_check(&all_lines, &count);
-	allocate_objects(scene, count.cylinder + count.plane + count.sphere);
-	allocate_lights(scene, count.ambient_light + count.point_light
-		+ count.unique_point_light);
-	load_scene_from_lines(scene, all_lines);
-	ft_lstclear(&all_lines, free);
-	if (check_scene(scene) != 0)
-	{
-		free(scene->objects);
-		free(scene->lights);
-		exit(1);
-	}
-	scene->focus = scene->objects;
+    get_all_lines(&all_lines, filename);
+    basic_check(&all_lines, &count);
+    allocate_objects(scene, count.cylinder + count.plane + count.sphere);
+    allocate_lights(scene, count.ambient_light + count.point_light
+                               + count.unique_point_light);
+    load_scene_from_lines(scene, all_lines);
+    ft_lstclear(&all_lines, free);
+    if (check_scene(scene) != 0)
+    {
+        free(scene->objects);
+        free(scene->lights);
+        exit(1);
+    }
+    scene->focus = scene->objects;
 }
 
-static void	get_all_lines(t_list **all_lines, const char *filename)
+static void get_all_lines(t_list** all_lines, const char* filename)
 {
-	int					file;
-	char				*line;
-	static const char	*cannot_open_message = RED_ERROR"cannot open ";
+    int                file;
+    char*              line;
+    static const char* cannot_open_message = RED_ERROR "cannot open ";
 
-	file = open(filename, O_RDONLY);
-	if (file == -1)
-	{
-		write(STDOUT_FILENO, cannot_open_message,
-			ft_strlen(cannot_open_message));
-		perror(filename);
-		exit(1);
-	}
-	*all_lines = NULL;
-	line = get_next_line(file);
-	while (line)
-	{
-		ft_lstadd_back(all_lines, ft_lstnew(line));
-		line = get_next_line(file);
-	}
-	close(file);
+    file = open(filename, O_RDONLY);
+    if (file == -1)
+    {
+        write(STDOUT_FILENO, cannot_open_message,
+              ft_strlen(cannot_open_message));
+        perror(filename);
+        exit(1);
+    }
+    *all_lines = NULL;
+    line       = get_next_line(file);
+    while (line)
+    {
+        ft_lstadd_back(all_lines, ft_lstnew(line));
+        line = get_next_line(file);
+    }
+    close(file);
 }
 
-static void	load_scene_from_lines(t_scene *scene, const t_list *all_lines)
+static void load_scene_from_lines(t_scene* scene, const t_list* all_lines)
 {
-	t_object		*object;
-	t_object		*light;
-	const t_list	*node;
-	const char		*ptr;
+    t_object*     object;
+    t_object*     light;
+    const t_list* node;
+    const char*   ptr;
 
-	object = scene->objects;
-	light = scene->lights;
-	node = all_lines;
-	while (node)
-	{
-		ptr = node->content;
-		skip_spaces(&ptr);
-		if (*ptr == 'C')
-			load_camera_from_line(&scene->camera, ptr);
-		else if (*ptr == 's' || *ptr == 'p' || *ptr == 'c')
-			load_object_from_line(object++, ptr);
-		else if (*ptr == 'A' || *ptr == 'L' || *ptr == 'l')
-			load_light_from_line(light++, ptr);
-		node = node->next;
-	}
+    object = scene->objects;
+    light  = scene->lights;
+    node   = all_lines;
+    while (node)
+    {
+        ptr = node->content;
+        skip_spaces(&ptr);
+        if (*ptr == 'C')
+            load_camera_from_line(&scene->camera, ptr);
+        else if (*ptr == 's' || *ptr == 'p' || *ptr == 'c')
+            load_object_from_line(object++, ptr);
+        else if (*ptr == 'A' || *ptr == 'L' || *ptr == 'l')
+            load_light_from_line(light++, ptr);
+        node = node->next;
+    }
 }
 
-static int	check_scene(t_scene *scene)
+static int check_scene(t_scene* scene)
 {
-	int	error;
-	int	i;
+    int error;
+    int i;
 
-	error = 0;
-	i = 0;
-	while (i < scene->object_count)
-		error |= scene->objects[i++].error;
-	i = 0;
-	while (i < scene->light_count)
-		error |= scene->lights[i++].error;
-	error |= scene->camera.error;
-	return (error);
+    error = 0;
+    i     = 0;
+    while (i < scene->object_count)
+        error |= scene->objects[i++].error;
+    i = 0;
+    while (i < scene->light_count)
+        error |= scene->lights[i++].error;
+    error |= scene->camera.error;
+    return (error);
 }

@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 22:47:42 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/02 22:47:57 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 16:58:53 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
  *
  * @param vars Pointer to the variables structure.
  */
-void	put_image_to_window_vars(t_vars *vars)
+void put_image_to_window_vars(t_vars* vars)
 {
-	mlx_put_image_to_window(vars->mlx_ptr, vars->win_ptr,
-		vars->img_vars.img_ptr, 0, 0);
+    mlx_put_image_to_window(vars->mlx_ptr, vars->win_ptr,
+                            vars->img_vars.img_ptr, 0, 0);
 }
