@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:21:20 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 16:45:57 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:25:53 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ static void change_fov(int key, t_vars* vars)
         update_fov(minirt()->fov + 1);
     render_image(vars);
     put_image_to_window_vars(vars);
-    fov     = ft_itoa((int)minirt()->fov);
+    fov = ft_itoa((int)minirt()->fov);
     message = ft_format_string("FOV: %s");
     mlx_string_put(vars->mlx_ptr, vars->win_ptr, 10, 10, GREEN, message);
     free(fov);

@@ -6,11 +6,13 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 20:04:59 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 16:38:34 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:32:57 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "inc/argb.h"
+
+// clang-format off
 
 extern inline t_argb color_add(t_argb a, t_argb b)
 {

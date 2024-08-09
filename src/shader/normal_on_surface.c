@@ -6,15 +6,15 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 15:40:17 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 17:32:09 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:44:08 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../geometry/inc/geometry.h"
 #include "../t_closest.h"
 
-static t_vector normal_on_cylinder_surface(
-    t_object* cylinder, t_point intersection);
+static t_vector normal_on_cylinder_surface(t_object* cylinder,
+                                           t_point   intersection);
 
 /**
  * @brief
@@ -37,8 +37,8 @@ extern t_vector normal_on_surface(t_object* obj, t_point intersection)
         return ((t_vector){0, 0, 0});
 }
 
-static t_vector normal_on_cylinder_surface(
-    t_object* cylinder, t_point intersection)
+static t_vector normal_on_cylinder_surface(t_object* cylinder,
+                                           t_point   intersection)
 {
     t_vector unit_normal;
     t_vector q;
@@ -50,9 +50,8 @@ static t_vector normal_on_cylinder_surface(
         q_on_v = vec_mult(vec_dot(q, cylinder->direction), cylinder->direction);
         unit_normal = vec_normalized(vec_minus(q, q_on_v));
     }
-    else if (
-        cylinder->ray_intersects == BottomFace
-        || cylinder->ray_intersects == TopFace)
+    else if (cylinder->ray_intersects == BottomFace
+             || cylinder->ray_intersects == TopFace)
     {
         unit_normal = cylinder->direction;
         if (cylinder->backside)

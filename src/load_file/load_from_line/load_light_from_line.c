@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 18:06:46 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 16:50:19 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:36:59 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,8 @@ static void load_point_light_from_line(t_object* l, const char* line)
     *l = point_light(position, intensity);
     if (l->intensity < 0.0 || l->intensity > 1.0)
     {
-        printf("  "RED_ERROR"point light intensity out of range [0, 1]: %.1f\n",
+        printf("  " RED_ERROR
+               "point light intensity out of range [0, 1]: %.1f\n",
                l->intensity);
         l->error = true;
     }

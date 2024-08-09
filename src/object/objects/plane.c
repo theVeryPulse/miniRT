@@ -6,13 +6,15 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:26:12 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 17:08:27 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:42:09 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/object.h"
 #include "../../minirt.h"
 #include "../../geometry/inc/geometry.h"
+
+// clang-format off
 
 t_object plane(t_argb      color,
                t_raw_point position,

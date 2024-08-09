@@ -6,13 +6,15 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:25:40 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 17:07:49 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:41:28 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/object.h"
 #include "../../minirt.h"
 #include "../../geometry/inc/geometry.h"
+
+// clang-format off
 
 t_object checkerboard_sphere(t_raw_point position,
                              double      radius,

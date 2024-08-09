@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 18:48:51 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 16:49:38 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:36:19 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,11 @@ extern int load_rgb(t_argb* rgb, const char** line)
     int error;
 
     error = 0;
-    r     = ft_atoi(*line);
+    r = ft_atoi(*line);
     *line = ft_strchr(*line, ',') + 1;
-    g     = ft_atoi(*line);
+    g = ft_atoi(*line);
     *line = ft_strchr(*line, ',') + 1;
-    b     = ft_atoi(*line);
+    b = ft_atoi(*line);
     printf("  RGB: %d,%d,%d\n", r, g, b);
     if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
     {

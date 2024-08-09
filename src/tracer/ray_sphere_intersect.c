@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 15:57:33 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 17:40:47 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:30:39 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 #include "../maths/inc/maths.h"
 #include <math.h>
 
-static void update_solution(
-    double t[2], t_ray* ray, t_object* sphere, t_closest* closest);
+static void update_solution(double t[2], t_ray* ray, t_object* sphere,
+                            t_closest* closest);
 
 /**
  * @brief
@@ -82,8 +82,8 @@ void ray_sphere_intersect(t_ray* ray, t_object* sphere, t_closest* closest)
     update_solution(t, ray, sphere, closest);
 }
 
-static void update_solution(
-    double t[2], t_ray* ray, t_object* sphere, t_closest* closest)
+static void update_solution(double t[2], t_ray* ray, t_object* sphere,
+                            t_closest* closest)
 {
     if (t[0] >= ray->t_min && t[0] <= ray->t_max && t[0] < closest->t)
     {

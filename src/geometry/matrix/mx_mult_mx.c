@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 22:22:00 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 16:40:19 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:33:37 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static void calc_mx_product(t_mx* product, t_mx* mxa, t_mx* mxb)
         while (p_col_i < product->col_num)
         {
             entry = 0;
-            i     = 0;
+            i = 0;
             while (i < mxa->col_num)
             {
                 entry += mxa->entries[p_row_i][i] * mxb->entries[i][p_col_i];

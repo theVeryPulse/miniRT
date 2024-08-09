@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:27:16 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 17:46:22 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:40:16 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #define OBJECT_H
 
 #include "../t_object.h"
+
+// clang-format off
 
 extern t_object colored_sphere(
     t_argb      color,
@@ -51,6 +53,8 @@ extern t_object cylinder(
     double      height,
     double      specular_exponent,
     double      reflectivity);
+
+// clang-format on
 
 extern t_object point_light(t_raw_point position, double intensity);
 

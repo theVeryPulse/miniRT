@@ -6,12 +6,12 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 23:20:54 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 16:37:34 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:24:25 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "t_argb.h"
-#include <stdint-gcc.h>
+#include <stdint.h>
 
 /**
  * @brief Create a int value representing arpg

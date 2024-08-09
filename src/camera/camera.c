@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 20:42:01 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 16:34:38 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:21:29 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ t_camera camera(t_raw_point position, t_vector w)
 {
     t_camera camera;
 
-    camera          = (t_camera){0};
+    camera = (t_camera){0};
     camera.position = vec_mult(minirt()->unit_one, position);
     if (w.x == 0 && w.z == 0 && w.y > 0)
     {

@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 23:11:32 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 17:31:23 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:43:57 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ static bool is_color1(double u, double v, uint8_t square_count);
  * @param color2
  * @return t_argb
  */
-extern t_argb get_checkerboard_sphere_color(
-    t_point pt, t_argb color1, t_argb color2)
+extern t_argb get_checkerboard_sphere_color(t_point pt, t_argb color1,
+                                            t_argb color2)
 {
     double u;
     double v;

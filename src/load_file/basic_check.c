@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 15:34:30 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 16:55:17 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:39:15 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ extern void basic_check(t_list** all_lines, t_counter* count)
     int error;
 
     *count = (t_counter){0};
-    error  = 0;
+    error = 0;
     error |= check_format(all_lines, count);
     error |= check_count(count);
     printf("A: %u, C: %u, L: %u, sp: %u, pl: %u, cy: %u, l: %u\n",
@@ -67,8 +67,8 @@ static int check_format(t_list** all_lines, t_counter* count)
     int     line_error;
 
     line_number = 1;
-    node        = *all_lines;
-    error       = 0;
+    node = *all_lines;
+    error = 0;
     while (node)
     {
         line_error = check_line(node->content, count);

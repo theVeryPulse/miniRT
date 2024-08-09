@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 22:34:24 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 16:54:12 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:39:27 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ static void get_all_lines(t_list** all_lines, const char* filename)
         exit(1);
     }
     *all_lines = NULL;
-    line       = get_next_line(file);
+    line = get_next_line(file);
     while (line)
     {
         ft_lstadd_back(all_lines, ft_lstnew(line));
@@ -104,8 +104,8 @@ static void load_scene_from_lines(t_scene* scene, const t_list* all_lines)
     const char*   ptr;
 
     object = scene->objects;
-    light  = scene->lights;
-    node   = all_lines;
+    light = scene->lights;
+    node = all_lines;
     while (node)
     {
         ptr = node->content;
@@ -126,7 +126,7 @@ static int check_scene(t_scene* scene)
     int i;
 
     error = 0;
-    i     = 0;
+    i = 0;
     while (i < scene->object_count)
         error |= scene->objects[i++].error;
     i = 0;

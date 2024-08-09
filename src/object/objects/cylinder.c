@@ -6,13 +6,15 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 13:49:01 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 17:08:07 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:41:48 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/object.h"
 #include "../../minirt.h"
 #include "../../geometry/inc/geometry.h"
+
+// clang-format off
 
 t_object cylinder(t_argb      color,
                   t_raw_point position,

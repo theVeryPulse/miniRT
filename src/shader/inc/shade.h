@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 02:41:17 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 17:30:18 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:43:06 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,12 @@
 #include "../../ray/t_ray.h"
 #include "../../scene/inc/scene.h"
 
+// clang-format off
+
 t_argb shade(
-    t_scene* scene, t_ray* ray, t_closest* closest, uint8_t recursion_depth);
+    t_scene*   scene,
+    t_ray*     ray,
+    t_closest* closest,
+    uint8_t     recursion_depth);
 
 #endif /* SHADE_H */

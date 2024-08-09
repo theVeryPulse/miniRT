@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 02:41:38 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 17:31:34 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:44:54 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 
 static t_object build_tangent_plane(t_ray* ray, t_closest* closest);
 
-static t_argb get_local_color(
-    t_object* object, t_point intersection, double intensity);
+static t_argb get_local_color(t_object* object, t_point intersection,
+                              double intensity);
 
 /**
  * @brief
@@ -35,8 +35,8 @@ static t_argb get_local_color(
  * @param recursion_depth
  * @return t_argb
  */
-t_argb shade(
-    t_scene* scene, t_ray* ray, t_closest* closest, uint8_t recursion_depth)
+t_argb shade(t_scene* scene, t_ray* ray, t_closest* closest,
+             uint8_t recursion_depth)
 {
     double   intensity;
     t_argb   local_color;
@@ -45,22 +45,22 @@ t_argb shade(
     t_object tangent_plane;
 
     tangent_plane = build_tangent_plane(ray, closest);
-    intensity = calculate_light_intensity(
-        scene, &tangent_plane, vec_mult(-1, ray->direction));
-    local_color = get_local_color(
-        closest->object, tangent_plane.position, intensity);
+    intensity = calculate_light_intensity(scene, &tangent_plane,
+                                          vec_mult(-1, ray->direction));
+    local_color = get_local_color(closest->object, tangent_plane.position,
+                                  intensity);
     if (recursion_depth <= 0 || closest->object->reflectivity <= 0)
         return (local_color);
     reflection_ray = (t_ray){
         .origin = tangent_plane.position,
-        .direction = reflect_ray(
-            vec_mult(-1, ray->direction), tangent_plane.direction),
+        .direction = reflect_ray(vec_mult(-1, ray->direction),
+                                 tangent_plane.direction),
         .t_min = 0.001,
         .t_max = INFINITY};
     reflected_color = cast_ray(scene, &reflection_ray, recursion_depth - 1);
-    return (color_add(
-        color_mult(local_color, 1 - closest->object->reflectivity),
-        color_mult(reflected_color, closest->object->reflectivity)));
+    return (
+        color_add(color_mult(local_color, 1 - closest->object->reflectivity),
+                  color_mult(reflected_color, closest->object->reflectivity)));
 }
 
 static t_object build_tangent_plane(t_ray* ray, t_closest* closest)
@@ -83,8 +83,8 @@ static t_object build_tangent_plane(t_ray* ray, t_closest* closest)
     return (plane);
 }
 
-static t_argb get_local_color(
-    t_object* object, t_point intersection, double intensity)
+static t_argb get_local_color(t_object* object, t_point intersection,
+                              double intensity)
 {
     t_argb local_color;
 

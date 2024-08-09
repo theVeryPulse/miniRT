@@ -6,13 +6,15 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 22:42:57 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 16:58:12 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:39:56 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../t_vars.h"
 #include "../window.h"
 #include "../../lib/minilibx-linux/mlx.h"
+
+// clang-format off
 
 extern void set_up_mlx(t_vars* vars)
 {

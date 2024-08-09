@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 02:54:22 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 16:36:56 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:22:52 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_argb cast_ray(t_scene* scene, t_ray* ray, uint8_t recursion_depth)
     t_closest closest;
 
     closest.object = NULL;
-    closest.t      = INFINITY;
+    closest.t = INFINITY;
     if (!trace(scene, ray, &closest))
         return (minirt()->background_color);
     return (shade(scene, ray, &closest, recursion_depth));

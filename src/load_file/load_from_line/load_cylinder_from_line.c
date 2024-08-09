@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 18:45:06 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 17:51:48 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:35:54 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@
 
 #define RED_ERROR "\033[91merror: \033[0m"
 
+// clang-format off
+
 static t_raw_point bottom_center(
     t_raw_point center,
     t_vector    axis,
@@ -45,6 +47,8 @@ static void check_cylinder(
     t_object* c,
     double    radius,
     double    height);
+
+// clang-format on
 
 /**
  * @brief

@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:45:59 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 17:40:11 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:30:21 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,9 @@
 
 static void calculate_abc(t_triplet* d3, t_ray* ray, t_object* c);
 static void ray_curved_surface_intersect(double t[2], t_triplet* d3);
-static void update_solution_if_t_in_cylinder_height(
-    t_ray* ray, t_object* c, t_closest* closest, double t[2]);
+static void update_solution_if_t_in_cylinder_height(t_ray* ray, t_object* c,
+                                                    t_closest* closest,
+                                                    double     t[2]);
 
 /**
  * @brief
@@ -43,9 +44,8 @@ extern void ray_cylinder_intersect(t_ray* ray, t_object* c, t_closest* closest)
     update_solution_if_t_in_cylinder_height(ray, c, closest, t);
     top_face = disk(
         c->color,
-        vec_div(
-            vec_add(c->position, vec_mult(c->height, c->direction)),
-            minirt()->unit_one),
+        vec_div(vec_add(c->position, vec_mult(c->height, c->direction)),
+                minirt()->unit_one),
         c->direction, c->radius / minirt()->unit_one, c->specular_exponent,
         c->reflectivity);
     if (ray_disk_intersect(ray, c, closest))
@@ -108,18 +108,19 @@ static void ray_curved_surface_intersect(double t[2], t_triplet* d3)
  * @note
  * p0​⋅v ≤ (O+td)⋅v ≤ (p0​+hv)⋅v
  */
-static void update_solution_if_t_in_cylinder_height(
-    t_ray* ray, t_object* c, t_closest* closest, double t[2])
+static void update_solution_if_t_in_cylinder_height(t_ray* ray, t_object* c,
+                                                    t_closest* closest,
+                                                    double     t[2])
 {
     double proj_min;
     double proj_max;
     double proj;
 
     proj_min = vec_dot(c->position, c->direction);
-    proj_max = vec_dot(
-        vec_add(c->position, vec_mult(c->height, c->direction)), c->direction);
-    proj = vec_dot(
-        vec_add(ray->origin, vec_mult(t[0], ray->direction)), c->direction);
+    proj_max = vec_dot(vec_add(c->position, vec_mult(c->height, c->direction)),
+                       c->direction);
+    proj = vec_dot(vec_add(ray->origin, vec_mult(t[0], ray->direction)),
+                   c->direction);
     if (t[0] >= ray->t_min && t[0] <= ray->t_max && t[0] < closest->t
         && proj >= proj_min && proj <= proj_max)
     {
@@ -127,8 +128,8 @@ static void update_solution_if_t_in_cylinder_height(
         closest->object = c;
         c->ray_intersects = CurvedSurface;
     }
-    proj = vec_dot(
-        vec_add(ray->origin, vec_mult(t[1], ray->direction)), c->direction);
+    proj = vec_dot(vec_add(ray->origin, vec_mult(t[1], ray->direction)),
+                   c->direction);
     if (t[1] >= ray->t_min && t[1] <= ray->t_max && t[1] < closest->t
         && proj >= proj_min && proj <= proj_max)
     {

@@ -6,7 +6,7 @@
 /*   By: Philip <juli@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 18:08:40 by Philip            #+#    #+#             */
-/*   Updated: 2024/08/09 16:49:24 by Philip           ###   ########.fr       */
+/*   Updated: 2024/08/09 18:36:48 by Philip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,8 @@ static void load_sphere_from_line(t_object* sphere, const char* line)
     radius = ft_atof(line);
     skip_number(&line);
     skip_spaces(&line);
-    printf("  position: (%.1f,%.1f,%.1f), radius: %.1f\n",
-	       position.x, position.y, position.z, radius);
+    printf("  position: (%.1f,%.1f,%.1f), radius: %.1f\n", position.x,
+           position.y, position.z, radius);
     *sphere = colored_sphere((t_argb){0}, position, radius, SPEC_EXPO, REFLECT);
     if (load_rgb(&(sphere->color), &line) != 0)
         sphere->error = true;
