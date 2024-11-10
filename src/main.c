@@ -53,8 +53,8 @@ int main(int argc, char const* argv[])
     check_argc(argc);
     check_filename(argv[1]);
     minirt_init(&vars);
-    load_scene_from_file(&vars.scene, argv[1]);
-    // load_default_scene(&vars.scene);
+    // load_scene_from_file(&vars.scene, argv[1]);
+    load_default_scene(&vars.scene);
     precompute_values(&vars.scene);
     set_up_mlx(&vars);
     set_up_hooks(&vars);

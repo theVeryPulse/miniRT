@@ -22,6 +22,7 @@
 #include <math.h>
 
 static t_vector transform_ray(t_camera* cam, t_point pt);
+static void     draw_progress_line(t_img_vars* img_vars, int y);
 
 /**
  * @brief
@@ -50,8 +51,8 @@ void render_image(t_vars* vars)
             ++pixel.x;
         }
         --pixel.y;
-        mlx_string_put(vars->mlx_ptr, vars->win_ptr, HEIGHT - 2 * pixel.y, 5,
-                       0x009900, "-");
+        draw_progress_line(&vars->img_vars, pixel.y);
+        put_image_to_window_vars(vars);
     }
 }
 
@@ -72,4 +73,20 @@ static t_vector transform_ray(t_camera* cam, t_point pt)
     ray.y = cam->u.y * pt.x + cam->v.y * pt.y + cam->w.y * pt.z;
     ray.z = cam->u.z * pt.x + cam->v.z * pt.y + cam->w.z * pt.z;
     return (ray);
+}
+
+static void draw_progress_line(t_img_vars* img_vars, int y)
+{
+    t_pixel pixel;
+
+    pixel.color = GREEN;
+    pixel.y = y - 1;
+    if (pixel.y <= -HEIGHT / 2)
+        return;
+    pixel.x = -WIDTH / 2;
+    while (pixel.x < WIDTH / 2)
+    {
+        draw_pixel_in_screen_space(img_vars, pixel);
+        ++pixel.x;
+    }
 }
