@@ -98,8 +98,7 @@ DEPS := %(OFILES:.o:.d)
 all: git_submodules $(NAME)
 
 git_submodules:
-	@git submodule init
-	@git submodule update
+	@git submodule update --init --recursive
 
 $(NAME): $(OFILES) $(LIBFT) $(LIBMLX)
 	@$(CC) $(LDFLAGS) -o $@ $(OFILES) $(LDLIBS)
@@ -127,8 +126,5 @@ fclean: clean
 
 re: fclean all
 
-debug: CFLAGS := -g -Wall -Wextra
-debug: re
-
-.PHONY: all, clean, fclean, re, debug
+.PHONY: all, clean, fclean, re, debug, git_submodules
 
