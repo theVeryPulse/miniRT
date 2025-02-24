@@ -1,8 +1,15 @@
 NAME := miniRT
 
+LIB_DIR := lib
+LIBFT_DIR := $(LIB_DIR)/libft
+LIBMLX_DIR := $(LIB_DIR)/minilibx-linux
+LIBFT := $(LIBFT_DIR)/libft.a
+LIBMLX := $(LIBMLX_DIR)/libmlx.a
+
 CC := gcc
-# CFLAGS := -Wall -Wextra -Werror
-CFLAGS := -Wall -Wextra -g
+CFLAGS := -Wall -Wextra -Werror -g -MMD -MP
+LDFLAGS := -L$(LIBFT_DIR) -L$(LIBMLX_DIR)
+LDLIBS := -lft -lmlx -lXext -lX11 -lm -lz
 
 # ls src/**/*.c >> Makefile
 FILES := \
@@ -83,16 +90,8 @@ FILES := \
 	src/tracer/ray_sphere_intersect.c \
 	src/tracer/trace.c
 
-# FILES := $(addprefix src/, $(FILES))
 OFILES := $(patsubst src/%.c, build/%.o, $(FILES))
-
-# debugmake:
-# 	@echo $(FILES)
-# 	@echo $(OFILES)
-
-MLX_STT := lib/minilibx-linux/libmlx.a
-
-FT_STT := lib/libft/lib/libft.a
+DEPS := %(OFILES:.o:.d)
 
 # .SILENT:
 
@@ -102,20 +101,23 @@ git_submodules:
 	@git submodule init
 	@git submodule update
 
-$(NAME): $(OFILES) $(FT_STT) $(MLX_STT)
-	@$(CC) $(CFLAGS) -o $@ $(OFILES) $(FT_STT) $(MLX_STT) -lXext -lX11 -lm -lz
+$(NAME): $(OFILES) $(LIBFT) $(LIBMLX)
+	@$(CC) $(LDFLAGS) -o $@ $(OFILES) $(LDLIBS)
 	@echo "\033[0;32m\n>>> ./$@\n\033[0m"
 
-$(FT_STT):
-	$(MAKE) -C lib/libft all
+$(LIBFT):
+	$(MAKE) -C $(LIBFT_DIR)
 
-$(MLX_STT):
-	$(MAKE) -C lib/minilibx-linux
+$(LIBMLX):
+	$(MAKE) -C $(LIBMLX_DIR)
 
 build/%.o: src/%.c
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -o $@ -c $^
 	@echo "\033[0;32m* $^\033[0m"
+
+# Include dependency files
+-include $(DEP_FILES)
 
 clean:
 	rm -rf build
